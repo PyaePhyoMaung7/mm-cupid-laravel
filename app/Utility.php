@@ -32,7 +32,6 @@ class Utility
         $formattedQueries = "";
         foreach ($queryLog as $query) {
             $querySql = $query['query'];
-            dd($querySql);
             foreach ($query['bindings'] as $binding) {
                 $querySql = preg_replace('/\?/', "'" . $binding . "'", $querySql, 1);
             }
