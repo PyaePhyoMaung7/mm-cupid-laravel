@@ -27,6 +27,16 @@ class Utility
         }
     }
 
+    public static function addDeletedBy($data)
+    {
+        if (Auth::guard('admin')->user()) {
+            $user_id = Auth::guard('admin')->user()->id;
+            $data['deleted_at'] = date('Y-m-d H:i:s');
+            $data['deleted_by'] = $user_id;
+            return $data;
+        }
+    }
+
     public static function saveDebugLog($screen, $queryLog)
     {
         $formattedQueries = "";

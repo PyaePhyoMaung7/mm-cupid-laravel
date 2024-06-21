@@ -5,7 +5,7 @@
                 <div class="left_col scroll-view">
                     <div class="navbar nav_title" style="border: 0;">
                         <a href="{{ url('admin-backend/index') }}" class="site_title">
-                            <span>Hello</span></a>
+                            <span>{{ Session::get('site_title') }}</span></a>
                     </div>
 
                     <div class="clearfix"></div>
@@ -38,41 +38,55 @@
                         <div class="menu_section">
                             <ul class="nav side-menu">
                                 <li><a href="{{ url('admin-backend/index') }}"><i class="fa fa-home"></i> Home</a></li>
+                                @if(showSection('admin-backend/user'))
+                                    <li><a><i class="fa fa-user"></i> User Management <span
+                                                class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="{{ url('admin-backend/user/create') }}">Create</a></li>
+                                            <li><a href="{{ url('admin-backend/user/show') }}">Listing</a></li>
+                                        </ul>
+                                    </li>
+                                @endif
 
-                                <li><a><i class="fa fa-user"></i> User Management <span
-                                            class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="{{ url('admin-backend/user/create') }}">Create</a></li>
-                                        <li><a href="{{ url('admin-backend/user/show') }}">Listing</a></li>
-                                    </ul>
-                                </li>
-                                <li><a><i class="fa fa-building"></i> City Management <span
-                                            class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="{{ url('admin-backend/city/create') }}">Create</a></li>
-                                        <li><a href="{{ url('admin-backend/city/index') }}">Listing</a></li>
-                                    </ul>
-                                </li>
-                                <li><a><i class="fa fa-futbol-o"></i> Hobby Management <span
-                                            class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="{{ url('admin-backend/hobby/create') }}">Create</a></li>
-                                        <li><a href="{{ url('admin-backend/hobby/show') }}">Listing</a></li>
-                                    </ul>
-                                </li>
+                                @if(showSection('admin-backend/city'))
+                                    <li><a><i class="fa fa-building"></i> City Management <span
+                                                class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="{{ url('admin-backend/city/create') }}">Create</a></li>
+                                            <li><a href="{{ url('admin-backend/city/index') }}">Listing</a></li>
+                                        </ul>
+                                    </li>
+                                @endif
 
-                                <li><a href="{{ url('admin-backend/setting') }}"><i class="fa fa-gear"></i> Setting
-                                    </a></li>
-                                <li><a href="{{ url('admin-backend/member/show') }}"><i class="fa fa-users"></i> Member
-                                        Mangement </a></li>
+                                @if(showSection('admin-backend/hobby'))
+                                    <li><a><i class="fa fa-futbol-o"></i> Hobby Management <span
+                                                class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="{{ url('admin-backend/hobby/create') }}">Create</a></li>
+                                            <li><a href="{{ url('admin-backend/hobby/index') }}">Listing</a></li>
+                                        </ul>
+                                    </li>
+                                @endif
 
-                                <li><a><i class="fa fa-newspaper-o bg-dange d-inline" style="font-size: 12px;"></i>
-                                        &nbsp;Knowledge Management<span class="fa fa-chevron-down"></span></a>
-                                    <ul class="nav child_menu">
-                                        <li><a href="{{ url('admin-backend/post/create') }}">Create</a></li>
-                                        <li><a href="{{ url('admin-backend/post/show') }}">Listing</a></li>
-                                    </ul>
-                                </li>
+                                @if(showSection('admin-backend/setting'))
+                                    <li><a href="{{ url('admin-backend/setting') }}"><i class="fa fa-gear"></i> Setting
+                                        </a></li>
+                                @endif
+
+                                @if(showSection('admin-backend/member'))
+                                    <li><a href="{{ url('admin-backend/member/index') }}"><i class="fa fa-users"></i> Member
+                                            Mangement </a></li>
+                                @endif
+
+                                @if(showSection('admin-backend/knowledge'))
+                                    <li><a><i class="fa fa-newspaper-o bg-dange d-inline" style="font-size: 12px;"></i>
+                                            &nbsp;Knowledge Management<span class="fa fa-chevron-down"></span></a>
+                                        <ul class="nav child_menu">
+                                            <li><a href="{{ url('admin-backend/post/create') }}">Create</a></li>
+                                            <li><a href="{{ url('admin-backend/post/index') }}">Listing</a></li>
+                                        </ul>
+                                    </li>
+                                @endif
 
                             </ul>
                         </div>

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Repositories\City;
+namespace App\Repositories\Hobby;
 
 use App\Utility;
-use App\Models\City;
+use App\Models\Hobby;
 use App\ReturnMessage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Repositories\City\CityRepositoryInterface;
+use App\Repositories\Hobby\CityRepositoryInterface;
 
-class CityRepository implements CityRepositoryInterface
+class HobbyRepository implements HobbyRepositoryInterface
 {
     public function store(array $data)
     {
@@ -17,7 +17,7 @@ class CityRepository implements CityRepositoryInterface
         $insert_data            = [];
         $insert_data['name']    = $data['name'];
         $data                   = Utility::addCreatedBy($insert_data);
-        $result                 = City::create($data);
+        $result                 = Hobby::create($data);
         if ($result) {
             $returned_array['status']   = ReturnMessage::OK;
         } else {
@@ -26,19 +26,18 @@ class CityRepository implements CityRepositoryInterface
         return $returned_array;
     }
 
-    public function getCities()
+    public function getHobbies()
     {
-        $cities = City::select('id', 'name')
-                ->whereNull('deleted_at')
+        $hobbies = Hobby::whereNull('deleted_at')
                 ->orderBy('id', 'DESC')
                 ->paginate('5');
-        return $cities;
+        return $hobbies;
     }
 
-    public function getCityById(int $id)
+    public function getHobbyById(int $id)
     {
-        $city = City::find($id);
-        return $city;
+        $hobby = Hobby::find($id);
+        return $hobby;
     }
 
     public function update(array $data)
@@ -48,7 +47,22 @@ class CityRepository implements CityRepositoryInterface
         $update_data            = [];
         $update_data['name']    = $data['name'];
         $data                   = Utility::addUpdatedBy($update_data);
-        $paramObj               = City::find($id);
+        $paramObj               = Hobby::find($id);
+        $result                 = $paramObj->update($data);
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
+    }
+
+    public function delete(int $id)
+    {
+        $returned_array         = [];
+        $deleted_data           = [];
+        $data                   = Utility::addDeletedBy($deleted_data);
+        $paramObj               = Hobby::find($id);
         $result                 = $paramObj->update($data);
         if ($result) {
             $returned_array['status']   = ReturnMessage::OK;

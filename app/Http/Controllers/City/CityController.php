@@ -66,6 +66,9 @@ class CityController extends Controller
     {
         try {
             $city = $this->cityRepository->getCityById((int) $id);
+            if ($city == null) {
+                abort(404);
+            }
             $queryLog = DB::getQueryLog();
             Utility::saveDebugLog("CityController::edit", $queryLog);
             return view('backend.city.form', compact([
@@ -73,6 +76,10 @@ class CityController extends Controller
             ]));
 
         } catch (\Exception $e) {
+            if ($e->getCode() == 0) {
+                Utility::saveErrorLog("CityController::edit", "Invalid City Id");
+                abort(404);
+            }
             Utility::saveErrorLog("CityController::edit", $e->getMessage());
             abort(500);
         }

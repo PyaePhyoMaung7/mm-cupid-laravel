@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\City\CityController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Hobby\HobbyController;
 use App\Http\Controllers\Dashboard\DashboardController;
 
 /*
@@ -35,4 +37,23 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
         Route::get('edit/{id}', [CityController::class, 'edit']);
         Route::post('update', [CityController::class, 'update'])->name('city.update');
     });
+
+    Route::group(['prefix' => 'user/'], function () {
+        Route::get('create', [UserController::class, 'create']);
+        Route::post('store', [UserController::class, 'store'])->name('user.store');
+        Route::get('index', [UserController::class, 'index']);
+        Route::get('password/edit/{id}', [UserController::class, 'editPassword']);
+        Route::post('password/update', [UserController::class, 'update'])->name('user.password.update');
+        Route::post('update', [UserController::class, 'update'])->name('user.info.update');
+    });
+
+    Route::group(['prefix' => 'hobby/'], function () {
+        Route::get('create', [HobbyController::class, 'create']);
+        Route::post('store', [HobbyController::class, 'store'])->name('hobby.store');
+        Route::get('index', [HobbyController::class, 'index']);
+        Route::get('edit/{id}', [HobbyController::class, 'edit']);
+        Route::get('delete/{id}', [HobbyController::class, 'delete']);
+        Route::post('update', [HobbyController::class, 'update'])->name('hobby.update');
+    });
+
 });

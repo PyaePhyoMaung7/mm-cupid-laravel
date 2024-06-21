@@ -1,7 +1,7 @@
     <!-- footer content -->
     <footer class="">
         <div class="pull-right">
-            Myanmar Cupid Dating Website <a href="http://localhost/mm-cupid/admin-backend/index.php">MM Cupid</a>
+            <a href="{{ url('admin-backend/index') }}">{{ Session::get('site_title') }} </a>
         </div>
         <div class="clearfix"></div>
     </footer>

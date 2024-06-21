@@ -1,12 +1,12 @@
 @extends('backend.master')
-@section('title', isset($city) ? 'City Update' : 'City Create')
+@section('title', 'User Password Update')
 @section('content')
     <!-- page content -->
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>{{ isset($city) ? 'Update City' : 'Create City' }}</h3>
+                    <h3>Update Password</h3>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -14,35 +14,35 @@
                 <div class="col-md-12 col-sm-12 ">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>City info</h2>
+                            <h2>User password</h2>
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
                             <br />
-                            @if (isset($city))
-                                <form id="demo-form2" action="{{ route('city.update') }}" class="form-horizontal form-label-left"
+                                <form id="demo-form2" action="{{ route('user.password.update') }}" class="form-horizontal form-label-left"
                                     method="POST">
-                                <input type="hidden" name="id" value="{{ $city->id }}">
-                            @else
-                                <form id="demo-form2" action="{{ route('city.store') }}" class="form-horizontal form-label-left"
-                                    method="POST">
-                            @endif
-
+                                <input type="hidden" name="id" value="{{ $id }}">
                                 @csrf
                                 <div class="item form-group">
-                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="cityname">City name
-                                        <span class="required">*</span>
+                                    <label class="col-form-label col-md-3 col-sm-3 label-align" for="password">Password <span class="required">*</span>
                                     </label>
                                     <div class="col-md-6 col-sm-6 ">
-                                        <input type="text" id="cityname" name="name" value="{{ old('name', isset($city) ? $city->name : '' ) }}"
-                                            class="form-control" placeholder="Enter City Name">
+                                        <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password">
                                     </div>
                                 </div>
+
+                                <div class="item form-group">
+                                    <label for="confirm-password" class="col-form-label col-md-3 col-sm-3 label-align">Confirm Password <span class="required">*</label>
+                                    <div class="col-md-6 col-sm-6 ">
+                                        <input id="confirm-password" class="form-control" type="password" name="confirm-password" placeholder="Enter Confirm Password">
+                                    </div>
+                                </div>
+
                                 <div class="ln_solid"></div>
                                 <div class="item form-group">
                                     <div class="col-md-6 col-sm-6 offset-md-3">
                                         <button class="btn btn-primary" type="reset">Reset</button>
-                                        <button type="submit" class="btn btn-success">{{ isset($city) ? 'Update' : 'Create' }}</button>
+                                        <button type="submit" class="btn btn-success">Update</button>
                                     </div>
                                 </div>
                             </form>
@@ -57,15 +57,22 @@
 @endsection
 
 @section('javascript')
-    @if ($errors->has('name'))
     <script>
-        new PNotify({
+        function showErrorMessage (error) {
+            new PNotify({
             title: 'Oh No!',
-            text: "{{ $errors->first('name') }}",
+            text: error,
             type: 'error',
             styling: 'bootstrap3'
         });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            @foreach ($errors->all() as $error)
+                showErrorMessage("{{ $error }}");
+            @endforeach
+        });
     </script>
-    @endif
+
 @endsection
 

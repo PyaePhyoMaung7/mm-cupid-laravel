@@ -4,9 +4,14 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\City\CityRepository;
-use App\Repositories\City\CityRepositoryInterface;
+use App\Repositories\Hobby\HobbyRepository;
 use App\Repositories\User\UserRepository;
+use App\Repositories\Setting\SettingRepository;
+
+use App\Repositories\City\CityRepositoryInterface;
+use App\Repositories\Hobby\HobbyRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\Setting\SettingRepositoryInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -19,6 +24,8 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(CityRepositoryInterface::class, CityRepository::class);
+        $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
+        $this->app->bind(HobbyRepositoryInterface::class, HobbyRepository::class);
     }
 
     /**

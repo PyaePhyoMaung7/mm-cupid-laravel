@@ -30,7 +30,6 @@ class AdminAuthMiddleware
                     $is_auth = true;
                 }
             }
-
             if ($is_auth) {
                 return $next($request);
             } else {

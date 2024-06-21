@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Utility;
 use App\Constant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\AdminLoginRequest;
 use App\Repositories\User\UserRepositoryInterface;
+use App\Repositories\Setting\SettingRepositoryInterface;
 
 class AuthController extends Controller
 {
     private $userRepository;
-    public function __construct (UserRepositoryInterface $userRepository) {
-        $this->userRepository = $userRepository;
+    private $settingRepository;
+    public function __construct(UserRepositoryInterface $userRepository, SettingRepositoryInterface $settingRepository)
+    {
+        $this->userRepository       = $userRepository;
+        $this->settingRepository    = $settingRepository;
+        DB::connection()->enableQueryLog();
     }
 
     public function adminLogout()
@@ -50,7 +57,7 @@ class AuthController extends Controller
             $username = $request->get('username');
             $password = $request->get('password');
 
-            $userInfo =$this->userRepository->getUserInfoByUsername((string) $username);
+            $userInfo = $this->userRepository->getUserInfoByUsername((string) $username);
 
             if ($userInfo == null) {
                 return redirect()
@@ -96,8 +103,13 @@ class AuthController extends Controller
 
                 } else {
                     $role = Auth::guard('admin')->user()->role;
-                    $permission = $this->userRepository->getPermissionRoutesByRole((int) $role);
-                    Session::put(['permission' => $permission]);
+                    $permissions = $this->userRepository->getPermissionRoutesByRole((int) $role);
+                    Session::put(['permission' => $permissions]);
+
+                    $this->settingRepository->setSiteSetting();
+
+                    $queryLog = DB::getQueryLog();
+                    Utility::saveDebugLog("AuthController::postAdminLogin", $queryLog);
 
                     return redirect('admin-backend/index');
 
