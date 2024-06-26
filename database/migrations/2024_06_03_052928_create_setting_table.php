@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('point')->default(0);
             $table->string('company_name', 100);
-            $table->string('company_logo', 150);
+            $table->string('company_logo', 150)->nullable();
             $table->string('company_email', 100);
             $table->string('company_phone', 100);
             $table->tinyText('company_address');

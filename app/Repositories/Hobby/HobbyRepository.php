@@ -60,8 +60,8 @@ class HobbyRepository implements HobbyRepositoryInterface
     public function delete(int $id)
     {
         $returned_array         = [];
-        $deleted_data           = [];
-        $data                   = Utility::addDeletedBy($deleted_data);
+        $delete_data           = [];
+        $data                   = Utility::addDeletedBy($delete_data);
         $paramObj               = Hobby::find($id);
         $result                 = $paramObj->update($data);
         if ($result) {

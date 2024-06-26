@@ -43,7 +43,7 @@
                                                 class="fa fa-chevron-down"></span></a>
                                         <ul class="nav child_menu">
                                             <li><a href="{{ url('admin-backend/user/create') }}">Create</a></li>
-                                            <li><a href="{{ url('admin-backend/user/show') }}">Listing</a></li>
+                                            <li><a href="{{ url('admin-backend/user/index') }}">Listing</a></li>
                                         </ul>
                                     </li>
                                 @endif
@@ -69,7 +69,7 @@
                                 @endif
 
                                 @if(showSection('admin-backend/setting'))
-                                    <li><a href="{{ url('admin-backend/setting') }}"><i class="fa fa-gear"></i> Setting
+                                    <li><a href="{{ url('admin-backend/setting/index') }}"><i class="fa fa-gear"></i> Setting
                                         </a></li>
                                 @endif
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\City\CityController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Hobby\HobbyController;
+use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\Dashboard\DashboardController;
 
 /*
@@ -43,8 +44,11 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
         Route::post('store', [UserController::class, 'store'])->name('user.store');
         Route::get('index', [UserController::class, 'index']);
         Route::get('password/edit/{id}', [UserController::class, 'editPassword']);
-        Route::post('password/update', [UserController::class, 'update'])->name('user.password.update');
-        Route::post('update', [UserController::class, 'update'])->name('user.info.update');
+        Route::post('password/update', [UserController::class, 'updatePassword'])->name('user.password.update');
+        Route::get('info/edit/{id}', [UserController::class, 'editInfo']);
+        Route::post('info/update', [UserController::class, 'updateInfo'])->name('user.info.update');
+        Route::get('change/status/{id}/{status}', [UserController::class, 'changeStatus']);
+        Route::get('delete/{id}', [UserController::class, 'delete']);
     });
 
     Route::group(['prefix' => 'hobby/'], function () {
@@ -54,6 +58,12 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
         Route::get('edit/{id}', [HobbyController::class, 'edit']);
         Route::get('delete/{id}', [HobbyController::class, 'delete']);
         Route::post('update', [HobbyController::class, 'update'])->name('hobby.update');
+    });
+
+    Route::group(['prefix' => 'setting/'], function () {
+        Route::post('store', [SettingController::class, 'store'])->name('setting.store');
+        Route::get('index', [SettingController::class, 'index']);
+        Route::post('update', [SettingController::class, 'update'])->name('setting.update');
     });
 
 });

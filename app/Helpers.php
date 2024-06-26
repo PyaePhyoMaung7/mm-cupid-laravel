@@ -59,3 +59,11 @@ if (!function_exists("getUserRoleName")) {
         }
     }
 }
+
+if (!function_exists("userIsActive")) {
+    function userIsActive($status)
+    {
+        return $status == Constant::ADMIN_ENABLE_STATUS;
+    }
+}
+

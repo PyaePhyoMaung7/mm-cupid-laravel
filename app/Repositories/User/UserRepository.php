@@ -27,8 +27,8 @@ class UserRepository implements UserRepositoryInterface
 
     public function store(array $data)
     {
-        $returned_array         = [];
-        $insert_data            = [];
+        $returned_array             = [];
+        $insert_data                = [];
         $insert_data['username']    = $data['username'];
         $insert_data['password']    = bcrypt($data['password']);
         $insert_data['role']        = $data['role'];
@@ -57,5 +57,74 @@ class UserRepository implements UserRepositoryInterface
     {
         $user = User::find($id);
         return $user;
+    }
+
+    public function updatePassword(array $data)
+    {
+        $returned_array             = [];
+        $update_data                = [];
+        $id                         = $data['id'];
+        $update_data['password']    = bcrypt($data['password']);
+
+        $data                       = Utility::addUpdatedBy($update_data);
+        $paramObj                   = User::find($id);
+        $result                     = $paramObj->update($data);
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
+    }
+
+    public function updateInfo(array $data)
+    {
+        $returned_array             = [];
+        $update_data                = [];
+        $id                         = $data['id'];
+        $update_data['username']    = $data['username'];
+        $update_data['role']        = $data['role'];
+
+        $data                       = Utility::addUpdatedBy($update_data);
+        $paramObj                   = User::find($id);
+        $result                     = $paramObj->update($data);
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
+    }
+
+    public function changeStatus(int $id, int $status)
+    {
+        $returned_array             = [];
+        $update_data                = [];
+        $update_data['status']      = $status;
+
+        $data                       = Utility::addUpdatedBy($update_data);
+        $paramObj                   = User::find($id);
+        $result                     = $paramObj->update($data);
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
+    }
+
+    public function delete(int $id)
+    {
+        $returned_array         = [];
+        $delete_data            = [];
+        $data                   = Utility::addDeletedBy($delete_data);
+        $paramObj               = User::find($id);
+        $result                 = $paramObj->update($data);
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
     }
 }
