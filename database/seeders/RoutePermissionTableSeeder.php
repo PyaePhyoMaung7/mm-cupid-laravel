@@ -58,5 +58,11 @@ class RoutePermissionTableSeeder extends Seeder
             'role' => 1
         ]);
 
+        DB::table('route_permission')->insert([
+            'id' => 8,
+            'name' => 'admin-backend/member',
+            'role' => 1
+        ]);
+
     }
 }

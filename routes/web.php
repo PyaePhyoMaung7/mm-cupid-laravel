@@ -4,8 +4,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\City\CityController;
+use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\Hobby\HobbyController;
+use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\Dashboard\DashboardController;
 
@@ -27,6 +29,7 @@ Route::get('/', function () {
 Route::get('/admin-backend/login', [AuthController::class, 'adminLoginForm']);
 Route::post('/admin-backend/login', [AuthController::class, 'postAdminLogin'])->name('admin.login');
 Route::get('/admin-backend/logout', [AuthController::class, 'adminLogout']);
+Route::get('/send-mail', [MailController::class, 'index']);
 
 Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function () {
     Route::get('index', [DashboardController::class, 'index']);
@@ -61,9 +64,17 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
     });
 
     Route::group(['prefix' => 'setting/'], function () {
-        Route::post('store', [SettingController::class, 'store'])->name('setting.store');
         Route::get('index', [SettingController::class, 'index']);
+        Route::get('edit', [SettingController::class, 'edit']);
         Route::post('update', [SettingController::class, 'update'])->name('setting.update');
+    });
+
+    Route::group(['prefix' => 'member/'], function () {
+        // Route::get('create', [UserController::class, 'create']);
+        // Route::post('store', [UserController::class, 'store'])->name('member.store');
+        Route::get('index', [MemberController::class, 'index']);
+        // Route::get('change/status/{id}/{status}', [UserController::class, 'changeStatus']);
+        // Route::get('delete/{id}', [UserController::class, 'delete']);
     });
 
 });

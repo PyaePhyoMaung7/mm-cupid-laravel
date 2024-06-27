@@ -47,15 +47,22 @@ class UserRepository implements UserRepositoryInterface
     public function getUsers()
     {
         $users = User::select('id', 'username', 'role', 'status')
-                ->whereNull('deleted_at')
-                ->orderBy('id', 'DESC')
-                ->paginate('5');
+                    ->selectRaw('CASE
+                                    WHEN role = ' . Constant::ADMIN_ROLE . ' THEN "ADMIN"
+                                    WHEN role = ' . Constant::EDITOR_ROLE . ' THEN "EDITOR"
+                                    WHEN role = ' . Constant::CUSTOMER_SERVICE_ROLE . ' THEN "CUSTOMER SERVICE"
+                                END as role_name')
+                    ->whereNull('deleted_at')
+                    ->orderBy('id', 'DESC')
+                    ->paginate('5');
         return $users;
     }
 
     public function getUserById(int $id)
     {
-        $user = User::find($id);
+        $user = User::select('id', 'username', 'role', 'status')
+                    ->find($id);
+
         return $user;
     }
 

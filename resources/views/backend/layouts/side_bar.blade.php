@@ -68,11 +68,6 @@
                                     </li>
                                 @endif
 
-                                @if(showSection('admin-backend/setting'))
-                                    <li><a href="{{ url('admin-backend/setting/index') }}"><i class="fa fa-gear"></i> Setting
-                                        </a></li>
-                                @endif
-
                                 @if(showSection('admin-backend/member'))
                                     <li><a href="{{ url('admin-backend/member/index') }}"><i class="fa fa-users"></i> Member
                                             Mangement </a></li>
@@ -88,6 +83,10 @@
                                     </li>
                                 @endif
 
+                                @if(showSection('admin-backend/setting'))
+                                    <li><a href="{{ url('admin-backend/setting/index') }}"><i class="fa fa-gear"></i> Setting
+                                        </a></li>
+                                @endif
                             </ul>
                         </div>
 

@@ -46,7 +46,7 @@
                                                     <td class="col-1 align-middle">{{ $user->id }}</td>
                                                     <td class="col-2 align-middle">{{ $user->username }}</td>
                                                     <td class="col-2 align-middle">
-                                                        {{ strtoupper(getUserRoleName($user->role)) }}</td>
+                                                        {{ $user->role_name }}</td>
                                                     <td class="col-1 align-middle text-center"><i
                                                             @if (userIsActive($user->status)) class="fa fa-circle text-success"
                                                         @else class="fa fa-circle text-danger" @endif></i>

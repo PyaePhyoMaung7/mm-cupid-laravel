@@ -29,14 +29,15 @@ class HobbyRepository implements HobbyRepositoryInterface
     public function getHobbies()
     {
         $hobbies = Hobby::whereNull('deleted_at')
-                ->orderBy('id', 'DESC')
-                ->paginate('5');
+                        ->orderBy('id', 'DESC')
+                        ->paginate('5');
         return $hobbies;
     }
 
     public function getHobbyById(int $id)
     {
-        $hobby = Hobby::find($id);
+        $hobby = Hobby::select('id','name')
+                        ->find($id);
         return $hobby;
     }
 

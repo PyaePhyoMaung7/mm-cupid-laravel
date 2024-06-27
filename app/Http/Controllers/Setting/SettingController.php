@@ -25,7 +25,7 @@ class SettingController extends Controller
             $setting = $this->settingRepository->getSetting();
             $queryLog = DB::getQueryLog();
             Utility::saveDebugLog("SettingController::index", $queryLog);
-            return view('backend.setting.form', compact(['setting']));
+            return view('backend.setting.index', compact(['setting']));
         } catch (\Exception $e) {
             Utility::saveErrorLog("SettingController::index", $e->getMessage());
             abort(500);
@@ -46,6 +46,29 @@ class SettingController extends Controller
             }
         } catch (\Exception $e) {
             Utility::saveErrorLog("SettingController::store", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function edit()
+    {
+        try {
+            $setting = $this->settingRepository->getSetting();
+            if ($setting == null) {
+                abort(404);
+            }
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("SettingController::edit", $queryLog);
+            return view('backend.setting.form', compact([
+                'setting'
+            ]));
+
+        } catch (\Exception $e) {
+            if ($e->getCode() == 0) {
+                Utility::saveErrorLog("SettingController::edit", "Invalid Setting Id");
+                abort(404);
+            }
+            Utility::saveErrorLog("SettingController::edit", $e->getMessage());
             abort(500);
         }
     }

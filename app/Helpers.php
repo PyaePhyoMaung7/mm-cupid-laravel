@@ -44,26 +44,9 @@ if (!function_exists("getUserRole")) {
     }
 }
 
-if (!function_exists("getUserRoleName")) {
-    function getUserRoleName($userRole)
-    {
-        switch ($userRole) {
-            case Constant::ADMIN_ROLE :
-                return 'admin';
-            case Constant::EDITOR_ROLE :
-                return 'editor';
-            case Constant::CUSTOMER_SERVICE_ROLE:
-                return 'customer_service';
-            default:
-                return 'others';
-        }
-    }
-}
-
 if (!function_exists("userIsActive")) {
     function userIsActive($status)
     {
         return $status == Constant::ADMIN_ENABLE_STATUS;
     }
 }
-
