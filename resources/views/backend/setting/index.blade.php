@@ -45,7 +45,7 @@
                                             </td>
                                             <td class="align-middle">{{ $setting->point }}</td>
                                             <td class="align-middle">{{ $setting->company_name }}</td>
-                                            <td class="align-middle"><div class="mx-auto" style="width: 80px;"><img class="w-100" src="{{ url('assets/default_images/'. $setting->company_logo) }}"></div></td>
+                                            <td class="align-middle"><div class="mx-auto" style="width: 80px;"><img class="w-100" src="{{ url('storage/images/'. $setting->company_logo) }}"></div></td>
                                             <td class="align-middle">{{ $setting->company_email }}</td>
                                             <td class="align-middle">{{ $setting->company_phone }}</td>
                                             <td class="align-middle">{{ $setting->company_address }}</td>

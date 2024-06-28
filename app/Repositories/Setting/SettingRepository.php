@@ -7,7 +7,9 @@ use App\ReturnMessage;
 use App\Models\Setting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 use App\Repositories\City\CityRepositoryInterface;
 
 class SettingRepository implements SettingRepositoryInterface
@@ -46,7 +48,7 @@ class SettingRepository implements SettingRepositoryInterface
             $file_name                  = uniqid() . time() . '_' . $file->getClientOriginalName();
             $destination_path           = public_path('assets/default_images/' . $file_name);
             Utility::cropAndResizeImage($data['company-logo'], $destination_path, 50, 50);
-            $insert_data['company_logo']= $file_name;
+            $insert_data['company_logo'] = $file_name;
         }
         $data                           = Utility::addCreatedBy($insert_data);
         $result                         = Setting::create($data);
@@ -64,31 +66,31 @@ class SettingRepository implements SettingRepositoryInterface
     {
         $returned_array                 = [];
         $update_data                    = [];
-        $id                             = $data['id'];
+        $paramObj                       = Setting::first();
         $update_data['point']           = $data['point'];
         $update_data['company_name']    = $data['company-name'];
         $update_data['company_email']   = $data['company-email'];
         $update_data['company_phone']   = $data['company-phone'];
         $update_data['company_address'] = $data['company-address'];
 
-        if (isset($data['company-logo'])) {
-            $old_logo = Setting::find($id)->value('company_logo');
-            if ($old_logo) {
-                $old_logo_path = public_path('assets/default_images') . '/' . $old_logo;
-                if (file_exists($old_logo_path)) {
-                    unlink($old_logo_path);
-                }
-            }
+        if (isset($data['company-logo']) && $data['company-logo']->isValid()) {
+            $file = $data['company-logo'];
+            $unique_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+            . "_"  . date('Ymd_his') . "_" . uniqid() . "." .  $file->getClientOriginalExtension();
 
-            $file                       = $data['company-logo'];
-            $file_name                  = uniqid() . time() . '_' . $file->getClientOriginalName();
-            $destination_path           = public_path('assets/default_images/' . $file_name);
-            Utility::cropAndResizeImage($data['company-logo'], $destination_path, 50, 50);
-            $update_data['company_logo']= $file_name;
+            $destination_path = storage_path('app/public/images');
+            if (!File::exists($destination_path)) {
+                File::makeDirectory($destination_path, 0755, true);
+            }
+            $file->storeAs('images', $unique_name, 'public');
+
+            $old_path = 'images/' . $paramObj->company_logo;
+            Storage::disk('public')->delete($old_path);
+
+            $update_data['company_logo'] = $unique_name;
         }
 
         $data                           = Utility::addUpdatedBy($update_data);
-        $paramObj                       = Setting::find($id);
         $result                         = $paramObj->update($data);
 
         if ($result) {

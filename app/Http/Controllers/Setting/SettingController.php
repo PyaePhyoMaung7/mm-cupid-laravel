@@ -7,7 +7,7 @@ use App\ReturnMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\SettingStoreRequest;
+use App\Http\Requests\SettingUpdateRequest;
 use App\Repositories\Setting\SettingRepositoryInterface;
 
 class SettingController extends Controller
@@ -73,7 +73,7 @@ class SettingController extends Controller
         }
     }
 
-    public function update(SettingStoreRequest $request)
+    public function update(SettingUpdateRequest $request)
     {
         try {
             $result = $this->settingRepository->update((array) $request->all());

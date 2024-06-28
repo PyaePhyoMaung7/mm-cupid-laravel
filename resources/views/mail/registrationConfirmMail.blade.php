@@ -8,18 +8,18 @@
 </head>
 
 <body>
-    <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
-        <div style="width: 500px; margin: 20px;">
+    <div style="margin:0 auto; width: 40%;">
+        <div style="margin: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <div style="margin-right: 20px;">
                     <h3 style="font-size: 1.25rem;">Please verify your email</h3>
                 </div>
                 <div>
-                    <img style="border-radius: 50%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 50px;"
+                    <img style="border-radius: 50%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 40px; height: 40px;"
                         src="https://t3.ftcdn.net/jpg/01/03/47/46/360_F_103474653_V0uJ6bx4r62TYIg7oZYPZo57FR0rCmkY.jpg" alt="">
                 </div>
             </div>
-            <div style="margin: 32px 0;">
+            <div style="margin: 20px 0;">
                 <div style="font-size: 0.9rem;">Please take a second to make sure we've got your email right.</div>
                 <div style="text-align: center; margin: 35px 0;">
                     <a href="{$confirm_link}" target="_blank">
@@ -35,7 +35,7 @@
             <div style="margin-top: 40px; background-color: #f8f9fa; padding: 16px;">
                 <div style="display: flex; align-items: center; margin-bottom: 12px;">
                     <div style="margin-right: 12px;">
-                        <img style="border-radius: 50%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 55px;"
+                        <img style="border-radius: 50%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 40px; height: 40px;"
                             src="https://t3.ftcdn.net/jpg/01/03/47/46/360_F_103474653_V0uJ6bx4r62TYIg7oZYPZo57FR0rCmkY.jpg" alt="">
                     </div>
                     <div>
