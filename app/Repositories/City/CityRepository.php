@@ -26,12 +26,21 @@ class CityRepository implements CityRepositoryInterface
         return $returned_array;
     }
 
-    public function getCities()
+    public function getCities ()
     {
         $cities = City::select('id', 'name')
                 ->whereNull('deleted_at')
                 ->orderBy('id', 'DESC')
                 ->paginate('5');
+        return $cities;
+    }
+
+    public function apiGetCities ()
+    {
+        $cities = City::select('id', 'name')
+                ->whereNull('deleted_at')
+                ->orderBy('name', 'ASC')
+                ->get();
         return $cities;
     }
 

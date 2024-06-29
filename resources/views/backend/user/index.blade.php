@@ -53,29 +53,29 @@
                                                     </td>
                                                     <td class="col-5 align-middle">
                                                         <a href="{{ url('admin-backend/user/info/edit/' . $user->id) }}"><button
-                                                                type="button" class="btn btn-success btn-sm"><i
+                                                                type="button" class="btn btn-success btn-sm shadow-sm"><i
                                                                     class="fa fa-pencil"></i>
                                                                 Edit</button></a>
                                                         @if (userIsActive($user->status))
                                                             <a
-                                                                href="{{ url('admin-backend/user/change/status/' . $user->id . '/1') }}"><button
-                                                                    type="button" class="btn btn-danger btn-sm"><i
+                                                                href="{{ url('admin-backend/user/change/status/' . $user->id . '/' . getAdminStatus('disable')) }}"><button
+                                                                    type="button" class="btn btn-danger btn-sm shadow-sm"><i
                                                                         class="fa fa-ban"></i>
                                                                     Disable</button></a>
                                                         @else
                                                             <a
-                                                                href="{{ url('admin-backend/user/change/status/' . $user->id . '/0') }}"><button
-                                                                    type="button" class="btn btn-primary btn-sm"><i
+                                                                href="{{ url('admin-backend/user/change/status/' . $user->id . '/' . getAdminStatus('enable')) }}"><button
+                                                                    type="button" class="btn btn-white text-danger btn-sm shadow-sm"><i
                                                                         class="fa fa-unlock"></i>
                                                                     Enable</button></a>
                                                         @endif
                                                         <a href="{{ url('admin-backend/user/delete/' . $user->id) }}"><button
-                                                                type="button" class="btn btn-info btn-sm"><i
+                                                                type="button" class="btn btn-info btn-sm shadow-sm"><i
                                                                     class="fa fa-trash"></i>
                                                                 Delete</button></a>
                                                         <a
                                                             href="{{ url('admin-backend/user/password/edit/' . $user->id) }}"><button
-                                                                type="button" class="btn btn-dark btn-sm"><i
+                                                                type="button" class="btn btn-dark btn-sm shadow-sm"><i
                                                                     class="fa fa-exchange"></i>
                                                                 Change Password</button></a>
                                                     </td>

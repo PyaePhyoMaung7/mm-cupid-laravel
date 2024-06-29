@@ -4,12 +4,12 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\City\CityController;
-use App\Http\Controllers\Mail\MailController;
-use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Dashboard\DashboardController;
 use App\Http\Controllers\Hobby\HobbyController;
+use App\Http\Controllers\Mail\MailController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Setting\SettingController;
-use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\User\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +29,13 @@ Route::get('/', function () {
 Route::get('/admin-backend/login', [AuthController::class, 'adminLoginForm']);
 Route::post('/admin-backend/login', [AuthController::class, 'postAdminLogin'])->name('admin.login');
 Route::get('/admin-backend/logout', [AuthController::class, 'adminLogout']);
+Route::get('/register', [MemberController::class, 'register']);
+Route::post('/register', [MemberController::class, 'photoRegister'])->name('register');
+Route::post('/api/register', [MemberController::class, 'infoRegister']);
+Route::get('api/cities', [MemberController::class, 'apiGetCities']);
+Route::get('api/hobbies', [MemberController::class, 'apiGetHobbies']);
+Route::post('api/check-email', [MemberController::class, 'apiCheckEmail']);
+
 Route::get('/send-mail', [MailController::class, 'index']);
 
 Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function () {

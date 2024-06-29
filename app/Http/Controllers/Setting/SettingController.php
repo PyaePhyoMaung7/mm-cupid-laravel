@@ -32,24 +32,6 @@ class SettingController extends Controller
         }
     }
 
-    public function store(SettingStoreRequest $request)
-    {
-        try {
-            $result = $this->settingRepository->store((array) $request->all());
-            $queryLog = DB::getQueryLog();
-            Utility::saveDebugLog("SettingController::store", $queryLog);
-
-            if ($result['status'] == ReturnMessage::OK) {
-                return redirect('admin-backend/setting/index')->with(['success_msg' => 'Setting store success']);
-            } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
-                return redirect('admin-backend/setting/index')->with(['fail_msg' => 'Setting store fail!']);
-            }
-        } catch (\Exception $e) {
-            Utility::saveErrorLog("SettingController::store", $e->getMessage());
-            abort(500);
-        }
-    }
-
     public function edit()
     {
         try {

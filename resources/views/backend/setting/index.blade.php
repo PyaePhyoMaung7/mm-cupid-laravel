@@ -52,7 +52,7 @@
 
                                             <td class="align-middle">
                                                 <a href="{{ url('admin-backend/setting/edit') }}"><button
-                                                        type="button" class="btn btn-success btn-sm"><i
+                                                        type="button" class="btn btn-success btn-sm shadow-sm"><i
                                                             class="fa fa-pencil"></i>
                                                         Edit</button></a>
                                             </td>

@@ -34,6 +34,14 @@ class HobbyRepository implements HobbyRepositoryInterface
         return $hobbies;
     }
 
+    public function apigetHobbies ()
+    {
+        $hobbies = Hobby::select('id', 'name')
+                        ->whereNull('deleted_at')
+                        ->get();
+        return $hobbies;
+    }
+
     public function getHobbyById(int $id)
     {
         $hobby = Hobby::select('id','name')

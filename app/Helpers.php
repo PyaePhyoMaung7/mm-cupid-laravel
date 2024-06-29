@@ -44,6 +44,20 @@ if (!function_exists("getUserRole")) {
     }
 }
 
+if (!function_exists("getAdminStatus")) {
+    function getAdminStatus($status)
+    {
+        switch ($status) {
+            case 'enable':
+                return Constant::ADMIN_ENABLE_STATUS;
+            case 'disable':
+                return Constant::ADMIN_DISABLE_STATUS;
+            default:
+                return -1;
+        }
+    }
+}
+
 if (!function_exists("userIsActive")) {
     function userIsActive($status)
     {

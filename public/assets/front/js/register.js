@@ -36,20 +36,21 @@ app.controller('myCtrl', function($scope, $http){
     $scope.max_ages = [...$scope.min_ages];
 
     $scope.init = function () {
-       $http.get(base_url+'api/get_cities.php')
+       $http.get(base_url+'/api/cities')
        .then(
             function (response) {
+                console.log(response);
                 if(response.status == '200'){
-                    $scope.cities = response.data;
+                    $scope.cities = response.data.data;
                 }
             }
         )
 
-        $http.get(base_url+'api/get_hobbies.php')
+        $http.get(base_url+'/api/hobbies')
         .then(
             function (response) {
                 if(response.status == '200'){
-                    $scope.hobbies = response.data;
+                    $scope.hobbies = response.data.data;
                 }
             }
         )
@@ -66,7 +67,7 @@ app.controller('myCtrl', function($scope, $http){
         $('#'+field).prop('type','password');
         $('#'+field+'-icon').removeClass('fa-eye');
         $('#'+field+'-icon').addClass('fa-eye-slash');
-        
+
     }
 
     $scope.chooseMinAge = function () {
@@ -100,11 +101,11 @@ app.controller('myCtrl', function($scope, $http){
 
         $scope.validate('max-age');
     }
-    
+
     $scope.formSubmit = function () {
         $('#register-form').submit();
     }
-    
+
     $scope.checkValidation = function (field) {
         $scope.username = $('#username').val();
         $scope.email = $('#email').val();
@@ -116,7 +117,7 @@ app.controller('myCtrl', function($scope, $http){
         $scope.hfeet = $('#hfeet').val();
         $scope.hinches = $('#hinches').val();
         $scope.gender = $('.gender:checked').val();
-        
+
         $scope.education = $('#education').val();
         $scope.about = $('#about').val();
         $scope.selected_hobbies = [];
@@ -128,7 +129,7 @@ app.controller('myCtrl', function($scope, $http){
         $scope.max_age = $('#max-age').val();
         $scope.religion = $('#religion').val();
         $scope.work = $('#work').val();
-        
+
         $scope.process_error = false;
         if($scope.username == ""){
             $scope.process_error = true;
@@ -195,7 +196,7 @@ app.controller('myCtrl', function($scope, $http){
         }
 
         $scope.validate(field);
-        
+
     }
 
     $scope.next = function () {
@@ -220,7 +221,7 @@ app.controller('myCtrl', function($scope, $http){
         data.work           = $scope.work;
 
         $scope.data         = data;
-       
+
         if($scope.email_exist){
             $scope.process_error = true;
             $('#email').get(0).scrollIntoView();
@@ -233,7 +234,7 @@ app.controller('myCtrl', function($scope, $http){
     $scope.register = function () {
         $http({
             method: 'POST',
-            url: base_url+'api/register.php',
+            url: base_url+'/api/register',
             data: $scope.data,
             headers: {
               'Content-Type': 'application/json'
@@ -338,25 +339,32 @@ app.controller('myCtrl', function($scope, $http){
                         $scope.email_error = true;
                         $scope.email_error_msg = error_messages.A0002;
                     }else{
-                        $http.get(base_url+`api/check_email.php?email=${$scope.email}`)
-                        .then(
+                        $http.post({
+                            method: 'POST',
+                            url: base_url + '/api/check-email',
+                            data: {'email' : $scope.email},
+                            headers: {
+                            'Content-Type': 'application/json'
+                            }
+                        }).then(
                                 function (response) {
-                                    if(response.status == '200'){
-                                        $scope.email_exist = response.data.email_exist;
-                                        if($scope.email_exist){
-                                        $scope.process_error  = true;
-                                        $scope.email_error = true;
-                                        $scope.email_error_msg = error_messages.A0008;
-                                        $('#next-btn').prop('disabled',true);
-                                        }else{
-                                            $scope.email_error = false;
-                                            $scope.email_error_msg = '';
-                                        }
-                                    }
+                                    console.log(response);
+                                    // if(response.status == '200'){
+                                    //     $scope.email_exist = response.data.email_exist;
+                                    //     if($scope.email_exist){
+                                    //     $scope.process_error  = true;
+                                    //     $scope.email_error = true;
+                                    //     $scope.email_error_msg = error_messages.A0008;
+                                    //     $('#next-btn').prop('disabled',true);
+                                    //     }else{
+                                    //         $scope.email_error = false;
+                                    //         $scope.email_error_msg = '';
+                                    //     }
+                                    // }
                                 }
                             )
                     }
-                    
+
                     break;
                 case 'password':
                     if($scope.password.length < 6 ){
@@ -481,7 +489,7 @@ app.controller('myCtrl', function($scope, $http){
                     break;
             }
         }
-        
+
         if($scope.process_error){
             $('#next-btn').prop('disabled',true);
         }else{
@@ -489,4 +497,4 @@ app.controller('myCtrl', function($scope, $http){
         }
     }
 })
-    
+

@@ -20,10 +20,10 @@ class SettingRepository implements SettingRepositoryInterface
 
         if ($setting == null) {
             Session::put(['site_title' => 'MM Cupid']);
-            Session::put(['site_logo' => 'cupid.jpg']);
+            Session::put(['site_logo' => url('assets/default_images/cupid.jpg')]);
         } else {
             Session::put(['site_title' => $setting['company_name']]);
-            Session::put(['site_logo' => $setting['company_logo']]);
+            Session::put(['site_logo' => url('storage/images/' .  $setting['company_logo'])]);
         }
     }
 
@@ -31,35 +31,6 @@ class SettingRepository implements SettingRepositoryInterface
     {
         $setting = Setting::first();
         return $setting;
-    }
-
-    public function store(array $data)
-    {
-        $returned_array                 = [];
-        $insert_data                    = [];
-        $insert_data['point']           = $data['point'];
-        $insert_data['company_name']    = $data['company-name'];
-        $insert_data['company_email']   = $data['company-email'];
-        $insert_data['company_phone']   = $data['company-phone'];
-        $insert_data['company_address'] = $data['company-address'];
-
-        if (isset($data['company-logo'])) {
-            $file                       = $data['company-logo'];
-            $file_name                  = uniqid() . time() . '_' . $file->getClientOriginalName();
-            $destination_path           = public_path('assets/default_images/' . $file_name);
-            Utility::cropAndResizeImage($data['company-logo'], $destination_path, 50, 50);
-            $insert_data['company_logo'] = $file_name;
-        }
-        $data                           = Utility::addCreatedBy($insert_data);
-        $result                         = Setting::create($data);
-
-        if ($result) {
-            $returned_array['status']   = ReturnMessage::OK;
-            $this->setSiteSetting();
-        } else {
-            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
-        }
-        return $returned_array;
     }
 
     public function update(array $data)

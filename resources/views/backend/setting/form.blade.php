@@ -98,7 +98,7 @@
                                                 onclick="browseImage()" />
                                             <label for="" onclick="browseImage('3')"
                                                 class="btn btn-dark p-2 rounded-3 position-absolute z-3 change-photo change-photo3"
-                                                style="opacity: 0.6; top:42%; left:42%;">Change</label>
+                                                style="opacity: 0.6; top:42%; left:38%;">Change</label>
                                         @else
                                             <label id="choose-file-label" onclick="browseImage()"
                                                 style="margin-top: 30%; margin-bottom: 30%; margin-left:35%; cursor: pointer; font-size: 20px;">Choose

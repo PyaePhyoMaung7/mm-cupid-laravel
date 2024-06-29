@@ -22,7 +22,7 @@
     <link href="{{ url('assets/css/custom.css?v=20240617') }}" rel="stylesheet">
     <!-- company logo -->
     <link rel="icon" type="image/png" sizes="32x32"
-        href="{{ url('assets/default_images/' . Session::get('site_logo')) }}">
+        href="{{ Session::get('site_logo') }}">
 
     <style>
         ::-webkit-scrollbar {
