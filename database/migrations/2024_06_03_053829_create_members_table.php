@@ -41,7 +41,7 @@ return new class () extends Migration {
             $table->string('thumbnail', 200)->nullable();
             $table->longText('verify_photo')->nullable();
             $table->unsignedInteger('view_count')->default(0);
-            $table->unsignedInteger('updated_by');
+            $table->unsignedInteger('updated_by')->nullable();
             $table->unsignedInteger('deleted_by')->nullable();
             $table->timestamps();
             $table->softDeletes()->nullable();

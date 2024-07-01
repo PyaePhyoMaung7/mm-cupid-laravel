@@ -4,11 +4,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ Session::get('site_title') }}Account Activation</title>
+    <title>{{ $mail_data['company_name'] }}Account Activation</title>
+    <style>
+        .button {
+            background-color: #dc3545;
+            color: #ffffff !important;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 8px 0;
+            width: 90%;
+            border: none;
+            cursor: pointer !important;
+            text-align: center;
+            display: inline-block;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .button:hover {
+            background-color: #c82333; /* Optional hover effect */
+        }
+        @media(min-width: 768px) {
+            #container {
+                width: 40% !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
-    <div style="margin:0 auto; width: 40%;">
+    <div id="container" style="margin:0 auto; width: 80%;">
         <div style="margin: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <div style="margin-right: 20px;">
@@ -22,14 +47,12 @@
             <div style="margin: 20px 0;">
                 <div style="font-size: 0.9rem;">Please take a second to make sure we've got your email right.</div>
                 <div style="text-align: center; margin: 35px 0;">
-                    <a href="{$confirm_link}" target="_blank">
-                        <button
-                            style="background-color: #dc3545; color: white; font-weight: bold; font-size: 1rem; padding: 8px 0; width: 90%; border: none; cursor: pointer;">Confirm
-                            your email</button>
+                    <a href="{{ $mail_data['email_confirm_link'] }}" class="button" target="_blank">
+                        Confirm your email
                     </a>
                 </div>
                 <div style="font-size: 0.9rem;">Didn't sign up for <span
-                        style="color: #dc3545; font-weight: bold;">{{ Session::get('site_title') }}</span> ?<span
+                        style="color: #dc3545; font-weight: bold;">{{ $mail_data['company_name'] }}</span> ?<span
                         style="color: #0d6efd;"> Let us know.</span></div>
             </div>
             <div style="margin-top: 40px; background-color: #f8f9fa; padding: 16px;">
@@ -39,7 +62,7 @@
                             src="https://t3.ftcdn.net/jpg/01/03/47/46/360_F_103474653_V0uJ6bx4r62TYIg7oZYPZo57FR0rCmkY.jpg" alt="">
                     </div>
                     <div>
-                        <h3 style="color: #dc3545; font-weight: bold;">{{ Session::get('site_title') }}</h3>
+                        <h3 style="color: #dc3545; font-weight: bold;">{{ $mail_data['company_name'] }}</h3>
                     </div>
                 </div>
                 <div style="font-size: 11px;">
@@ -47,7 +70,7 @@
                     <a href="" style="color: #6c757d; text-decoration: none;">Privacy Policy</a> .
                     <a href="" style="color: #6c757d; text-decoration: none;">Terms & Conditions</a>
                     <a href="" style="color: #6c757d; text-decoration: none; display: block;">Unsubscribe
-                        {$member_email} from this email</a>
+                        {{ $mail_data['email'] }} from this email</a>
                 </div>
             </div>
         </div>

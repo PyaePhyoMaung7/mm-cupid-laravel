@@ -64,3 +64,10 @@ if (!function_exists("userIsActive")) {
         return $status == Constant::ADMIN_ENABLE_STATUS;
     }
 }
+
+if (!function_exists("memberAccActivated")) {
+    function memberAccActivated($status)
+    {
+        return $status == Constant::MEMBER_EMAIL_VERIFIED;
+    }
+}

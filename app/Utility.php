@@ -55,6 +55,18 @@ class Utility
         Log::error($screen . " - \n" . $error_msg);
     }
 
+    public static function convertTodmYFormat ($date_time) {
+        $timestamps = strtotime($date_time);
+        $date       = date('d/m/Y', $timestamps);
+        return $date;
+    }
+
+    public static function convertToYmdFormat ($date_time) {
+        $timestamps = strtotime($date_time);
+        $date       = date('Y-m-d', $timestamps);
+        return $date;
+    }
+
     public static function cropAndResizeImage($src_image_path, $dest_image_path, $new_width, $new_height)
     {
 

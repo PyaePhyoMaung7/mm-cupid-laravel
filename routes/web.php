@@ -30,11 +30,12 @@ Route::get('/admin-backend/login', [AuthController::class, 'adminLoginForm']);
 Route::post('/admin-backend/login', [AuthController::class, 'postAdminLogin'])->name('admin.login');
 Route::get('/admin-backend/logout', [AuthController::class, 'adminLogout']);
 Route::get('/register', [MemberController::class, 'register']);
-Route::post('/register', [MemberController::class, 'photoRegister'])->name('register');
-Route::post('/api/register', [MemberController::class, 'infoRegister']);
+Route::post('/api/register', [MemberController::class, 'postRegister'])->name('register');
+Route::get('/login', [MemberController::class, 'login']);
 Route::get('api/cities', [MemberController::class, 'apiGetCities']);
 Route::get('api/hobbies', [MemberController::class, 'apiGetHobbies']);
 Route::post('api/check-email', [MemberController::class, 'apiCheckEmail']);
+Route::get('/email-confirm/{email_confirm_code}', [MemberController::class, 'confirmEmail']);
 
 Route::get('/send-mail', [MailController::class, 'index']);
 

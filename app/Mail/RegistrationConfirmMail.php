@@ -18,10 +18,10 @@ class RegistrationConfirmMail extends Mailable
      *
      * @return void
      */
-    public $mailData;
-    public function __construct($mailData)
+    public $mail_data;
+    public function __construct($mail_data)
     {
-        $this->mailData = $mailData;
+        $this->mail_data = $mail_data;
     }
 
     /**
@@ -52,7 +52,7 @@ class RegistrationConfirmMail extends Mailable
     {
         return $this->subject('MMCupid Account Activation')
                     ->view('email.registrationConfirmMail')
-                    ->with('mailData', $this->mailData);;
+                    ->with('mail_data', $this->mail_data);
     }
 
     /**

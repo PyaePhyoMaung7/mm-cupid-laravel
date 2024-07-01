@@ -30,7 +30,7 @@
                         <input type="text"
                             class="form-control form-control-lg border border-1 border-black rounded rounded-4 mt-2"
                             style="width:100%;" placeholder="Enter Email" name="email" id="email" ng-model="email"
-                            ng-blur="validate('email')" ng-change="checkValidation('email');" />
+                            ng-blur="validate('email'); checkEmailExist()" ng-change="checkValidation('email');" />
                         <p class="text-danger" ng-if="email_error">@{{ email_error_msg }}</p>
 
                         <div class="position-relative">
@@ -350,6 +350,9 @@
     </div>
 @endsection
 @section('javascript')
+    <!-- PNotify -->
+    <script src="{{ url('assets/js/pnotify/pnotify.js') }}"></script>
+
     <script>
         let today_date = new Date();
         let last_18_years_ago_date;
