@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
-class MemberRegisterRequest extends FormRequest
+class MemberRegisterRequest extends BaseFormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -77,7 +78,37 @@ class MemberRegisterRequest extends FormRequest
             ],
             'religion' => [
                 'required',
-            ]
+            ],
+            'upload1' => [
+                'required',
+                'mimes:jpg,jpeg,png,gif,webp',
+                'max:2048',
+            ],
+            'upload2' => [
+                'nullable',
+                'mimes:jpg,jpeg,png,gif,webp',
+                'max:2048',
+            ],
+            'upload3' => [
+                'nullable',
+                'mimes:jpg,jpeg,png,gif,webp',
+                'max:2048',
+            ],
+            'upload4' => [
+                'nullable',
+                'mimes:jpg,jpeg,png,gif,webp',
+                'max:2048',
+            ],
+            'upload5' => [
+                'nullable',
+                'mimes:jpg,jpeg,png,gif,webp',
+                'max:2048',
+            ],
+            'upload6' => [
+                'nullable',
+                'mimes:jpg,jpeg,png,gif,webp',
+                'max:2048',
+            ],
         ];
     }
 
@@ -109,6 +140,19 @@ class MemberRegisterRequest extends FormRequest
             'work.required'             => "Please fill your occupation",
             'religion.required'         => "Please choose your religion",
             'religion.integer'          => "Religion must be a number",
+            'upload1.required'          => "Please upload a photo for image 1.",
+            'upload1.mimes'             => 'Invalid image for image 1.<br> Only jpg, jpeg, png, gif, webp photos are allowed.',
+            'upload1.max'               => 'File size can be 2mb maximum for image 1.',
+            'upload2.mimes'             => 'Invalid image for image 2.<br> Only jpg, jpeg, png, gif, webp photos are allowed.',
+            'upload2.max'               => 'File size can be 2mb maximum for image 2.',
+            'upload3.mimes'             => 'Invalid image for image 3.<br> Only jpg, jpeg, png, gif, webp photos are allowed.',
+            'upload3.max'               => 'File size can be 2mb maximum for image 3.',
+            'upload4.mimes'             => 'Invalid image for image 4.<br> Only jpg, jpeg, png, gif, webp photos are allowed.',
+            'upload4.max'               => 'File size can be 2mb maximum for image 4.',
+            'upload5.mimes'             => 'Invalid image for image 5.<br> Only jpg, jpeg, png, gif, webp photos are allowed.',
+            'upload5.max'               => 'File size can be 2mb maximum for image 5.',
+            'upload6.mimes'             => 'Invalid image for image 6.<br> Only jpg, jpeg, png, gif, webp photos are allowed.',
+            'upload6.max'               => 'File size can be 2mb maximum for image 6.',
         ];
     }
 }

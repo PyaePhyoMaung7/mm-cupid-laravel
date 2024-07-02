@@ -46,9 +46,8 @@
 
                 <p class="w-100 mt-4 fw-medium text-center" style="font-size: 12px; line-height:16px;">By signing up, you
                     agree to our
-                    <a href="" class="text-black">Terms & Conditions</a>. Learn how we
-                    use your data in our
-                    <a href="" class="text-black">Privacy Policy</a>
+                    <a href="" class="text-black">Terms & Conditions</a>.
+                    <span class="d-block mt-2">Learn how we use your data in our <a href="" class="text-black">Privacy Policy</a>.</span>
                 </p>
             </div>
 
@@ -59,11 +58,21 @@
 @section('javascript')
     <!-- PNotify -->
     <script src="{{ url('assets/js/pnotify/pnotify.js') }}"></script>
-    @if (memberAccActivated($status['status']))
+    @if (session('success_msg'))
         <script>
             new PNotify({
                 title: 'Welcome to ' + '{{ $setting->company_name }}' +  ' !',
                 text: 'Your account has been activated successfully.</br>Please Login',
+                width: '350px',
+                type: 'success',
+                styling: 'bootstrap3'
+            });
+        </script>
+    @elseif (session('fail_msg'))
+        <script>
+            new PNotify({
+                title: 'Welcome to ' + '{{ $setting->company_name }}' +  ' !',
+                text: 'Unfortunately, your account activation failed!.</br>Please try again.',
                 width: '350px',
                 type: 'success',
                 styling: 'bootstrap3'

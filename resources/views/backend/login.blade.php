@@ -17,7 +17,7 @@
     <!-- Custom Theme Style -->
     <link href="{{ url('assets/css/custom.css') }}" rel="stylesheet">
     <!-- company logo -->
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('assets/images/cupid.jpg') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('storage/images/' . $setting->company_logo) }}">
 </head>
 
 <body class="login">
@@ -44,7 +44,7 @@
                             <div class="clearfix"></div>
                             <br />
                             <div>
-                                <p>©2016 All Rights Reserved.</p>
+                                <p>©2024 All Rights Reserved.</p>
                             </div>
                         </div>
                     </form>

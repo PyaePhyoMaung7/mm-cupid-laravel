@@ -43,7 +43,10 @@ class AuthController extends Controller
             if (Auth::guard('admin')->user() != null) {
                 return redirect('admin-backend/index');
             } else {
-                return view('backend.login');
+                $setting    = $this->settingRepository->getSetting();
+                $queryLog   = DB::getQueryLog();
+                Utility::saveDebugLog("AuthController::adminLoginForm", $queryLog);
+                return view('backend.login', compact(['setting']));
             }
         } catch (\Exception $e) {
             Utility::saveErrorLog("AuthController::adminLoginForm", $e->getMessage());
@@ -102,13 +105,13 @@ class AuthController extends Controller
                     ->withInput();
 
                 } else {
-                    $role = Auth::guard('admin')->user()->role;
-                    $permissions = $this->userRepository->getPermissionRoutesByRole((int) $role);
+                    $role           = Auth::guard('admin')->user()->role;
+                    $permissions    = $this->userRepository->getPermissionRoutesByRole((int) $role);
                     Session::put(['permission' => $permissions]);
 
                     $this->settingRepository->setSiteSetting();
 
-                    $queryLog = DB::getQueryLog();
+                    $queryLog       = DB::getQueryLog();
                     Utility::saveDebugLog("AuthController::postAdminLogin", $queryLog);
 
                     return redirect('admin-backend/index');

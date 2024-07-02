@@ -61,7 +61,7 @@ class SettingUpdateRequest extends FormRequest
             'company-email.email'       => 'Invalid email',
             'company-phone.required'    => 'Please fill company phone',
             'company-address.required'  => 'Please fill company address',
-            'company-logo.mimes'        => 'Only jpg, jpeg, png, gif, webp and avif files are allowed',
+            'company-logo.mimes'        => 'Only jpg, jpeg, png, gif, web photos are allowed',
             'company-logo.max'          => 'Company logo file size can be 2mb maximum',
         ];
     }

@@ -12,17 +12,19 @@
             font-weight: bold;
             font-size: 1rem;
             padding: 8px 0;
-            width: 90%;
+            width: 100%;
             border: none;
             cursor: pointer !important;
             text-align: center;
             display: inline-block;
             text-decoration: none;
             border-radius: 5px;
+            border: 1px solid #dc3545;
         }
 
         .button:hover {
-            background-color: #c82333; /* Optional hover effect */
+            background-color: #ffffff;
+            color:#dc3545  !important;
         }
         @media(min-width: 768px) {
             #container {

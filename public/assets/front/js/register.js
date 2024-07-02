@@ -196,28 +196,6 @@ app.controller("myCtrl", function ($scope, $http) {
     };
 
     $scope.next = function () {
-        $scope.form = {};
-        let data = {};
-        data.username = $scope.username;
-        data.email = $scope.email;
-        data.password = $scope.password;
-        data.phone = $scope.phone;
-        data.birthday = $scope.birthday;
-        data.city = $scope.city;
-        data.hfeet = $scope.hfeet;
-        data.hinches = $scope.hinches;
-        data.education = $scope.education;
-        data.about = $scope.about;
-        data.gender = $scope.gender;
-        data.hobbies = $scope.selected_hobbies;
-        data.partner_gender = $scope.partner_gender;
-        data.min_age = $scope.min_age;
-        data.max_age = $scope.max_age;
-        data.religion = $scope.religion;
-        data.work = $scope.work;
-
-        $scope.data = data;
-
         if ($scope.email_exist) {
             $scope.process_error = true;
             $("#email").get(0).scrollIntoView();
@@ -246,7 +224,6 @@ app.controller("myCtrl", function ($scope, $http) {
         form.append('max_age', $scope.max_age );
         form.append('religion', $scope.religion );
         form.append('work', $scope.work );
-        let uploads = [];
         for (let i = 1; i <= 6; i++) {
             const file_input = $('#upload' + i)[0];
             const files = file_input.files;
@@ -263,13 +240,35 @@ app.controller("myCtrl", function ($scope, $http) {
             headers: {
                 "Content-Type": undefined,
             },
-        }).then(function (response) {
-            console.log(response);
-            if (response.status == 201) {
-                $scope.member_id = response.data.data.member_id;
-                $("#member-id").val($scope.member_id);
+        }).then(
+            function (response) {
+                console.log(response);
+                if (response.status == 201) {
+                    $scope.member_id = response.data.data.member_id;
+                    $("#member-id").val($scope.member_id);
+                }
+            },
+            function (error) {
+                console.log(error);
+                if (error.status === 422) {
+                    for (let field in error.data.errors) {
+                        if (error.data.errors.hasOwnProperty(field)) {
+                            let errorMessages = error.data.errors[field];
+                            // Display each error message using PNotify
+                            errorMessages.forEach(function(message) {
+                                new PNotify({
+                                    title: 'Oh No!',
+                                    text: message,
+                                    width: '380px',
+                                    type: 'error',
+                                    styling: 'bootstrap3'
+                                });
+                            });
+                        }
+                    }
+                }
             }
-        });
+        );
     };
 
     $scope.validate = function (field) {

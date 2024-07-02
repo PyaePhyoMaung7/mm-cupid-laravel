@@ -70,10 +70,9 @@ class MemberController extends Controller
     {
         try {
             $setting    = $this->settingRepository->getSetting();
-            $status     = ['status' => Constant::MEMBER_EMAIL_VERIFIED];
             $queryLog   = DB::getQueryLog();
             Utility::saveDebugLog("MemberController::login", $queryLog);
-            return view('frontend.login', compact(['setting', 'status']));
+            return view('frontend.login', compact(['setting']));
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::login", $e->getMessage());
             abort(500);

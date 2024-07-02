@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmMail;
+use Intervention\Image\Facades\Image;
 use App\Repositories\Member\MemberRepositoryInterface;
 use App\Repositories\Setting\SettingRepositoryInterface;
 
@@ -93,7 +94,6 @@ class MemberRepository implements MemberRepositoryInterface
                 $result = MemberHobby::create($hobby_ins_data);
             }
 
-            $is_thumb = false;
             for ($i = 1; $i <= 6; $i++) {
                 if (isset($data['upload' . $i]) && $data['upload' . $i]->isValid()) {
                     $file = $data['upload' . $i];
@@ -104,7 +104,6 @@ class MemberRepository implements MemberRepositoryInterface
                     if (!File::exists($upload_dir)) {
                         File::makeDirectory($upload_dir, 0755, true);
                     }
-                    $destination = $upload_dir . $unique_name;
                     $file->storeAs('uploads/' . $member_id, $unique_name, 'public');
 
                     $photo_ins_data                 = [];
@@ -115,24 +114,39 @@ class MemberRepository implements MemberRepositoryInterface
                     $photo_ins_data['updated_by']   = $member_id;
                     MemberGallery::create($photo_ins_data);
 
-                    if (!$is_thumb) {
-                        $thumb_upload_dir = storage_path('app/public/uploads/' . $member_id . '/thumb/');
+                    if ($i == 1) {
+                        $thumb_upload_dir = $upload_dir . '/thumb/';
                         if (!File::exists($thumb_upload_dir)) {
                             File::makeDirectory($thumb_upload_dir, 0755, true);
                         }
-                        $unique_thumb_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
-                        . "_thumb" . "_"  . date('Ymd_his') . "_" . uniqid() . "." .  $file->getClientOriginalExtension();
+                        $unique_thumb_name = 'thumb_' . $unique_name;
                         $thumb_destination = $thumb_upload_dir . $unique_thumb_name;
-                        Utility::cropAndResizeImage($file, $thumb_destination, Constant::THUMB_WIDTH, Constant::THUMB_HEIGHT);
 
-                        $thumb_ins_data                 = [];
-                        $thumb_ins_data['thumbnail']    = $unique_thumb_name;
-                        $thumb_ins_data['updated_at']   = date('Y-m-d H:i:s');
-                        $thumb_ins_data['updated_by']   = $member_id;
-                        $param_obj                      = Member::find($member_id);
-                        $param_obj->update($thumb_ins_data);
+                        $desired_ratio = Constant::THUMB_WIDTH / Constant::THUMB_HEIGHT;
+                        $img = Image::make($file);
+                        $width = $img->width();
+                        $height = $img->height();
 
-                        $is_thumb = true;
+                        if ($width / $height > $desired_ratio) {
+                            $new_width = (int) ($height * $desired_ratio);
+                            $new_height = $height;
+                        } else {
+                            $new_width = $width;
+                            $new_height = (int) ($width * $desired_ratio);
+                        }
+                        $crop_x = (int) (($width - $new_width) / 2);
+                        $crop_y = (int) (($height - $new_height) / 2);
+
+                        $modified_img = $img->crop($new_width, $new_height, $crop_x, $crop_y);
+                        $modified_img->resize(Constant::THUMB_WIDTH, Constant::THUMB_HEIGHT);
+                        $modified_img->save($thumb_destination);
+
+                        $thumb_up_data                  = [];
+                        $thumb_up_data['thumbnail']     = $unique_thumb_name;
+                        $thumb_up_data['updated_at']    = date('Y-m-d H:i:s');
+                        $thumb_up_data['updated_by']    = $member_id;
+                        $member_obj                     = Member::find($member_id);
+                        $member_obj->update($thumb_up_data);
                     }
                 }
             }

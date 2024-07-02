@@ -247,6 +247,7 @@
                                         <label for="" onclick="browseImage('1')"
                                             class="btn btn-dark p-2 rounded-3 hide position-absolute change-photo change-photo1"
                                             style="opacity: 0.8">Change</label>
+                                        <span class="position-absolute rounded-circle bg-white text-center" style="top:0; left:0; z-index: 10; width: 25px; height: 25px;">1</span>
                                         <i class="fa fa-upload fs-4" style="cursor: pointer" id="upload-icon-1"
                                             onclick="browseImage('1')"></i>
                                     </div>
@@ -387,7 +388,7 @@
             let fileName = fileInput.value.split('\\').pop();
             let fileExtension = fileName.split('.').pop();
 
-            let allow_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
+            let allow_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
 
             let file = event.target.files[0];
 
@@ -412,20 +413,27 @@
                 $('#upload-icon-' + index).show();
                 $('#preview' + index).addClass('d-none');
 
-                alert('Your uploaded file type is not accepted.');
+                new PNotify({
+                title: 'Sorry!',
+                text: 'Your uploaded file type is not accepted.',
+                width: '350px',
+                type: 'error',
+                styling: 'bootstrap3'
+                });
             };
 
-            let upload1_value = document.getElementById('upload1').value;
-            let upload2_value = document.getElementById('upload2').value;
-            let upload3_value = document.getElementById('upload3').value;
-            let upload4_value = document.getElementById('upload4').value;
-            let upload5_value = document.getElementById('upload5').value;
-            let upload6_value = document.getElementById('upload6').value;
+            const upload1_value = document.getElementById('upload1').value;
 
-            if (upload1_value != "" || upload2_value != "" || upload3_value != "" || upload4_value != "" || upload5_value !=
-                "" || upload6_value != "") {
+            if (upload1_value != "") {
                 $('#register-btn').prop('disabled', false);
             } else {
+                new PNotify({
+                title: 'Reminder!',
+                text: 'Please upload a photo in the biggest square area.',
+                width: '350px',
+                type: 'error',
+                styling: 'bootstrap3'
+                });
                 $('#register-btn').prop('disabled', true);
             }
         }
