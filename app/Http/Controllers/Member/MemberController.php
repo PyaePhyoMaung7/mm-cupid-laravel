@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Member;
 
 use App\Utility;
 use App\Constant;
+use App\Models\Member;
 use App\ReturnMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -56,7 +57,18 @@ class MemberController extends Controller
     //         abort(500);
     //     }
     // }
-
+    public function index()
+    {
+        try {
+            $setting = $this->settingRepository->getSetting();
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::register", $queryLog);
+            return view('frontend/index',  compact(['setting']));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::index", $e->getMessage());
+            abort(500);
+        }
+    }
     public function register()
     {
         try {
@@ -83,6 +95,17 @@ class MemberController extends Controller
         }
     }
 
+    public function logout()
+    {
+        try {
+            Auth::guard('member')->logout();
+            return redirect('login');
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::logout", $e->getMessage());
+            abort(500);
+        }
+    }
+
     public function postMemberLogin(MemberLoginRequest $request)
     {
         try {
@@ -92,37 +115,36 @@ class MemberController extends Controller
             $member     = $this->memberRepository->getMemberByEmail((string) $email);
 
             if ($member == null) {
-
                 return redirect()
                 ->back()
-                ->withErrors(
-                    ['email' => 'Email not found!']
+                ->with(
+                    ['error_msg' => 'Email not found!']
                 )->withInput();
 
             } elseif (!Hash::check($password, $member->password)) {
 
                 return redirect()
                 ->back()
-                ->withErrors(['password' => 'Incorrect password!'])
+                ->with(['error_msg' => 'Incorrect password!'])
                 ->withInput();
 
             } elseif ($member->status == Constant::MEMBER_BANNED) {
 
                 return redirect()
                 ->back()
-                ->withErrors(['status' => 'You have been banned from our wesite!'])
+                ->with(['error_msg' => 'You have been banned from our wesite!'])
                 ->withInput();
 
             } elseif ($member->deleted_at != null) {
 
                 return redirect()
                 ->back()
-                ->withErrors(['deleted_at' => 'Your account has been deleted!'])
+                ->with(['error_msg' => 'Your account has been deleted!'])
                 ->withInput();
 
             } else {
 
-                $credentials = Auth::guard('user')->attempt([
+                $credentials = Auth::guard('member')->attempt([
                             'email' => $email,
                             'password' => $password,
                             ]);
@@ -131,20 +153,16 @@ class MemberController extends Controller
 
                     return redirect()
                     ->back()
-                    ->withErrors(['unexpected' => 'Unexpected error occurred. Please contact admin!'])
+                    ->with(['error_msg' => 'Unexpected error occurred. Please contact admin!'])
                     ->withInput();
 
                 } else {
-                    $role           = Auth::guard('admin')->user()->role;
-                    $permissions    = $this->userRepository->getPermissionRoutesByRole((int) $role);
-                    Session::put(['permission' => $permissions]);
-
                     $this->settingRepository->setSiteSetting();
 
                     $queryLog       = DB::getQueryLog();
                     Utility::saveDebugLog("AuthController::postMemberLogin", $queryLog);
 
-                    return redirect('admin-backend/index');
+                    return redirect('index');
 
                 }
             }
@@ -229,5 +247,24 @@ class MemberController extends Controller
             Utility::saveErrorLog("MemberController::confirmEmail", $e->getMessage());
             abort(500);
         }
+    }
+
+    public function syncMember(Request $request)
+    {
+        $response       = [];
+        $pageNo         = $request->page;
+        $record_per_page= 9;
+        $offset         = ($pageNo - 1) * $record_per_page;
+        $total_show_data= $pageNo * $record_per_page;
+        $response_data  = Member::skip($offset)->take($record_per_page)->get();
+        $total_count    = Member::count();
+        if($total_count <= $total_show_data){
+            $response['show_more'] = false;
+        }else{
+            $response['show_more'] = true;
+        }
+        $response['status'] = '200';
+        $response['data']   = $response_data;
+        return response()->json(['data' => $response]);
     }
 }

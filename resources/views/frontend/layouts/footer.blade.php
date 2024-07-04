@@ -5,5 +5,6 @@
     <!-- PNotify -->
     <script src="{{ url('assets/js/pnotify/pnotify.js') }}"></script>
 </body>
+
 </html>
 

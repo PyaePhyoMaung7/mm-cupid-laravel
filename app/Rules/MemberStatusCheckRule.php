@@ -7,7 +7,7 @@ use App\Models\Member;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Contracts\Validation\Rule;
 
-class MemberStatusCheck implements Rule
+class MemberStatusCheckRule implements Rule
 {
     /**
      * Create a new rule instance.
@@ -31,7 +31,9 @@ class MemberStatusCheck implements Rule
      */
     public function passes($attribute, $value)
     {
-        $member = Member::select('password', 'status')->where('email', $this->email)->first();
+        $member = Member::select('password', 'status')
+                ->where('email', $this->email)
+                ->first();
 
         if ($member) {
             if (Hash::check($this->password, $member->password)) {

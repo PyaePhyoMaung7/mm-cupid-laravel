@@ -43,7 +43,11 @@ return [
         'admin' => [
             'driver' => 'session',
             'provider' => 'users',
-        ]
+        ],
+        'member' => [
+            'driver' => 'session',
+            'provider' => 'members', // you can define a custom provider if needed
+        ],
     ],
 
     /*
@@ -67,6 +71,10 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
+        ],
+        'members' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Member::class,
         ],
 
         // 'users' => [

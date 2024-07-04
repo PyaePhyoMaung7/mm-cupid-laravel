@@ -81,55 +81,28 @@
         </script>
     @endif
 
-    @if ($errors->has('email'))
-        <script>
+    <script>
+        function showErrorMessage(error) {
             new PNotify({
                 title: 'Oh No!',
-                text: "{{ $errors->first('email') }}",
+                text: error,
                 type: 'error',
                 styling: 'bootstrap3'
             });
-        </script>
-    @endif
+        }
 
-    @if ($errors->has('password'))
+        document.addEventListener('DOMContentLoaded', function() {
+            @foreach ($errors->all() as $error)
+                showErrorMessage("{{ $error }}");
+            @endforeach
+        });
+    </script>
+
+    @if (session('error_msg'))
         <script>
             new PNotify({
                 title: 'Oh No!',
-                text: "{{ $errors->first('password') }}",
-                type: 'error',
-                styling: 'bootstrap3'
-            });
-        </script>
-    @endif
-
-    @if ($errors->has('status'))
-        <script>
-            new PNotify({
-                title: 'Oh No!',
-                text: "{{ $errors->first('status') }}",
-                type: 'error',
-                styling: 'bootstrap3'
-            });
-        </script>
-    @endif
-
-    @if ($errors->has('deleted_at'))
-        <script>
-            new PNotify({
-                title: 'Oh No!',
-                text: "{{ $errors->first('deleted_at') }}",
-                type: 'error',
-                styling: 'bootstrap3'
-            });
-        </script>
-    @endif
-
-    @if ($errors->has('unexpected'))
-        <script>
-            new PNotify({
-                title: 'Oh No!',
-                text: "{{ $errors->first('unexpected') }}",
+                text: "{{ session('error_msg') }}",
                 type: 'error',
                 styling: 'bootstrap3'
             });

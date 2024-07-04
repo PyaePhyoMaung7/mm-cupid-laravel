@@ -2,7 +2,8 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\MemberStatusCheck;
+use Illuminate\Validation\Rule;
+use App\Rules\MemberStatusCheckRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MemberLoginRequest extends FormRequest
@@ -28,10 +29,11 @@ class MemberLoginRequest extends FormRequest
             'email' => [
                 'required',
                 'email',
+                Rule::exists('members', 'email'),
             ],
             'password' => [
                 'required',
-                new MemberStatusCheck($this->email, $this->password),
+                new MemberStatusCheckRule($this->email, $this->password),
             ]
         ];
     }
@@ -39,8 +41,11 @@ class MemberLoginRequest extends FormRequest
     public function messages()
     {
         return [
-            'username.required' => 'Please fill username',
+            'email.required'    => 'Please fill your email address',
+            'email.email'       => 'Invalid email address',
+            'email.exists'      => 'Email cannot be found',
             'password.required' => 'Please fill password',
+
         ];
     }
 }

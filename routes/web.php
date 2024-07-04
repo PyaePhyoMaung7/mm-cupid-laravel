@@ -33,13 +33,18 @@ Route::get('/register', [MemberController::class, 'register']);
 Route::post('/api/register', [MemberController::class, 'postRegister'])->name('register');
 Route::get('/login', [MemberController::class, 'login']);
 Route::post('/login', [MemberController::class, 'postMemberLogin']);
+Route::get('/logout', [MemberController::class, 'logout']);
 Route::get('api/cities', [MemberController::class, 'apiGetCities']);
 Route::get('api/hobbies', [MemberController::class, 'apiGetHobbies']);
 Route::post('api/check-email', [MemberController::class, 'apiCheckEmail']);
+Route::post('api/sync-members', [MemberController::class, 'syncMember']);
 Route::get('/email-confirm', [MemberController::class, 'confirmEmail']);
 
 Route::get('/send-mail', [MailController::class, 'index']);
 
+Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
+    Route::get('index', [MemberController::class, 'index']);
+});
 Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function () {
     Route::get('index', [DashboardController::class, 'index']);
 

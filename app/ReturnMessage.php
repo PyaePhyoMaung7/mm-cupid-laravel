@@ -8,4 +8,5 @@ class ReturnMessage
     public const FORBIDDEN              = 403;
     public const NOT_FOUND              = 404;
     public const INTERNAL_SERVER_ERROR  = 500;
+    public const EMAIL_ALREADY_CONFIRMED= 800;
 }

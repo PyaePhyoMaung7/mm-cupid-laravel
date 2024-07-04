@@ -46,15 +46,16 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         const data = $scope.is_filtered ? {'page' : $scope.page, 'partner_gender' : $scope.partner_gender, 'min_age' : $scope.min_age, 'max_age' : $scope.max_age } : {'page' : $scope.page} ;
         $http({
             method: 'POST',
-            url: base_url+'api/sync_members.php',
+            url: base_url+'/api/sync-members',
             data: data,
             headers: {
               'Content-Type': 'application/json'
             }
         }).then(
             function (response) {
-                if(response.data.status == "200") {
-                    $scope.members = $scope.members.concat(response.data.data);
+                console.log(response);
+                if(response.status == "200") {
+                    $scope.members = $scope.members.concat(response.data.data.data);
                     $scope.show_more = response.data.show_more;
                     $('.loading').hide();
                 }
@@ -88,7 +89,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         }, 2000);
 
         $scope.member_index = index;
-        
+
         if($scope.member_index <= 0) {
             $scope.prev_btn_disabled = true;
         }else{
@@ -124,7 +125,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
             "background-color": "rgba(0, 0, 0, 0.5)"
         });
         $(".carousel-inner").html("");
-        
+
     }
 
     $scope.showPrevProfile = function (index) {
@@ -165,7 +166,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
     }
 
     $scope.showCarousel = function (index, src) {
-        
+
         const getCarousel       = document.querySelector(".carousel-inner");
         const currentPage       = document.querySelector("#current-page");
         const carouselWrapper   = document.querySelector("#carousel-wrapper");
@@ -222,7 +223,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
 
     $scope.displayCurrentPage = (btn) => {
         const currentPage       = document.querySelector("#current-page");
-        
+
         if(btn == 'next') {
             if($scope.member_image_index + 1 < $scope.image_arr.length){
                 $scope.member_image_index++;
@@ -325,7 +326,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
             function (response) {
                 console.log(response);
                 if (response.data.status == '200') {
-                    const point          = response.data.data.point; 
+                    const point          = response.data.data.point;
                     const success_code   = response.data.data.success;
                     $('#point').text(point);
                     $('.loading').hide();

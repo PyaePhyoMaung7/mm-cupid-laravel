@@ -192,13 +192,24 @@ class MemberRepository implements MemberRepositoryInterface
         $update_data                = [];
         $update_data['status']      = Constant::MEMBER_EMAIL_VERIFIED;
         $update_data['updated_at']  = date('Y-m-d H:i:s');
-        $result                     = Member::where('email_confirm_code', $data['code'])
-                                            ->update($update_data);
-        if ($result) {
+        $member_data                = Member::select('status')
+                                        ->where('email_confirm_code', '=', $data['code'])
+                                        ->first();
+        $status                     = $member_data->status;
+
+        if ($status == Constant::MEMBER_UNVERIFIED) {
+            $result                 = Member::where('email_confirm_code', '=', $data['code'])
+                                        ->update($update_data);
+            if ($result) {
             $returned_array['status']   = ReturnMessage::OK;
-        } else {
+            } else {
             $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+            }
+            return $returned_array;
+        } else {
+            $returned_array['status']   = ReturnMessage::EMAIL_ALREADY_CONFIRMED;
         }
-        return $returned_array;
+
+
     }
 }

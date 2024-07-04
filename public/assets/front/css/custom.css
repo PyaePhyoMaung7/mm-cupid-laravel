@@ -405,7 +405,7 @@ input[type="radio"]:checked + label.gender-label {
    /* #cancel-btn{
     margin-left: 50px;
   } */
-} 
+}
 @media(max-width: 1080px) {
   .carousel-inner, .carousel-indicators {
     width: 50% !important;
@@ -429,6 +429,14 @@ input[type="radio"]:checked + label.gender-label {
 
   .member-profiles {
     height: 26vh !important;
+  }
+
+  .article-container-footer {
+    gap: 5px;
+  }
+
+  .article-container-footer button {
+    padding: 10px;
   }
 }
 
