@@ -6,11 +6,13 @@ interface MemberRepositoryInterface
 {
     public function getMembers();
 
+    public function getMemberByEmail(string $email);
+
     public function emailAlreadyExists(array $data);
 
     public function register(array $data);
 
     public function sendEmailConfirmMail($data);
 
-    public function confirmEmail(string $email_confirm_code);
+    public function confirmEmail(array $data);
 }

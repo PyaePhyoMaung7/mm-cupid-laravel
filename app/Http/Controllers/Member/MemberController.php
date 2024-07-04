@@ -9,9 +9,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\HobbyResource;
 use App\Http\Resources\MemberResource;
 use App\Http\Requests\EmailCheckRequest;
+use App\Http\Requests\MemberLoginRequest;
+use App\Http\Requests\EmailConfirmRequest;
 use App\Http\Requests\MemberRegisterRequest;
 use App\Http\Controllers\Member\MemberController;
 use App\Repositories\City\CityRepositoryInterface;
@@ -79,6 +83,77 @@ class MemberController extends Controller
         }
     }
 
+    public function postMemberLogin(MemberLoginRequest $request)
+    {
+        try {
+            $email      = $request->get('email');
+            $password   = $request->get('password');
+
+            $member     = $this->memberRepository->getMemberByEmail((string) $email);
+
+            if ($member == null) {
+
+                return redirect()
+                ->back()
+                ->withErrors(
+                    ['email' => 'Email not found!']
+                )->withInput();
+
+            } elseif (!Hash::check($password, $member->password)) {
+
+                return redirect()
+                ->back()
+                ->withErrors(['password' => 'Incorrect password!'])
+                ->withInput();
+
+            } elseif ($member->status == Constant::MEMBER_BANNED) {
+
+                return redirect()
+                ->back()
+                ->withErrors(['status' => 'You have been banned from our wesite!'])
+                ->withInput();
+
+            } elseif ($member->deleted_at != null) {
+
+                return redirect()
+                ->back()
+                ->withErrors(['deleted_at' => 'Your account has been deleted!'])
+                ->withInput();
+
+            } else {
+
+                $credentials = Auth::guard('user')->attempt([
+                            'email' => $email,
+                            'password' => $password,
+                            ]);
+
+                if (!$credentials) {
+
+                    return redirect()
+                    ->back()
+                    ->withErrors(['unexpected' => 'Unexpected error occurred. Please contact admin!'])
+                    ->withInput();
+
+                } else {
+                    $role           = Auth::guard('admin')->user()->role;
+                    $permissions    = $this->userRepository->getPermissionRoutesByRole((int) $role);
+                    Session::put(['permission' => $permissions]);
+
+                    $this->settingRepository->setSiteSetting();
+
+                    $queryLog       = DB::getQueryLog();
+                    Utility::saveDebugLog("AuthController::postMemberLogin", $queryLog);
+
+                    return redirect('admin-backend/index');
+
+                }
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("AuthController::postMemberLogin", $e->getMessage());
+            abort(500);
+        }
+    }
+
     public function apiGetCities()
     {
         try {
@@ -139,10 +214,10 @@ class MemberController extends Controller
         }
     }
 
-    public function confirmEmail($email_confirm_code)
+    public function confirmEmail(EmailConfirmRequest $request)
     {
         try {
-            $result = $this->memberRepository->confirmEmail((string) $email_confirm_code);
+            $result = $this->memberRepository->confirmEmail((array) $request->all());
             $queryLog = DB::getQueryLog();
             Utility::saveDebugLog("MemberController::confirmEmail", $queryLog);
             if ($result['status'] == ReturnMessage::OK) {

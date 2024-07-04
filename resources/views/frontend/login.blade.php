@@ -18,6 +18,7 @@
                 </div>
 
                 <form id="login-form" action="{{ url('login') }}" method="POST">
+                    @csrf
                     <input type="text"
                         class="form-control form-control-lg border border-1 border-black rounded rounded-4 mt-2"
                         style="width:100%;" placeholder="Enter Email" name="email" id="email" ng-model="email"
@@ -75,6 +76,61 @@
                 text: 'Unfortunately, your account activation failed!.</br>Please try again.',
                 width: '350px',
                 type: 'success',
+                styling: 'bootstrap3'
+            });
+        </script>
+    @endif
+
+    @if ($errors->has('email'))
+        <script>
+            new PNotify({
+                title: 'Oh No!',
+                text: "{{ $errors->first('email') }}",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        </script>
+    @endif
+
+    @if ($errors->has('password'))
+        <script>
+            new PNotify({
+                title: 'Oh No!',
+                text: "{{ $errors->first('password') }}",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        </script>
+    @endif
+
+    @if ($errors->has('status'))
+        <script>
+            new PNotify({
+                title: 'Oh No!',
+                text: "{{ $errors->first('status') }}",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        </script>
+    @endif
+
+    @if ($errors->has('deleted_at'))
+        <script>
+            new PNotify({
+                title: 'Oh No!',
+                text: "{{ $errors->first('deleted_at') }}",
+                type: 'error',
+                styling: 'bootstrap3'
+            });
+        </script>
+    @endif
+
+    @if ($errors->has('unexpected'))
+        <script>
+            new PNotify({
+                title: 'Oh No!',
+                text: "{{ $errors->first('unexpected') }}",
+                type: 'error',
                 styling: 'bootstrap3'
             });
         </script>

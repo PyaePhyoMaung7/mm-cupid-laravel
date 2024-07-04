@@ -32,7 +32,7 @@ class RegistrationConfirmMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'Registration Confirm Mail',
+            subject: 'MMCupid :: Registration Confirm Mail',
         );
     }
 
@@ -44,14 +44,14 @@ class RegistrationConfirmMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'mail.registrationConfirmMail',
+            view: 'mail.registration',
         );
     }
 
     public function build()
     {
         return $this->subject('MMCupid Account Activation')
-                    ->view('email.registrationConfirmMail')
+                    ->view('email.registration')
                     ->with('mail_data', $this->mail_data);
     }
 

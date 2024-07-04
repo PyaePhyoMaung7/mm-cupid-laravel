@@ -64,7 +64,7 @@ class AuthController extends Controller
 
             if ($userInfo == null) {
                 return redirect()
-                ->bac()
+                ->back()
                 ->withErrors(
                     ['username' => 'Username not found!']
                 )->withInput();

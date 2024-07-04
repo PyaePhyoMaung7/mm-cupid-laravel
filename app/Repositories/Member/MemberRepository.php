@@ -39,6 +39,14 @@ class MemberRepository implements MemberRepositoryInterface
         return $members;
     }
 
+    public function getMemberByEmail(string $email)
+    {
+        $member = Member::select('password', 'status', 'deleted_at')
+                        ->where('email', $email)
+                        ->first();
+        return $member;
+    }
+
     public function emailAlreadyExists(array $data)
     {
         $email  = $data['email'];
@@ -163,7 +171,8 @@ class MemberRepository implements MemberRepositoryInterface
         }
     }
 
-    public function sendEmailConfirmMail($data) {
+    public function sendEmailConfirmMail($data)
+    {
         $setting        = $this->settingRepository->getSetting();
         $company_name   = $setting->company_name;
         $company_logo   = asset('storage/images/' . $setting->company_logo);
@@ -171,27 +180,20 @@ class MemberRepository implements MemberRepositoryInterface
             'email'              => $data->email,
             'company_name'       => $company_name,
             'company_logo'       => $company_logo,
-            'email_confirm_link' => url('email-confirm/' . $data->email_confirm_code),
+            'email_confirm_link' => url('email-confirm?code=' . $data->email_confirm_code),
         ];
         Mail::to($data->email)->send(new RegistrationConfirmMail($mail_data));
     }
 
-    public function confirmEmail(string $email_confirm_code) {
-        $returned_array = [];
-        $result         = '';
-        $member = Member::where('email_confirm_code', $email_confirm_code)
-                        ->whereNull('deleted_at')
-                        ->first();
-
-        if ($member != null) {
-            $update_data                = [];
-            $update_data['status']      = Constant::MEMBER_EMAIL_VERIFIED;
-            $update_data['updated_at']  = date('Y-m-d H:i:s');
-            $update_data['updated_by']  = $member->id;
-            $result = Member::where('email_confirm_code', $email_confirm_code)
-                            ->update($update_data);
-        }
-
+    public function confirmEmail(array $data)
+    {
+        $returned_array             = [];
+        $result                     = '';
+        $update_data                = [];
+        $update_data['status']      = Constant::MEMBER_EMAIL_VERIFIED;
+        $update_data['updated_at']  = date('Y-m-d H:i:s');
+        $result                     = Member::where('email_confirm_code', $data['code'])
+                                            ->update($update_data);
         if ($result) {
             $returned_array['status']   = ReturnMessage::OK;
         } else {

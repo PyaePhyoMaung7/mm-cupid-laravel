@@ -233,6 +233,7 @@ app.controller("myCtrl", function ($scope, $http) {
             }
         }
 
+        $('.loading').show();
         $http({
             method: "POST",
             url: base_url + "/api/register",
@@ -242,19 +243,19 @@ app.controller("myCtrl", function ($scope, $http) {
             },
         }).then(
             function (response) {
-                console.log(response);
-                if (response.status == 201) {
+                if (response.status == 200 || response.status == 201) {
                     $scope.member_id = response.data.data.member_id;
                     $("#member-id").val($scope.member_id);
+                    $('.loading').hide();
+                    window.location.href = '/login';
                 }
             },
             function (error) {
-                console.log(error);
                 if (error.status === 422) {
                     for (let field in error.data.errors) {
                         if (error.data.errors.hasOwnProperty(field)) {
                             let errorMessages = error.data.errors[field];
-                            // Display each error message using PNotify
+                            $('.loading').hide();
                             errorMessages.forEach(function(message) {
                                 new PNotify({
                                     title: 'Oh No!',
