@@ -59,6 +59,23 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
                     $scope.show_more = response.data.show_more;
                     $('.loading').hide();
                 }
+            },
+            function (error) {
+                $('.loading').hide();
+                for (let field in error.data.errors) {
+                    if (error.data.errors.hasOwnProperty(field)) {
+                        let errorMessages = error.data.errors[field];
+                        errorMessages.forEach(function(message) {
+                            new PNotify({
+                                title: 'Oh No!',
+                                text: message,
+                                width: '380px',
+                                type: 'error',
+                                styling: 'bootstrap3'
+                            });
+                        });
+                    }
+                }
             }
         )
     }

@@ -23,7 +23,7 @@ use App\Http\Controllers\User\UserController;
 */
 
 Route::get('/', function () {
-    return redirect('admin-backend/index');
+    return redirect('index');
 });
 
 Route::get('/admin-backend/login', [AuthController::class, 'adminLoginForm']);
@@ -37,13 +37,15 @@ Route::get('/logout', [MemberController::class, 'logout']);
 Route::get('api/cities', [MemberController::class, 'apiGetCities']);
 Route::get('api/hobbies', [MemberController::class, 'apiGetHobbies']);
 Route::post('api/check-email', [MemberController::class, 'apiCheckEmail']);
-Route::post('api/sync-members', [MemberController::class, 'syncMember']);
 Route::get('/email-confirm', [MemberController::class, 'confirmEmail']);
 
 Route::get('/send-mail', [MailController::class, 'index']);
 
 Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
     Route::get('index', [MemberController::class, 'index']);
+    Route::group(['prefix' => 'api'], function () {
+        Route::post('/sync-members', [MemberController::class, 'apiSyncMembers']);
+    });
 });
 Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function () {
     Route::get('index', [DashboardController::class, 'index']);
@@ -84,10 +86,9 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
     });
 
     Route::group(['prefix' => 'member/'], function () {
-        // Route::get('create', [UserController::class, 'create']);
-        // Route::post('store', [UserController::class, 'store'])->name('member.store');
-        Route::get('index', [MemberController::class, 'index']);
-        // Route::get('change/status/{id}/{status}', [UserController::class, 'changeStatus']);
+        Route::get('index', [MemberController::class, 'adminIndex']);
+        // Route::get('point/{id}', [MemberController::class, 'point']);
+        Route::get('change/status', [MemberController::class, 'changeStatus']);
         // Route::get('delete/{id}', [UserController::class, 'delete']);
     });
 

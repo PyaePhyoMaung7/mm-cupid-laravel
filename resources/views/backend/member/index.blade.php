@@ -50,11 +50,11 @@
                                                     </td>
                                                     <td class="align-middle">{{ $member->id }}</td>
                                                     <td class="align-middle">{{ $member->username }}</td>
-                                                    <td class="align-middle">{{ $member->email }}</td>
+                                                    <td class="align-middle">{{ getFifteenChars($member->email) }}</td>
                                                     <td class="align-middle">{{ $member->phone }}</td>
                                                     <td class="align-middle">{{ $member->gender }}</td>
                                                     <td class="align-middle">{{ $member->date_of_birth }}</td>
-                                                    <td class="align-middle">{{ $member->thumbnail }}</td>
+                                                    <td class="align-middle col-1">{{ 'hello' }}</td>
                                                     <td class="align-middle">{{ $member->city_id }}</td>
                                                     <td class="align-middle">{{ $member->status }}</td>
                                                     <td class="align-middle">
@@ -66,20 +66,20 @@
                                                         <a href=""><button type="button"
                                                                 class="btn btn-dark shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
                                                                     class="fa fa-eye"></i> <span>View</span></button></a>
-                                                        <a href=""><button type="button"
+                                                        <a href="{{ url('member/point/' . $member->point) }}"><button type="button"
                                                                 class="btn btn-primary shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
                                                                     class="fa fa-diamond"></i>
                                                                 <span>Point</span></button></a>
 
                                                         <a href="javascript:void(0)"
-                                                            onclick=""><button
+                                                            onclick="confirmRelease({{ url('member/change/status?id=' . $member->id '&status=1') }})"><button
                                                                 type="button"
                                                                 class="btn btn-white text-danger shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
                                                                     class="fa fa-unlock"></i> <span>Release</span>
                                                             </button></a>
 
                                                         <a href="javascript:void(0)"
-                                                            onclick=""><button
+                                                            onclick="confirmRelease({{ url('member/change/status?id=' . $member->id '&status=1') }})"><button
                                                                 type="button"
                                                                 class="btn btn-danger py-0 d-flex shadow-sm justify-content-between align-items-center btn-sm w-100"><i
                                                                     class="fa fa-ban"></i> <span>Ban</span> </button></a>

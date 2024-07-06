@@ -10,6 +10,7 @@ use App\Models\Setting;
 use App\Models\MemberHobby;
 use App\Models\MemberGallery;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmMail;
@@ -45,6 +46,14 @@ class MemberRepository implements MemberRepositoryInterface
                         ->where('email', $email)
                         ->first();
         return $member;
+    }
+
+    public function getMemberPointById(int $id)
+    {
+        $point = Member::select('point')
+                        ->where('id', '=', $id)
+                        ->first();
+        return $point;
     }
 
     public function emailAlreadyExists(array $data)
@@ -209,7 +218,65 @@ class MemberRepository implements MemberRepositoryInterface
         } else {
             $returned_array['status']   = ReturnMessage::EMAIL_ALREADY_CONFIRMED;
         }
+    }
 
+    public function apiSyncMembers (array $data)
+    {
+        $response           = [];
+        $page_no            = $data['page'];
+        $offset             = ($page_no - 1) * Constant::RECORD_PER_PAGE;
+        $total_show_data    = $page_no * Constant::RECORD_PER_PAGE;
+        $partner_gender     = Auth::guard('member')->user()->partner_gender;
+        $member_id          = Auth::guard('member')->user()->id;
+        $total_count        = Member::count();
+        if ($total_count <= $total_show_data) {
+            $response['show_more'] = false;
+        } else {
+            $response['show_more'] = true;
+        }
+        $members  = Member::select(
+                    '*',
+                    DB::raw('TIMESTAMPDIFF(YEAR, members.date_of_birth, CURDATE()) AS age'),
+                    DB::raw("CASE
+                                WHEN gender = ". Constant::MALE ." THEN 'male'
+                                WHEN gender = ". Constant::FEMALE ." THEN 'female'
+                                ELSE 'other'
+                            END AS gender_name"),
+                    DB::raw("CASE
+                                WHEN religion = ". Constant::RELIGION_CHRISTIAN ." THEN 'Christian'
+                                WHEN religion = ". Constant::RELIGION_ISLAM ." THEN 'Muslim'
+                                WHEN religion = ". Constant::RELIGION_BUDDHIST ." THEN 'Buddhist'
+                                WHEN religion = ". Constant::RELIGION_HINDU ." THEN 'Hindu'
+                                WHEN religion = ". Constant::RELIGION_JAIN ." THEN 'Jain'
+                                WHEN religion = ". Constant::RELIGION_SHINTO ." THEN 'Shinto'
+                                WHEN religion = ". Constant::RELIGION_ATHEIST ." THEN 'Atheist'
+                                ELSE 'Other'
+                            END AS religion_name"))
+                    ->where('id', '!=', $member_id)
+                    ->where('status', '!=', Constant::MEMBER_UNVERIFIED)
+                    ->where('status', '!=', Constant::MEMBER_BANNED)
+                    // ->where('love_status', '!=', Constant::IN_RELATIONSHIP)
+                    ->whereNull('deleted_at');
 
+        if(array_key_exists('partner_gender', $data) && $data['partner_gender'] != '') {
+            $partner_gender = $data['partner_gender'];
+        }
+
+        if($partner_gender != Constant::PARTNER_GENDER_BOTH) {
+            $members = $members->where('gender', '=', $partner_gender);
+        }
+
+        // if(array_key_exists('min_age', $data) && $data['min_age'] != ''){
+        //     $partner_min_age=  $data['min_age'];
+        //     $members =  $members->whereRaw('date_of_birth <= CURDATE() - INTERVAL ? YEAR', [$partner_min_age]);
+        // }
+
+        // if(array_key_exists('max_age', $data) && $data['max_age'] != ''){
+        //     $partner_max_age=  $data['max_age'];
+        //     $members =  $members->whereRaw('date_of_birth >= CURDATE() - INTERVAL ? YEAR', [$partner_max_age]);
+        // }
+
+        $result = $members->get();
+        return $result;
     }
 }

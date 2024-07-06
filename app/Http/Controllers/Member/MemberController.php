@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers\Member;
 
-use App\Utility;
 use App\Constant;
-use App\Models\Member;
-use App\ReturnMessage;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Member\MemberController;
+use App\Http\Requests\EmailCheckRequest;
+use App\Http\Requests\EmailConfirmRequest;
+use App\Http\Requests\Front\ApiSyncMembersRequest;
+use App\Http\Requests\MemberLoginRequest;
+use App\Http\Requests\MemberRegisterRequest;
 use App\Http\Resources\CityResource;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\HobbyResource;
 use App\Http\Resources\MemberResource;
-use App\Http\Requests\EmailCheckRequest;
-use App\Http\Requests\MemberLoginRequest;
-use App\Http\Requests\EmailConfirmRequest;
-use App\Http\Requests\MemberRegisterRequest;
-use App\Http\Controllers\Member\MemberController;
+use App\Models\Member;
 use App\Repositories\City\CityRepositoryInterface;
 use App\Repositories\Hobby\HobbyRepositoryInterface;
 use App\Repositories\Member\MemberRepositoryInterface;
 use App\Repositories\Setting\SettingRepositoryInterface;
+use App\ReturnMessage;
+use App\Utility;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class MemberController extends Controller
 {
@@ -43,27 +43,56 @@ class MemberController extends Controller
         DB::connection()->enableQueryLog();
     }
 
-    // public function index()
-    // {
-    //     try {
-    //         $members = $this->memberRepository->getMembers();
-    //         $queryLog = DB::getQueryLog();
-    //         Utility::saveDebugLog("MemberController::index", $queryLog);
-    //         return view('backend.member.index', compact([
-    //             'members'
-    //         ]));
-    //     } catch (\Exception $e) {
-    //         Utility::saveErrorLog("MemberController::index", $e->getMessage());
-    //         abort(500);
-    //     }
-    // }
+    public function adminIndex()
+    {
+        try {
+            $members = $this->memberRepository->getMembers();
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::index", $queryLog);
+            return view('backend.member.index', compact([
+                'members'
+            ]));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::index", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function point($id)
+    {
+        try {
+            $point = $this->memberRepository->getMemberPointById((int) $id);
+            if ($point == null) {
+                abort(404);
+            }
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::point", $queryLog);
+            return view('backend.member.point_form', compact([
+                'point'
+            ]));
+
+        } catch (\Exception $e) {
+            if ($e->getCode() == 0) {
+                Utility::saveErrorLog("MemberController::point", "Invalid Member Id");
+                abort(404);
+            }
+            Utility::saveErrorLog("MemberController::point", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function changeStatus ()
+    {
+        dd('hey');
+    }
+
     public function index()
     {
         try {
             $setting = $this->settingRepository->getSetting();
             $queryLog = DB::getQueryLog();
             Utility::saveDebugLog("MemberController::register", $queryLog);
-            return view('frontend/index',  compact(['setting']));
+            return view('frontend/index', compact(['setting']));
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::index", $e->getMessage());
             abort(500);
@@ -85,6 +114,9 @@ class MemberController extends Controller
     public function login()
     {
         try {
+            if (Auth::guard('member')->user() != null) {
+                return redirect('index');
+            }
             $setting    = $this->settingRepository->getSetting();
             $queryLog   = DB::getQueryLog();
             Utility::saveDebugLog("MemberController::login", $queryLog);
@@ -249,22 +281,21 @@ class MemberController extends Controller
         }
     }
 
-    public function syncMember(Request $request)
+    public function apiSyncMembers(ApiSyncMembersRequest $request)
     {
-        $response       = [];
-        $pageNo         = $request->page;
-        $record_per_page= 9;
-        $offset         = ($pageNo - 1) * $record_per_page;
-        $total_show_data= $pageNo * $record_per_page;
-        $response_data  = Member::skip($offset)->take($record_per_page)->get();
-        $total_count    = Member::count();
-        if($total_count <= $total_show_data){
-            $response['show_more'] = false;
-        }else{
-            $response['show_more'] = true;
+        try {
+            $result = $this->memberRepository->apiSyncMembers((array) $request->all());
+            dd($result);
+            // $queryLog = DB::getQueryLog();
+            // Utility::saveDebugLog("MemberController::apiSyncMembers", $queryLog);
+            // if ($result['status'] == ReturnMessage::OK) {
+            //     return redirect('login')->with(['success_msg' => 'Email confirmed successfully']);
+            // } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
+            //     return redirect('login')->with(['fail_msg' => 'Email confirmed failed!']);
+            // }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiSyncMembers", $e->getMessage());
+            abort(500);
         }
-        $response['status'] = '200';
-        $response['data']   = $response_data;
-        return response()->json(['data' => $response]);
     }
 }

@@ -125,14 +125,14 @@
                             class="form-control form-control-lg border border-1 border-black rounded rounded-4 mt-2"
                             style="width:100%;" ng-blur="validate('religion')" ng-change="checkValidation('religion');">
                             <option value="" selected>Choose your religion</option>
-                            <option value="1">Christianity</option>
-                            <option value="2">Islam</option>
-                            <option value="3">Buddhistm</option>
-                            <option value="4">Hinduism</option>
-                            <option value="5">Jain</option>
-                            <option value="6">Shinto</option>
-                            <option value="7">Atheism</option>
-                            <option value="8">Others</option>
+                            <option value="{{ getReligion('christian') }}">Christian</option>
+                            <option value="{{ getReligion('islam') }}">Islam</option>
+                            <option value="{{ getReligion('buddhist') }}">Buddhist</option>
+                            <option value="{{ getReligion('hindu') }}">Hindu</option>
+                            <option value="{{ getReligion('jain') }}">Jain</option>
+                            <option value="{{ getReligion('shinto') }}">Shinto</option>
+                            <option value="{{ getReligion('atheist') }}">Atheist</option>
+                            <option value="{{ getReligion('other') }}">Other</option>
 
                         </select>
                         <p class="text-danger" ng-if="religion_error">@{{ religion_error_msg }}</p>
@@ -141,13 +141,13 @@
                         <p class="mt-2">Please choose your gender.</p>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input gender" type="radio" id="male" name="gender"
-                                ng-model="gender" value="0" ng-blur="validate('gender')"
+                                ng-model="gender" value="{{ getGender('male') }}" ng-blur="validate('gender')"
                                 ng-click="validate('gender')" ng-change="checkValidation('gender')">
                             <label class="form-check-label" for="male">Male</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input gender" type="radio" id="female" name="gender"
-                                ng-model="gender" value="1" ng-blur="validate('gender')"
+                                ng-model="gender" value="{{ getGender('female') }}" ng-blur="validate('gender')"
                                 ng-click="validate('gender')" ng-change="checkValidation('gender')">
                             <label class="form-check-label" for="female">Female</label>
                         </div>
@@ -169,21 +169,21 @@
                         <p class="form-check-label d-block mt-2" for="male">Please choose your partner gender.</p>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input partner-gender" type="radio" id="partner-male"
-                                name="partner-gender" ng-model="partner_gender" value="0"
+                                name="partner-gender" ng-model="partner_gender" value="{{ getPartnerGender('male') }}"
                                 ng-blur="validate('partner-gender')" ng-click="validate('partner-gender')"
                                 ng-change="checkValidation('partner-gender')">
                             <label class="form-check-label" for="partner-male">Male</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input partner-gender" type="radio" id="partner-female"
-                                name="partner-gender" ng-model="partner_gender" value="1"
+                                name="partner-gender" ng-model="partner_gender" value="{{ getPartnerGender('female') }}"
                                 ng-blur="validate('partner-gender')" ng-click="validate('partner-gender')"
                                 ng-change="checkValidation('partner-gender')">
                             <label class="form-check-label" for="partner-female">Female</label>
                         </div>
                         <div class="form-check form-check-inline">
                             <input class="form-check-input partner-gender" type="radio" id="partner-both"
-                                name="partner-gender" ng-model="partner_gender" value="2"
+                                name="partner-gender" ng-model="partner_gender" value="{{ getPartnerGender('both') }}"
                                 ng-blur="validate('partner-gender')" ng-click="validate('partner-gender')"
                                 ng-change="checkValidation('partner-gender')">
                             <label class="form-check-label" for="partner-both">Both</label>
