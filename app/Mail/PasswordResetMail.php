@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RegistrationConfirmMail extends Mailable
+class PasswordResetMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -32,7 +32,7 @@ class RegistrationConfirmMail extends Mailable
     public function envelope()
     {
         return new Envelope(
-            subject: 'MMCupid :: Registration Confirm Mail',
+            subject: 'MMCupid :: Password Reset Mail',
         );
     }
 
@@ -44,17 +44,16 @@ class RegistrationConfirmMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'email.registration',
+            view: 'email.password_reset',
         );
     }
 
     public function build()
     {
-        return $this->subject('MMCupid Account Activation')
-                    ->view('email.registration')
+        return $this->subject('Reset Your Password')
+                    ->view('email.password_reset')
                     ->with('mail_data', $this->mail_data);
     }
-
     /**
      * Get the attachments for the message.
      *

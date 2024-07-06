@@ -5,19 +5,19 @@
 @section('keywords')
     mmcupid | MMcupid | find love | find lover | dating | date partner | ဖူးစာရှာ | အချစ်ရှာ | ကောင်လေးရှာ | ကောင်မလေးရှာ
 @endsection
-@section('title', 'MMCupid')
+@section('title', 'MMCupid :: Forgot Password')
 @section('content')
     <div class="container my-5" ng-app="myApp" ng-controller="myCtrl" ng-init="init()">
         <div class="row">
             <div class="col"></div>
 
             <div class="col-md-5">
-                <h1 class="fw-bold text-center" style="font-size: 60px">Sign in</h1>
-                <div class="py-3 text-center" style="font-size: 14px;">
-                    Don't have account yet? <a href="{{ url('forgot-password') }}" class="text-decoration-none text-primary">Sign up</a>
+                <h3 class="fw-bold text-center">Forgot your password?</h3>
+                <div class="py-3 text-center" style="font-size: 16px;">
+                    <div>We will send instructions to this email to reset your password. </div>
                 </div>
 
-                <form id="login-form" action="{{ url('login') }}" method="POST">
+                <form id="login-form" action="{{ url('password-reset-email') }}" method="POST">
                     @csrf
                     <input type="text"
                         class="form-control form-control-lg border border-1 border-black rounded rounded-4 mt-2"
@@ -26,27 +26,16 @@
                         value="{{ old('email') }}" />
                     <p class="text-danger" ng-if="email_error">@{{ email_error_msg }}</p>
 
-                    <div class="position-relative">
-                        <input type="password" ng-keypress="tryLogin($event)"
-                            class="form-control form-control-lg border border-1 border-black rounded rounded-4 mt-2"
-                            style="width:100%;" placeholder="Enter Password" name="password" id="password"
-                            ng-model="password" ng-blur="validate('password')"
-                            ng-change="checkValidation();validate('password');" value="" />
-                        <i class="fa fa-eye-slash position-absolute top-0 end-0 mt-3 me-3 fs-5" id="password-icon"
-                            ng-mousedown="openPassword('password')" ng-mouseup="closePassword('password')"></i>
-                        <p class="text-danger" ng-if="password_error">@{{ password_error_msg }}</p>
-                    </div>
-
                     <button type="button" ng-click="login()" ng-disabled="process_error" id="login-btn"
-                        class="btn btn-dark rounded rounded-5 btn-lg mt-4" style="width:100%;">
-                        Log in
+                        class="btn btn-dark rounded rounded-5 btn-lg mt-3" style="width:100%;">
+                        Continue
                     </button>
 
                     <input type="hidden" name="form-sub" value="1">
                 </form>
 
                 <div class="py-3 text-center" style="font-size: 14px;">
-                    <a href="{{ url('forgot-password') }}" class="text-decoration-none text-primary">Forgot password?</a>
+                    <a href="{{ url('login') }}" class="text-decoration-none text-primary">Remember password? Log in</a>
                 </div>
             </div>
 

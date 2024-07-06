@@ -14,7 +14,7 @@
             <div class="col-10 col-sm-8 col-md-6 col-lg-5">
                 <h1 class="fw-bold text-center" style="font-size: 60px">Sign up</h1>
                 <div class="py-3 text-center" style="font-size: 14px;">
-                    Already have an account? <a href="{{ url('/login') }}" class="text-black">Log in</a>
+                    Already have an account? <a href="{{ url('/login') }}" class="text-decoration-none text-primary">Log in</a>
                 </div>
                 <div class="fw-medium text-center" style="font-size: 14px;">Sign up with your email or phone number</div>
 
@@ -247,7 +247,7 @@
                                         <label for="" onclick="browseImage('1')"
                                             class="btn btn-dark p-2 rounded-3 hide position-absolute change-photo change-photo1"
                                             style="opacity: 0.8">Change</label>
-                                        <span class="position-absolute rounded-circle bg-white text-center" style="top:0; left:0; z-index: 10; width: 25px; height: 25px;">1</span>
+                                        <span class="position-absolute rounded-circle shadow-sm bg-white text-center" style="top:1%; left:1%; z-index: 10; width: 25px; height: 25px;">1</span>
                                         <i class="fa fa-upload fs-4" style="cursor: pointer" id="upload-icon-1"
                                             onclick="browseImage('1')"></i>
                                     </div>
@@ -259,6 +259,7 @@
                                         <label for="" onclick="browseImage('2')"
                                             class="btn btn-dark p-2 rounded-3 position-absolute hide change-photo change-photo2"
                                             style="opacity: 0.8">Change</label>
+                                        <span class="position-absolute rounded-circle shadow-sm bg-white text-center" style="top:1%; left:1%; z-index: 10; width: 25px; height: 25px;">2</span>
                                         <i class="fa fa-upload fs-4" onclick="browseImage('2')" style="cursor: pointer"
                                             id="upload-icon-2"></i>
                                     </div>
@@ -272,6 +273,7 @@
                                         <label for="" onclick="browseImage('3')"
                                             class="btn btn-dark p-2 rounded-3 position-absolute hide change-photo change-photo3"
                                             style="opacity: 0.8">Change</label>
+                                        <span class="position-absolute rounded-circle shadow-sm bg-white text-center" style="top:1%; left:1%; z-index: 10; width: 25px; height: 25px;">3</span>
                                         <i class="fa fa-upload fs-4" onclick="browseImage('3')" style="cursor: pointer"
                                             id="upload-icon-3"></i>
                                     </div>
@@ -285,6 +287,7 @@
                                         <label for="" onclick="browseImage('4')"
                                             class="btn btn-dark p-2 rounded-3 position-absolute hide change-photo change-photo4"
                                             style="opacity: 0.8">Change</label>
+                                        <span class="position-absolute rounded-circle shadow-sm bg-white text-center" style="top:1%; left:1%; z-index: 10; width: 25px; height: 25px;">4</span>
                                         <i class="fa fa-upload fs-4" onclick="browseImage('4')" style="cursor: pointer"
                                             id="upload-icon-4"></i>
                                     </div>
@@ -296,6 +299,7 @@
                                         <label for="" onclick="browseImage('5')"
                                             class="btn btn-dark p-2 rounded-3 position-absolute hide change-photo change-photo5"
                                             style="opacity: 0.8">Change</label>
+                                        <span class="position-absolute rounded-circle shadow-sm bg-white text-center" style="top:1%; left:1%; z-index: 10; width: 25px; height: 25px;">5</span>
                                         <i class="fa fa-upload fs-4" onclick="browseImage('5')" style="cursor: pointer"
                                             id="upload-icon-5"></i>
                                     </div>
@@ -307,6 +311,7 @@
                                         <label for="" onclick="browseImage('6')"
                                             class="btn btn-dark p-2 rounded-3 position-absolute hide change-photo change-photo6"
                                             style="opacity: 0.8">Change</label>
+                                        <span class="position-absolute rounded-circle shadow-sm bg-white text-center" style="top:1%; left:1%; z-index: 10; width: 25px; height: 25px;">6</span>
                                         <i class="fa fa-upload fs-4" onclick="browseImage('6')" style="cursor: pointer"
                                             id="upload-icon-6"></i>
                                     </div>

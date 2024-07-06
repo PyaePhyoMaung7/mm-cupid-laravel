@@ -2,27 +2,28 @@
 
 namespace App\Http\Controllers\Member;
 
-use App\Constant;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Member\MemberController;
-use App\Http\Requests\EmailCheckRequest;
-use App\Http\Requests\EmailConfirmRequest;
-use App\Http\Requests\Front\ApiSyncMembersRequest;
-use App\Http\Requests\MemberLoginRequest;
-use App\Http\Requests\MemberRegisterRequest;
-use App\Http\Resources\CityResource;
-use App\Http\Resources\HobbyResource;
-use App\Http\Resources\MemberResource;
-use App\Models\Member;
-use App\Repositories\City\CityRepositoryInterface;
-use App\Repositories\Hobby\HobbyRepositoryInterface;
-use App\Repositories\Member\MemberRepositoryInterface;
-use App\Repositories\Setting\SettingRepositoryInterface;
-use App\ReturnMessage;
 use App\Utility;
+use App\Constant;
+use App\Models\Member;
+use App\ReturnMessage;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CityResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\HobbyResource;
+use App\Http\Resources\MemberResource;
+use App\Http\Requests\EmailCheckRequest;
+use App\Http\Requests\MemberLoginRequest;
+use App\Http\Requests\EmailConfirmRequest;
+use App\Http\Requests\MemberRegisterRequest;
+use App\Http\Controllers\Member\MemberController;
+use App\Http\Requests\Front\ApiSyncMembersRequest;
+use App\Repositories\City\CityRepositoryInterface;
+use App\Repositories\Hobby\HobbyRepositoryInterface;
+use App\Http\Requests\Front\PasswordResetLinkRequest;
+use App\Repositories\Member\MemberRepositoryInterface;
+use App\Repositories\Setting\SettingRepositoryInterface;
 
 class MemberController extends Controller
 {
@@ -81,7 +82,7 @@ class MemberController extends Controller
         }
     }
 
-    public function changeStatus ()
+    public function changeStatus()
     {
         dd('hey');
     }
@@ -277,6 +278,30 @@ class MemberController extends Controller
             }
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::confirmEmail", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function forgotPassword()
+    {
+        try {
+            $setting = $this->settingRepository->getSetting();
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::forgotPassword", $queryLog);
+            return view('frontend.forgot_password', compact(['setting']));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::forgotPassword", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function emailPasswordResetLink(PasswordResetLinkRequest $request)
+    {
+        try {
+            $this->memberRepository->sendPasswordResetLink((array) $request->all());
+            return view('frontend.forgot_password', compact(['setting']));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::forgotPassword", $e->getMessage());
             abort(500);
         }
     }

@@ -19,6 +19,7 @@ return new class () extends Migration {
             $table->string('email', 150);
             $table->string('phone', 100);
             $table->string('email_confirm_code', 32);
+            $table->string('password_reset_code', 32)->nullable();
             $table->unsignedTinyInteger('gender');
             $table->date('date_of_birth');
             $table->mediumText('education');
@@ -41,6 +42,7 @@ return new class () extends Migration {
             $table->string('thumbnail', 200)->nullable();
             $table->longText('verify_photo')->nullable();
             $table->unsignedInteger('view_count')->default(0);
+            $table->timestamp('password_reset_code_sent_at')->nullable();
             $table->unsignedInteger('updated_by')->nullable();
             $table->unsignedInteger('deleted_by')->nullable();
             $table->timestamps();

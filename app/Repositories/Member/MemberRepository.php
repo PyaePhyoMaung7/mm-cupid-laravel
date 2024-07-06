@@ -279,4 +279,28 @@ class MemberRepository implements MemberRepositoryInterface
         $result = $members->get();
         return $result;
     }
+
+    public function sendPasswordResetLink(array $data)
+    {
+        $returned_array                     = [];
+        $update_data                        = [];
+        $password_reset_code                = self::generateEmailConfirmCode();
+        $update_data['password_reset_code'] = $password_reset_code;
+        $update_data['updated_at']          = date('Y-m-d H:i:s');
+        $result                             = Member::where('email', '=', $data['email'])
+                                              ->update($update_data);
+
+        if ($result) {
+            $setting        = $this->settingRepository->getSetting();
+            $company_name   = $setting->company_name;
+            $company_logo   = asset('storage/images/' . $setting->company_logo);
+            $mail_data = [
+                'email'              => $data['email'],
+                'company_name'       => $company_name,
+                'company_logo'       => $company_logo,
+                'password_reset_link' => url('password-reset?code=' . $password_reset_code),
+            ];
+            Mail::to($data['email'])->send(new RegistrationConfirmMail($mail_data));
+        }
+    }
 }

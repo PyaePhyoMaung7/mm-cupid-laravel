@@ -19,4 +19,6 @@ interface MemberRepositoryInterface
     public function getMemberPointById(int $id);
 
     public function apiSyncMembers(array $data);
+
+    public function sendPasswordResetLink(array $data);
 }
