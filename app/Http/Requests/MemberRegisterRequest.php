@@ -35,7 +35,12 @@ class MemberRegisterRequest extends BaseFormRequest
             ],
             'password' => [
                 'required',
-                'min:6'
+                'min:6',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/'
+            ],
+            'confirm-password' => [
+                'required',
+                'same:password'
             ],
             'phone' => [
                 'required',
@@ -121,6 +126,9 @@ class MemberRegisterRequest extends BaseFormRequest
             'email.unique'              => 'Email already exists',
             'password.required'         => 'Please fill password',
             'password.min'              => 'Password must contain at least 6 characters',
+            'password.regex'            => 'Password must contain at least 1 small letter, 1 capital letter, \n 1 number and 1 special character',
+            'confirm-password.required' => 'Please fill confirm password',
+            'confirm-password.same'     => 'Password and confirm password do not match',
             'phone.required'            => 'Please fill your phone number',
             'gender.required'           => 'Please choose your gender',
             'gender.integer'            => 'Gender must be a number',

@@ -39,7 +39,7 @@
         <div style="margin: 20px;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
                 <div style="margin-right: 20px;">
-                    <h3 style="font-size: 1.25rem;">Please reset your email</h3>
+                    <h3 style="font-size: 1.25rem;">Please reset your password</h3>
                 </div>
                 <div style="padding-top: 12px;">
                     <img style="border-radius: 50%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 40px; height: 40px;"
@@ -47,20 +47,20 @@
                 </div>
             </div>
             <div style="margin: 20px 0;">
-                <div style="font-size: 0.9rem;">If you don't recognise this activity.</div>
+                <div style="font-size: 0.9rem;">Click the following link to reset your password</div>
                 <div style="text-align: center; margin: 35px 0;">
                     <a href="{{ $mail_data['password_reset_link'] }}" class="button" target="_blank">
-                        Confirm your email
+                        Reset your password
                     </a>
                 </div>
                 <div style="font-size: 0.9rem;">Didn't request for password reset?
-                    <a href="{{ $mail_data['password_reset_link'] }}" class="button" target="_blank">
+                    <a href="{{ $mail_data['password_reset_link'] }}" style="text-decoration: none; color: blue;" target="_blank">
                             Change your password
                     </a>
                 </div>
             </div>
             <div style="margin-top: 40px; background-color: #f8f9fa; padding: 16px;">
-                <div style="display: flex; align-items: center; margin-bottom: 12px;">
+                <div style="display: flex; align-items: center; justify-content: center; margin-bottom: 12px;">
                     <div style="margin-right: 12px; padding-top: 3px;">
                         <img style="border-radius: 50%; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); width: 40px; height: 40px;"
                             src="https://t3.ftcdn.net/jpg/01/03/47/46/360_F_103474653_V0uJ6bx4r62TYIg7oZYPZo57FR0rCmkY.jpg" alt="">
@@ -69,7 +69,7 @@
                         <h3 style="color: #dc3545; font-weight: bold;">{{ $mail_data['company_name'] }}</h3>
                     </div>
                 </div>
-                <div style="font-size: 11px;">
+                <div style="font-size: 11px; text-align: center;">
                     <a href="" style="color: #6c757d; text-decoration: none;">Help Center</a> .
                     <a href="" style="color: #6c757d; text-decoration: none;">Privacy Policy</a> .
                     <a href="" style="color: #6c757d; text-decoration: none;">Terms & Conditions</a>

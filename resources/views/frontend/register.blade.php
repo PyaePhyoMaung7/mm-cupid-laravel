@@ -5,7 +5,7 @@
 @section('keywords')
     mmcupid | MMcupid | find love | find lover | dating | date partner | ဖူးစာရှာ | အချစ်ရှာ | ကောင်လေးရှာ | ကောင်မလေးရှာ
 @endsection
-@section('title', 'MMCupid')
+@section('title', 'MMCupid :: Register')
 @section('content')
     <div class="container my-5" ng-app="myApp" ng-controller="myCtrl" ng-init="init()">
         <div class="row">

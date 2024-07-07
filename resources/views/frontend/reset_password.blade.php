@@ -5,48 +5,46 @@
 @section('keywords')
     mmcupid | MMcupid | find love | find lover | dating | date partner | ဖူးစာရှာ | အချစ်ရှာ | ကောင်လေးရှာ | ကောင်မလေးရှာ
 @endsection
-@section('title', 'MMCupid :: Log In')
+@section('title', 'MMCupid :: Reset Password')
 @section('content')
     <div class="container my-5" ng-app="myApp" ng-controller="myCtrl" ng-init="init()">
         <div class="row">
             <div class="col"></div>
 
             <div class="col-md-5">
-                <h1 class="fw-bold text-center" style="font-size: 60px">Sign in</h1>
-                <div class="py-3 text-center" style="font-size: 14px;">
-                    Don't have account yet? <a href="{{ url('forgot-password') }}" class="text-decoration-none text-primary">Sign up</a>
-                </div>
+                <h3 class="fw-bold text-center mb-5">Please reset your password</h3>
 
-                <form id="login-form" action="{{ url('login') }}" method="POST">
+                <form id="login-form" action="{{ url('password-reset') }}" method="POST">
                     @csrf
-                    <input type="text"
+                    <input type="password"
                         class="form-control form-control-lg border border-1 border-black rounded rounded-4 mt-2"
-                        style="width:100%;" placeholder="Enter Email" name="email" id="email" ng-model="email"
-                        ng-blur="validate('email')" ng-change="checkValidation();validate('email');"
-                        value="{{ old('email') }}" />
-                    <p class="text-danger" ng-if="email_error">@{{ email_error_msg }}</p>
+                        style="width:100%;" placeholder="Enter Password" name="password" id="password"
+                        ng-model="password" ng-blur="validate('password')"
+                        ng-change="checkValidation('password');" />
+                    <p class="text-danger" ng-if="password_error">@{{ password_error_msg }}</p>
 
-                    <div class="position-relative">
-                        <input type="password" ng-keypress="tryLogin($event)"
-                            class="form-control form-control-lg border border-1 border-black rounded rounded-4 mt-2"
-                            style="width:100%;" placeholder="Enter Password" name="password" id="password"
-                            ng-model="password" ng-blur="validate('password')"
-                            ng-change="checkValidation();validate('password');" value="" />
-                        <i class="fa fa-eye-slash position-absolute top-0 end-0 mt-3 me-3 fs-5" id="password-icon"
-                            ng-mousedown="openPassword('password')" ng-mouseup="closePassword('password')"></i>
-                        <p class="text-danger" ng-if="password_error">@{{ password_error_msg }}</p>
+                    <input type="password"
+                        class="form-control form-control-lg border border-1 border-black rounded rounded-4 mt-2"
+                        style="width:100%;" placeholder="Enter Confirm Password" name="confirm-password"
+                        id="confirm-password" ng-model="confirm_password" ng-blur="validate('confirm_password')"
+                        ng-change="checkValidation('confirm_password');" />
+                    <p class="text-danger" ng-if="confirm_password_error">@{{ confirm_password_error_msg }}</p>
+                    <p class="text-danger" ng-if="passwords_unmatch_error">@{{ passwords_unmatch_error_msg }}</p>
+
+                    <div class="text-end mt-2" style="font-size: 14px;">
+                        <a href="{{ url('login') }}" class="text-decoration-none text-primary">Request link again</a>
                     </div>
 
-                    <button type="button" ng-click="login()" ng-disabled="process_error" id="login-btn"
-                        class="btn btn-dark rounded rounded-5 btn-lg mt-4" style="width:100%;">
-                        Log in
+                    <button type="submit" ng-disabled="process_error" id="login-btn"
+                        class="btn btn-dark rounded rounded-5 btn-lg mt-3" style="width:100%;">
+                        Reset Password
                     </button>
 
-                    <input type="hidden" name="form-sub" value="1">
+                    <input type="hidden" name="member-id" value="{{ old('member-id', $member_id) }}">
                 </form>
 
                 <div class="py-3 text-center" style="font-size: 14px;">
-                    <a href="{{ url('forgot-password') }}" class="text-decoration-none text-primary">Forgot password?</a>
+                    Remember password? <a href="{{ url('login') }}" class="text-decoration-none text-primary">Log in</a>
                 </div>
             </div>
 
@@ -61,8 +59,8 @@
         <script>
             new PNotify({
                 title: 'Welcome to ' + '{{ $setting->company_name }}' +  ' !',
-                text: "{{ session('success_msg')}}",
-                width: '360px',
+                text: 'Your account has been activated successfully.</br>Please Login',
+                width: '350px',
                 type: 'success',
                 styling: 'bootstrap3'
             });
@@ -71,8 +69,8 @@
         <script>
             new PNotify({
                 title: 'Welcome to ' + '{{ $setting->company_name }}' +  ' !',
-                text: "{{ session('fail_msg')}}",
-                width: '360px',
+                text: 'Unfortunately, your account activation failed!.</br>Please try again.',
+                width: '350px',
                 type: 'success',
                 styling: 'bootstrap3'
             });

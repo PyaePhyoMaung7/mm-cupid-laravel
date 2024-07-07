@@ -21,4 +21,9 @@ interface MemberRepositoryInterface
     public function apiSyncMembers(array $data);
 
     public function sendPasswordResetLink(array $data);
+
+    public function getMemberIdByPasswordResetCode(string $code);
+
+    public function updatePassword(array $data);
+
 }

@@ -11,7 +11,8 @@ use Illuminate\Queue\SerializesModels;
 
 class RegistrationConfirmMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new message instance.
@@ -44,14 +45,14 @@ class RegistrationConfirmMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'email.registration',
+            view: 'mail.registration',
         );
     }
 
     public function build()
     {
         return $this->subject('MMCupid Account Activation')
-                    ->view('email.registration')
+                    ->view('mail.registration')
                     ->with('mail_data', $this->mail_data);
     }
 

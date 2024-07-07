@@ -40,7 +40,9 @@ Route::post('api/check-email', [MemberController::class, 'apiCheckEmail']);
 Route::get('/email-confirm', [MemberController::class, 'confirmEmail']);
 Route::get('forgot-password', [MemberController::class, 'forgotPassword']);
 Route::post('password-reset-email', [MemberController::class, 'emailPasswordResetLink']);
+Route::get('password-reset-code-check', [MemberController::class, 'passwordResetCodeCheck']);
 Route::get('password-reset', [MemberController::class, 'resetPassword']);
+Route::post('password-reset', [MemberController::class, 'postResetPassword']);
 
 Route::get('/send-mail', [MailController::class, 'index']);
 

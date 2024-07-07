@@ -6,6 +6,7 @@ use App\Utility;
 use App\Constant;
 use App\Models\Member;
 use App\ReturnMessage;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CityResource;
@@ -18,9 +19,11 @@ use App\Http\Requests\MemberLoginRequest;
 use App\Http\Requests\EmailConfirmRequest;
 use App\Http\Requests\MemberRegisterRequest;
 use App\Http\Controllers\Member\MemberController;
+use App\Http\Requests\Front\PasswordResetRequest;
 use App\Http\Requests\Front\ApiSyncMembersRequest;
 use App\Repositories\City\CityRepositoryInterface;
 use App\Repositories\Hobby\HobbyRepositoryInterface;
+use App\Http\Requests\Front\PasswordResetCodeRequest;
 use App\Http\Requests\Front\PasswordResetLinkRequest;
 use App\Repositories\Member\MemberRepositoryInterface;
 use App\Repositories\Setting\SettingRepositoryInterface;
@@ -301,7 +304,53 @@ class MemberController extends Controller
             $this->memberRepository->sendPasswordResetLink((array) $request->all());
             return view('frontend.forgot_password', compact(['setting']));
         } catch (\Exception $e) {
-            Utility::saveErrorLog("MemberController::forgotPassword", $e->getMessage());
+            Utility::saveErrorLog("MemberController::emailPasswordResetLink", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function passwordResetCodeCheck(PasswordResetCodeRequest $request)
+    {
+        try {
+            $code       = $request->get('code');
+            $member_id  = $this->memberRepository->getMemberIdByPasswordResetCode((string) $code);
+            return redirect('password-reset')->with('member_id', $member_id);
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::passwordResetCodeCheck", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function resetPassword()
+    {
+        try {
+            $member_id  = session('member_id');
+            $setting    = $this->settingRepository->getSetting();
+            $queryLog   = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::resetPassword", $queryLog);
+            return view('frontend.reset_password', compact([
+                'setting',
+                'member_id'
+            ]));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::resetPassword", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function postResetPassword(PasswordResetRequest $request)
+    {
+        try {
+            $result     = $this->memberRepository->updatePassword((array) $request->all());
+            $queryLog   = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::postResetPassword", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return redirect('login')->with(['success_msg' => 'Password updated successfully \n Please log in']);
+            } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
+                return redirect('login')->with(['fail_msg' => 'Password update failed!']);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::postResetPassword", $e->getMessage());
             abort(500);
         }
     }
@@ -310,14 +359,13 @@ class MemberController extends Controller
     {
         try {
             $result = $this->memberRepository->apiSyncMembers((array) $request->all());
-            dd($result);
-            // $queryLog = DB::getQueryLog();
-            // Utility::saveDebugLog("MemberController::apiSyncMembers", $queryLog);
-            // if ($result['status'] == ReturnMessage::OK) {
-            //     return redirect('login')->with(['success_msg' => 'Email confirmed successfully']);
-            // } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
-            //     return redirect('login')->with(['fail_msg' => 'Email confirmed failed!']);
-            // }
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiSyncMembers", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return redirect('login')->with(['success_msg' => 'Email confirmed successfully']);
+            } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
+                return redirect('login')->with(['fail_msg' => 'Email confirmed failed!']);
+            }
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::apiSyncMembers", $e->getMessage());
             abort(500);

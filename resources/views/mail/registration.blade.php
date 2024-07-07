@@ -67,7 +67,7 @@
                         <h3 style="color: #dc3545; font-weight: bold;">{{ $mail_data['company_name'] }}</h3>
                     </div>
                 </div>
-                <div style="font-size: 11px;">
+                <div style="font-size: 11px; text-align: center;">
                     <a href="" style="color: #6c757d; text-decoration: none;">Help Center</a> .
                     <a href="" style="color: #6c757d; text-decoration: none;">Privacy Policy</a> .
                     <a href="" style="color: #6c757d; text-decoration: none;">Terms & Conditions</a>

@@ -11,7 +11,8 @@ use Illuminate\Queue\SerializesModels;
 
 class PasswordResetMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     /**
      * Create a new message instance.
@@ -44,14 +45,14 @@ class PasswordResetMail extends Mailable
     public function content()
     {
         return new Content(
-            view: 'email.password_reset',
+            view: 'mail.password_reset',
         );
     }
 
     public function build()
     {
         return $this->subject('Reset Your Password')
-                    ->view('email.password_reset')
+                    ->view('mail.password_reset')
                     ->with('mail_data', $this->mail_data);
     }
     /**

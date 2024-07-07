@@ -9,6 +9,7 @@ use App\ReturnMessage;
 use App\Models\Setting;
 use App\Models\MemberHobby;
 use App\Models\MemberGallery;
+use App\Mail\PasswordResetMail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -50,10 +51,20 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function getMemberPointById(int $id)
     {
-        $point = Member::select('point')
+        $member = Member::select('point')
                         ->where('id', '=', $id)
                         ->first();
+        $point  = $member->point;
         return $point;
+    }
+
+    public function getMemberIdByPasswordResetCode(string $code)
+    {
+        $member = Member::select('id')
+                        ->where('password_reset_code', '=', $code)
+                        ->first();
+        $id     = $member->id;
+        return $id;
     }
 
     public function emailAlreadyExists(array $data)
@@ -191,6 +202,7 @@ class MemberRepository implements MemberRepositoryInterface
             'company_logo'       => $company_logo,
             'email_confirm_link' => url('email-confirm?code=' . $data->email_confirm_code),
         ];
+        dd($mail_data);
         Mail::to($data->email)->send(new RegistrationConfirmMail($mail_data));
     }
 
@@ -210,9 +222,9 @@ class MemberRepository implements MemberRepositoryInterface
             $result                 = Member::where('email_confirm_code', '=', $data['code'])
                                         ->update($update_data);
             if ($result) {
-            $returned_array['status']   = ReturnMessage::OK;
+                $returned_array['status']   = ReturnMessage::OK;
             } else {
-            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+                $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
             }
             return $returned_array;
         } else {
@@ -220,7 +232,7 @@ class MemberRepository implements MemberRepositoryInterface
         }
     }
 
-    public function apiSyncMembers (array $data)
+    public function apiSyncMembers(array $data)
     {
         $response           = [];
         $page_no            = $data['page'];
@@ -235,14 +247,14 @@ class MemberRepository implements MemberRepositoryInterface
             $response['show_more'] = true;
         }
         $members  = Member::select(
-                    '*',
-                    DB::raw('TIMESTAMPDIFF(YEAR, members.date_of_birth, CURDATE()) AS age'),
-                    DB::raw("CASE
+            '*',
+            DB::raw('TIMESTAMPDIFF(YEAR, members.date_of_birth, CURDATE()) AS age'),
+            DB::raw("CASE
                                 WHEN gender = ". Constant::MALE ." THEN 'male'
                                 WHEN gender = ". Constant::FEMALE ." THEN 'female'
                                 ELSE 'other'
                             END AS gender_name"),
-                    DB::raw("CASE
+            DB::raw("CASE
                                 WHEN religion = ". Constant::RELIGION_CHRISTIAN ." THEN 'Christian'
                                 WHEN religion = ". Constant::RELIGION_ISLAM ." THEN 'Muslim'
                                 WHEN religion = ". Constant::RELIGION_BUDDHIST ." THEN 'Buddhist'
@@ -251,18 +263,19 @@ class MemberRepository implements MemberRepositoryInterface
                                 WHEN religion = ". Constant::RELIGION_SHINTO ." THEN 'Shinto'
                                 WHEN religion = ". Constant::RELIGION_ATHEIST ." THEN 'Atheist'
                                 ELSE 'Other'
-                            END AS religion_name"))
+                            END AS religion_name")
+        )
                     ->where('id', '!=', $member_id)
                     ->where('status', '!=', Constant::MEMBER_UNVERIFIED)
                     ->where('status', '!=', Constant::MEMBER_BANNED)
                     // ->where('love_status', '!=', Constant::IN_RELATIONSHIP)
                     ->whereNull('deleted_at');
 
-        if(array_key_exists('partner_gender', $data) && $data['partner_gender'] != '') {
+        if (array_key_exists('partner_gender', $data) && $data['partner_gender'] != '') {
             $partner_gender = $data['partner_gender'];
         }
 
-        if($partner_gender != Constant::PARTNER_GENDER_BOTH) {
+        if ($partner_gender != Constant::PARTNER_GENDER_BOTH) {
             $members = $members->where('gender', '=', $partner_gender);
         }
 
@@ -282,13 +295,14 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function sendPasswordResetLink(array $data)
     {
-        $returned_array                     = [];
-        $update_data                        = [];
-        $password_reset_code                = self::generateEmailConfirmCode();
-        $update_data['password_reset_code'] = $password_reset_code;
-        $update_data['updated_at']          = date('Y-m-d H:i:s');
-        $result                             = Member::where('email', '=', $data['email'])
-                                              ->update($update_data);
+        $returned_array                             = [];
+        $update_data                                = [];
+        $password_reset_code                        = self::generateEmailConfirmCode();
+        $update_data['password_reset_code']         = $password_reset_code;
+        $update_data['password_reset_code_sent_at'] = date('Y-m-d H:i:s');
+        $update_data['updated_at']                  = date('Y-m-d H:i:s');
+        $result                                     = Member::where('email', '=', $data['email'])
+                                                            ->update($update_data);
 
         if ($result) {
             $setting        = $this->settingRepository->getSetting();
@@ -298,9 +312,28 @@ class MemberRepository implements MemberRepositoryInterface
                 'email'              => $data['email'],
                 'company_name'       => $company_name,
                 'company_logo'       => $company_logo,
-                'password_reset_link' => url('password-reset?code=' . $password_reset_code),
+                'password_reset_link' => url('password-reset-code-check?code=' . $password_reset_code),
             ];
-            Mail::to($data['email'])->send(new RegistrationConfirmMail($mail_data));
+            Mail::to($data['email'])->send(new PasswordResetMail($mail_data));
         }
+    }
+
+    public function updatePassword(array $data)
+    {
+        $returned_array                             = [];
+        $update_data                                = [];
+        $member_id                                  = $data['member-id'];
+        $update_data['password']                    = bcrypt($data['password']);
+        $update_data['updated_at']                  = date('Y-m-d H:i:s');
+        $update_data['updated_by']                  = $member_id;
+        $param_obj                                  = Member::find($member_id);
+        $result                                     = $param_obj->update($update_data);
+
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
     }
 }
