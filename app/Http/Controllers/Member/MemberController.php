@@ -17,6 +17,7 @@ use App\Http\Resources\MemberResource;
 use App\Http\Requests\EmailCheckRequest;
 use App\Http\Requests\MemberLoginRequest;
 use App\Http\Requests\EmailConfirmRequest;
+use App\Http\Resources\SyncMemberResource;
 use App\Http\Requests\MemberRegisterRequest;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Requests\Front\PasswordResetRequest;
@@ -362,7 +363,7 @@ class MemberController extends Controller
             $queryLog = DB::getQueryLog();
             Utility::saveDebugLog("MemberController::apiSyncMembers", $queryLog);
             if ($result['status'] == ReturnMessage::OK) {
-                return redirect('login')->with(['success_msg' => 'Email confirmed successfully']);
+                return SyncMemberResource::collection($result['members']);
             } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
                 return redirect('login')->with(['fail_msg' => 'Email confirmed failed!']);
             }

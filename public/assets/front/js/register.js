@@ -210,6 +210,7 @@ app.controller("myCtrl", function ($scope, $http) {
         form.append('username', $scope.username );
         form.append('email', $scope.email );
         form.append('password', $scope.password );
+        form.append('confirm-password', $scope.confirm_password);
         form.append('phone', $scope.phone );
         form.append('birthday', $scope.birthday );
         form.append('city', $scope.city );

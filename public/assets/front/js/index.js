@@ -53,9 +53,9 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
             }
         }).then(
             function (response) {
-                console.log(response);
                 if(response.status == "200") {
-                    $scope.members = $scope.members.concat(response.data.data.data);
+                    $scope.members = $scope.members.concat(response.data.data);
+                    console.log($scope.members);
                     $scope.show_more = response.data.show_more;
                     $('.loading').hide();
                 }

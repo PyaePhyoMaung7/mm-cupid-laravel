@@ -234,17 +234,18 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function apiSyncMembers(array $data)
     {
-        $response           = [];
+        $returned_array     = [];
         $page_no            = $data['page'];
         $offset             = ($page_no - 1) * Constant::RECORD_PER_PAGE;
         $total_show_data    = $page_no * Constant::RECORD_PER_PAGE;
         $partner_gender     = Auth::guard('member')->user()->partner_gender;
         $member_id          = Auth::guard('member')->user()->id;
         $total_count        = Member::count();
+        $base_url           = url('/');
         if ($total_count <= $total_show_data) {
-            $response['show_more'] = false;
+            $returned_array['show_more'] = false;
         } else {
-            $response['show_more'] = true;
+            $returned_array['show_more'] = true;
         }
         $members  = Member::select(
             '*',
@@ -263,7 +264,9 @@ class MemberRepository implements MemberRepositoryInterface
                                 WHEN religion = ". Constant::RELIGION_SHINTO ." THEN 'Shinto'
                                 WHEN religion = ". Constant::RELIGION_ATHEIST ." THEN 'Atheist'
                                 ELSE 'Other'
-                            END AS religion_name")
+                            END AS religion_name"),
+            DB::raw('CONCAT(height_feet, "\'", height_inches, "\"") AS height'),
+            DB::raw("CONCAT('". $base_url ."/storage/uploads/', id, '/thumb/', thumbnail) AS thumb")
         )
                     ->where('id', '!=', $member_id)
                     ->where('status', '!=', Constant::MEMBER_UNVERIFIED)
@@ -289,8 +292,18 @@ class MemberRepository implements MemberRepositoryInterface
         //     $members =  $members->whereRaw('date_of_birth >= CURDATE() - INTERVAL ? YEAR', [$partner_max_age]);
         // }
 
-        $result = $members->get();
-        return $result;
+        $result = $members
+                ->skip($offset)
+                ->take(Constant::RECORD_PER_PAGE)
+                ->get();
+
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+            $returned_array['members']  = $result;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
     }
 
     public function sendPasswordResetLink(array $data)

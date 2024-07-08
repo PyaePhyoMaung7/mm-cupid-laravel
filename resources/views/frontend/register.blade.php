@@ -53,8 +53,8 @@
                             <i class="fa fa-eye-slash position-absolute top-0 end-0 mt-3 me-3 fs-5"
                                 id="confirm-password-icon" ng-mousedown="openPassword('confirm-password')"
                                 ng-mouseup="closePassword('confirm-password')"></i>
-                            <p class="text-danger" ng-if="confirm_password_error">@{{ confirm_password_error_msg }}</p>
-                            <p class="text-danger" ng-if="passwords_unmatch_error">@{{ passwords_unmatch_error_msg }}</p>
+                                <p class="text-danger" ng-if="confirm_password_error">@{{ confirm_password_error_msg }}</p>
+                                <p class="text-danger" ng-if="passwords_unmatch_error">@{{ passwords_unmatch_error_msg }}</p>
                         </div>
 
 

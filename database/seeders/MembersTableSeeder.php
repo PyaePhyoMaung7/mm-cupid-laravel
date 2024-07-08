@@ -18,7 +18,7 @@ class MembersTableSeeder extends Seeder
     {
         DB::table('members')->truncate();
 
-        Member::factory()->count(50)->create();
+        // Member::factory()->count(50)->create();
 
         // DB::table('members')->insert(
         //     [

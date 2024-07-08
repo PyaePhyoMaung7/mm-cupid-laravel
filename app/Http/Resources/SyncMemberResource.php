@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Http\Resources;
+
+use App\Http\Resources\MemberGalleryResource;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class SyncMemberResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     */
+    public function toArray($request)
+    {
+        return [
+            'id'        => $this->id,
+            'username'  => $this->username,
+            'age'       => $this->age,
+            'gender'    => $this->gender_name,
+            // 'city' => $this->city_name,
+            'religion'  => $this->religion_name,
+            'about'     => $this->about,
+            'status'    => $this->status,
+            'height'    => $this->height,
+            'education' => $this->education,
+            'work'      => $this->work,
+            'city'      => $this->when(
+                            $this->getCityByMember != null,
+                            new CityResource($this->getCityByMember)
+                        ),
+            'images'    => $this->when(
+                            $this->getGalleryByMember != null,
+                            MemberGalleryResource::collection($this->getGalleryByMember)
+                        ),
+            'hobbies'   => $this->when(
+                            $this->getMemberHobbiesByMember != null,
+                            MemberHobbyResource::collection($this->getMemberHobbiesByMember)
+                        ),
+            'thumb'     => $this->thumb,
+        ];
+    }
+}
