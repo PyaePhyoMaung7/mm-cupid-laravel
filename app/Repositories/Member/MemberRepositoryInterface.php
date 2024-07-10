@@ -20,10 +20,14 @@ interface MemberRepositoryInterface
 
     public function apiSyncMembers(array $data);
 
+    public function apiMemberViewUpdate(int $id);
+
     public function sendPasswordResetLink(array $data);
 
     public function getMemberIdByPasswordResetCode(string $code);
 
     public function updatePassword(array $data);
+
+    public function apiSendDateRequest(int $id);
 
 }

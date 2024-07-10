@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             UsersTableSeeder::class,
             MembersTableSeeder::class,
             RoutePermissionTableSeeder::class,
+            MemberGalleryTableSeeder::class,
         ]);
     }
 }

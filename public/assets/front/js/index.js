@@ -58,6 +58,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
                     console.log($scope.members);
                     $scope.show_more = response.data.show_more;
                     $('.loading').hide();
+                    $scope.checkShowMore(response.data.meta);
                 }
             },
             function (error) {
@@ -80,18 +81,35 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         )
     }
 
+    $scope.checkShowMore = function (data) {
+        console.log(data);
+        page_no             = data.current_page;
+        per_page            = data.per_page;
+        total_show_data     = page_no * per_page;
+        total_count         = data.total;
+        if (total_count <= total_show_data) {
+            $scope.show_more = false;
+        } else {
+            $scope.show_more = true;
+        }
+    }
+
     $scope.updateViewCount = function (id) {
         const data = {'id' : id};
         $http({
             method: 'POST',
-            url: base_url+'api/update_view_count.php',
+            url: base_url+'/api/member/view/update',
             data: data,
             headers: {
               'Content-Type': 'application/json'
             }
         }).then(
             function (response) {
-                console.log(response);
+                if (response.data.success) {
+                    return true;
+                } else {
+                    alert('Something went wrong while updating member view count');
+                }
             }
         );
     };
@@ -133,7 +151,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         for (let i = 0; i < $scope.image_arr.length; i++) {
             $scope.all_images.push($scope.image_arr[i].image);
         }
-
+        console.log($scope.all_images);
         $('#profile-content').scrollTop(0);
         $("#image-content").css("z-index", 5);
         $('#member-profile').removeClass('opacity-0');
@@ -334,7 +352,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         $('.loading').show();
         $http({
             method: 'POST',
-            url: base_url+'api/invite_date.php',
+            url: base_url+'/api/invite',
             data: data,
             headers: {
               'Content-Type': 'application/json'
@@ -342,10 +360,10 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         }).then(
             function (response) {
                 console.log(response);
-                if (response.data.status == '200') {
-                    const point          = response.data.data.point;
-                    const success_code   = response.data.data.success;
-                    $('#point').text(point);
+                if (response.status == '200') {
+                    // const point          = response.data.data.point;
+                    const success_code   = response.data.success_code;
+                    // $('#point').text(point);
                     $('.loading').hide();
                    new PNotify({
                         title: 'Success!',
@@ -357,7 +375,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
                     });
 
                 } else {
-                    const error_code = response.data.data.error;
+                    const error_code = response.data.error_code;
                     $('.loading').hide();
                     new PNotify({
                         title: 'Fail!',
@@ -371,6 +389,10 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
 
             }
         );
+    }
+
+    $scope.AvailabilityToDate = function (id) {
+
     }
 
 })

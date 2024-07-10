@@ -7,6 +7,7 @@ use App\Constant;
 use App\Models\Member;
 use App\ReturnMessage;
 use App\Models\Setting;
+use App\Models\DateRequest;
 use App\Models\MemberHobby;
 use App\Models\MemberGallery;
 use App\Mail\PasswordResetMail;
@@ -282,20 +283,17 @@ class MemberRepository implements MemberRepositoryInterface
             $members = $members->where('gender', '=', $partner_gender);
         }
 
-        // if(array_key_exists('min_age', $data) && $data['min_age'] != ''){
-        //     $partner_min_age=  $data['min_age'];
-        //     $members =  $members->whereRaw('date_of_birth <= CURDATE() - INTERVAL ? YEAR', [$partner_min_age]);
-        // }
+        if (array_key_exists('min_age', $data) && $data['min_age'] != '') {
+            $partner_min_age =  $data['min_age'];
+            $members =  $members->whereRaw('date_of_birth <= CURDATE() - INTERVAL ? YEAR', [$partner_min_age]);
+        }
 
-        // if(array_key_exists('max_age', $data) && $data['max_age'] != ''){
-        //     $partner_max_age=  $data['max_age'];
-        //     $members =  $members->whereRaw('date_of_birth >= CURDATE() - INTERVAL ? YEAR', [$partner_max_age]);
-        // }
+        if (array_key_exists('max_age', $data) && $data['max_age'] != '') {
+            $partner_max_age =  $data['max_age'];
+            $members =  $members->whereRaw('date_of_birth >= CURDATE() - INTERVAL ? YEAR', [$partner_max_age ]);
+        }
 
-        $result = $members
-                ->skip($offset)
-                ->take(Constant::RECORD_PER_PAGE)
-                ->get();
+        $result = $members->paginate(Constant::RECORD_PER_PAGE);
 
         if ($result) {
             $returned_array['status']   = ReturnMessage::OK;
@@ -328,7 +326,27 @@ class MemberRepository implements MemberRepositoryInterface
                 'password_reset_link' => url('password-reset-code-check?code=' . $password_reset_code),
             ];
             Mail::to($data['email'])->send(new PasswordResetMail($mail_data));
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
         }
+
+        return $returned_array;
+    }
+
+    public function apiMemberViewUpdate(int $id)
+    {
+        $returned_array                             = [];
+        $update_data                                = [];
+        $param_obj                                  = Member::find($id);
+        $update_data['view_count']                  = $param_obj->view_count + 1;
+        $result                                     = $param_obj->update($update_data);
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
     }
 
     public function updatePassword(array $data)
@@ -342,6 +360,25 @@ class MemberRepository implements MemberRepositoryInterface
         $param_obj                                  = Member::find($member_id);
         $result                                     = $param_obj->update($update_data);
 
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
+    }
+
+    public function apiSendDateRequest(int $id)
+    {
+        $returned_array             = [];
+        $invite_id                  = Auth::guard('member')->user()->id;
+        $insert_data                = [];
+        $insert_data['invite_id']   = $invite_id;
+        $insert_data['accept_id']   = $id;
+        $insert_data['status']      = Constant::DATE_REQUEST_PENDING;
+        $insert_data['created_by']  = $invite_id ;
+        $insert_data['updated_by']  = $invite_id ;
+        $result                     = DateRequest::create($insert_data);
         if ($result) {
             $returned_array['status']   = ReturnMessage::OK;
         } else {

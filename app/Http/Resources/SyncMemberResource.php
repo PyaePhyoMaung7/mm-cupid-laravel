@@ -22,11 +22,11 @@ class SyncMemberResource extends JsonResource
             'gender'    => $this->gender_name,
             // 'city' => $this->city_name,
             'religion'  => $this->religion_name,
-            'about'     => $this->about,
+            'about'     => str_replace("\n", '<br>', $this->about),
             'status'    => $this->status,
             'height'    => $this->height,
-            'education' => $this->education,
-            'work'      => $this->work,
+            'education' => str_replace("\n", '<br>', $this->education),
+            'work'      => str_replace("\n", '<br>', $this->work),
             'city'      => $this->when(
                             $this->getCityByMember != null,
                             new CityResource($this->getCityByMember)
@@ -40,6 +40,14 @@ class SyncMemberResource extends JsonResource
                             MemberHobbyResource::collection($this->getMemberHobbiesByMember)
                         ),
             'thumb'     => $this->thumb,
+            'sent_date_requests'    => $this->when(
+                            $this->getSentDateRequestsByMember != null,
+                            DateRequestResource::collection($this->getSentDateRequestsByMember)
+                        ),
+            'received_date_requests' => $this->when(
+                            $this->getReceiveDateRequestsByMember != null,
+                            DateRequestResource::collection($this->getReceiveDateRequestsByMember)
+                        ),
         ];
     }
 }

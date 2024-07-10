@@ -80,4 +80,22 @@ class Member extends Authenticatable
         );
     }
 
+    public function getSentDateRequestsByMember(): HasMany
+    {
+        return $this->hasMany(
+            DateRequest::class,
+            'invite_id',
+            'id'
+        );
+    }
+
+    public function getReceiveDateRequestsByMember(): HasMany
+    {
+        return $this->hasMany(
+            DateRequest::class,
+            'accept_id',
+            'id'
+        );
+    }
+
 }

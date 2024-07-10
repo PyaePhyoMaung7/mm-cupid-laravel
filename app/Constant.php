@@ -32,6 +32,9 @@ class Constant
     public const PARTNER_GENDER_FEMALE          = 1;
     public const PARTNER_GENDER_BOTH            = 2;
 
+    public const MIN_AGE                        = 18;
+    public const MAX_AGE                        = 55;
+
     public const RELIGION_CHRISTIAN             = 1;
     public const RELIGION_ISLAM                 = 2;
     public const RELIGION_BUDDHIST              = 3;
@@ -42,4 +45,9 @@ class Constant
     public const RELIGION_OTHER                 = 8;
 
     public const RECORD_PER_PAGE                = 9;
+
+    public const DATE_REQUEST_PENDING           = 0;
+    public const DATE_REQUEST_REJECTED          = 1;
+    public const DATE_REQUEST_ACCEPTED          = 2;
+
 }

@@ -39,7 +39,7 @@ Route::get('api/hobbies', [MemberController::class, 'apiGetHobbies']);
 Route::post('api/check-email', [MemberController::class, 'apiCheckEmail']);
 Route::get('/email-confirm', [MemberController::class, 'confirmEmail']);
 Route::get('forgot-password', [MemberController::class, 'forgotPassword']);
-Route::post('password-reset-email', [MemberController::class, 'emailPasswordResetLink']);
+Route::post('password-reset-email', [MemberController::class, 'sendPasswordResetLink']);
 Route::get('password-reset-code-check', [MemberController::class, 'passwordResetCodeCheck']);
 Route::get('password-reset', [MemberController::class, 'resetPassword']);
 Route::post('password-reset', [MemberController::class, 'postResetPassword']);
@@ -50,6 +50,8 @@ Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
     Route::get('index', [MemberController::class, 'index']);
     Route::group(['prefix' => 'api'], function () {
         Route::post('/sync-members', [MemberController::class, 'apiSyncMembers']);
+        Route::post('/member/view/update', [MemberController::class, 'apiMemberViewUpdate']);
+        Route::post('invite', [MemberController::class, 'apiSendDateRequest']);
     });
 });
 Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function () {

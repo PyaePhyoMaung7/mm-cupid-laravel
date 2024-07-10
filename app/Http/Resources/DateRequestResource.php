@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class MemberGalleryResource extends JsonResource
+class DateRequestResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,9 +16,8 @@ class MemberGalleryResource extends JsonResource
     {
         return [
             'id'        => $this->id,
-            'image'     => url('/'). '/storage/uploads/' . $this->member_id . '/' . $this->name,
-            'sort'      => $this->sort,
-            'member_id' => $this->member_id
+            'invite_id' => $this->invite_id,
+            'accept_id' => $this->accept_id,
         ];
     }
 }

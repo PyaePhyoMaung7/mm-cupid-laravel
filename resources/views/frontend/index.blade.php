@@ -160,7 +160,7 @@
 
                                     <div class="p-4">
                                         <div class="text-secondary fw-bold">Current location</div>
-                                        <div class="fs-5 fw-bold mt-2">@{{ member . city }}</div>
+                                        <div class="fs-5 fw-bold mt-2">@{{ member . city . name }}</div>
                                     </div>
                                     <div class="p-4" style="margin-bottom: 70px;">
                                         <div class="text-secondary fw-bold">Verification</div>
@@ -176,7 +176,7 @@
                                             </span>
 
                                             <span class="fs-5 fw-bold d-flex align-items-center"
-                                                ng-if="member.status == 1">
+                                                ng-if="member.status == 1 || member.status == 2 || member.status == 3">
                                                 <i class="fa fa-check-circle text-primary me-2"></i>
                                                 <span>@{{ first_name }} is email verified</span>
                                             </span>
@@ -212,7 +212,7 @@
                                             class="image rounded rounded-4 object-fit-cover">
                                     </div>
                                     <p style="font-size: 12px; line-height: 16px; font-weight: 500" class="pt-2">
-                                        @{{ member . username }},@{{ member . age }}
+                                        @{{ member . username }}, @{{ member . age }}
                                     </p>
                                 </div>
                             </div>

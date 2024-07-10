@@ -20,6 +20,7 @@ use App\Http\Requests\EmailConfirmRequest;
 use App\Http\Resources\SyncMemberResource;
 use App\Http\Requests\MemberRegisterRequest;
 use App\Http\Controllers\Member\MemberController;
+use App\Http\Requests\Front\ApiDateInviteRequest;
 use App\Http\Requests\Front\PasswordResetRequest;
 use App\Http\Requests\Front\ApiSyncMembersRequest;
 use App\Repositories\City\CityRepositoryInterface;
@@ -27,6 +28,7 @@ use App\Repositories\Hobby\HobbyRepositoryInterface;
 use App\Http\Requests\Front\PasswordResetCodeRequest;
 use App\Http\Requests\Front\PasswordResetLinkRequest;
 use App\Repositories\Member\MemberRepositoryInterface;
+use App\Http\Requests\Front\ApiMemberViewUpdateRequest;
 use App\Repositories\Setting\SettingRepositoryInterface;
 
 class MemberController extends Controller
@@ -248,6 +250,27 @@ class MemberController extends Controller
         }
     }
 
+    public function apiMemberViewUpdate(ApiMemberViewUpdateRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->apiMemberViewUpdate((int) $request->get('id'));
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiMemberViewUpdate", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return response()->json([
+                    'success' => 'true'
+                ], ReturnMessage::OK);
+            } else {
+                return response()->json([
+                    'success' => 'false'
+                ], ReturnMessage::INTERNAL_SERVER_ERROR);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiMemberViewUpdate", $e->getMessage());
+            abort(500);
+        }
+    }
+
     public function postRegister(MemberRegisterRequest $request)
     {
         try {
@@ -299,13 +322,17 @@ class MemberController extends Controller
         }
     }
 
-    public function emailPasswordResetLink(PasswordResetLinkRequest $request)
+    public function sendPasswordResetLink(PasswordResetLinkRequest $request)
     {
         try {
-            $this->memberRepository->sendPasswordResetLink((array) $request->all());
-            return view('frontend.forgot_password', compact(['setting']));
+            $result = $this->memberRepository->sendPasswordResetLink((array) $request->all());
+            if ($result['status'] == ReturnMessage::OK) {
+                return redirect('login')->with(['success_msg' => 'Passowrd reset link successfully sent']);
+            } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
+                return redirect('login')->with(['fail_msg' => 'Passowrd reset link failed to send!']);
+            }
         } catch (\Exception $e) {
-            Utility::saveErrorLog("MemberController::emailPasswordResetLink", $e->getMessage());
+            Utility::saveErrorLog("MemberController::sendPasswordResetLink", $e->getMessage());
             abort(500);
         }
     }
@@ -369,6 +396,28 @@ class MemberController extends Controller
             }
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::apiSyncMembers", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function apiSendDateRequest(ApiDateInviteRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->apiSendDateRequest((int) $request->get('id'));
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiSendDateRequest", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return response()->json([
+                    'success'       => 'true',
+                    'success_code'  => 'Z0001'
+                ], ReturnMessage::OK);
+            } else {
+                return response()->json([
+                    'success' => 'false'
+                ], ReturnMessage::INTERNAL_SERVER_ERROR);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiSendDateRequest", $e->getMessage());
             abort(500);
         }
     }

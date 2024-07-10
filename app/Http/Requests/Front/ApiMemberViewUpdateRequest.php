@@ -4,9 +4,8 @@ namespace App\Http\Requests\Front;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\MemberPasswordResetLinkCheckRule;
 
-class PasswordResetCodeRequest extends FormRequest
+class ApiMemberViewUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,27 +25,23 @@ class PasswordResetCodeRequest extends FormRequest
     public function rules()
     {
         return [
-            'code' => [
+            'id' => [
                 'required',
-                Rule::exists('members', 'password_reset_code')
+                'integer',
+                Rule::exists('members', 'id')
                     ->where(function ($query) {
                         return $query->whereNull('deleted_at');
                     }),
-                new MemberPasswordResetLinkCheckRule($this->code),
-                'min:32',
-                'max:32',
-            ]
+            ],
         ];
     }
 
     public function messages()
     {
         return [
-            'code.required'     => 'Please fill password reset code',
-            'code.min'          => 'Invalid password reset code',
-            'code.max'          => 'Invalid password reset code',
-            'email.email'       => 'Invalid email',
-            'email.exists'      => 'Email not found in our database',
+            'id.required'       => 'Member id is required',
+            'id.integer'        => 'Member id must be a number',
+            'id.exists'         => 'Invalid member id',
         ];
     }
 }
