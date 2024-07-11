@@ -1,6 +1,7 @@
 var app = angular.module("myApp", []);
 
 app.controller('myCtrl', function($scope, $http, $timeout, $window){
+    $scope.login_info = [];
     $scope.members = [];
     $scope.member  = [];
     $scope.member_index = undefined;
@@ -21,6 +22,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
     $scope.age_limit = '';
     $scope.min_ages = [];
     $scope.max_ages = [];
+    $scope.available_to_request_date = true;
 
     for (let i = 18; i <= $scope.max_age; i++) {
         $scope.min_ages.push(i);
@@ -34,6 +36,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         $scope.syncMember();
         $scope.checkedGender();
         $scope.changeAgeLimit();
+        $scope.apiMe();
     }
 
     $scope.loadMore = function () {
@@ -81,6 +84,25 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         )
     }
 
+    $scope.apiMe = function () {
+        $http({
+            method: 'GET',
+            url: base_url+'/api/member',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        }).then(
+            function (response) {
+                if(response.status = 200) {
+                    $scope.login_info = response.data.data;
+                    console.log($scope.login_info.id);
+                } else {
+                    alert('Something went wrong while retrieving login user info');
+                }
+            }
+        );
+    }
+
     $scope.checkShowMore = function (data) {
         console.log(data);
         page_no             = data.current_page;
@@ -117,6 +139,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
     $scope.showMemberProfile = function (index) {
         $scope.all_images = [];
         $scope.member = $scope.members[index];
+        $scope.checkDateRequests($scope.member);
 
         $timeout.cancel($scope.timer);
         $scope.timer = $timeout( function () {
@@ -391,8 +414,22 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         );
     }
 
-    $scope.AvailabilityToDate = function (id) {
+    $scope.checkDateRequests = function (member) {
+        let sent_date_requests      = member.sent_date_requests;
+        let received_date_requests  = member.received_date_requests;
+        for (let i = 0; i < sent_date_requests.length; i++) {
+            if (sent_date_requests[i].accept_id == $scope.login_info.id) {
+                $scope.available_to_request_date = false;
+                return ;
+            }
+        }
 
+        for (let i = 0; i < received_date_requests.length; i++) {
+            if (received_date_requests[i].invite_id = $scope.login_info.id) {
+                $scope.available_to_request_date = false;
+                return ;
+            }
+        }
     }
 
 })

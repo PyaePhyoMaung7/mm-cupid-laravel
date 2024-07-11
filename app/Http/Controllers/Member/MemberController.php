@@ -421,4 +421,15 @@ class MemberController extends Controller
             abort(500);
         }
     }
+
+    public function apiGetLoginInfo()
+    {
+        try {
+            $member = Auth::guard('member')->user();
+            return new MemberResource($member);
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiSendDateRequest", $e->getMessage());
+            abort(500);
+        }
+    }
 }

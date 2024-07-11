@@ -123,7 +123,7 @@
                                         class="profile-image w-100 h-100 object-fit-cover" alt="">
                                 </div>
                                 <div class="">
-                                    <div class="p-4">
+                                    <div class="p-4" ng-if="available_to_request_date" >
                                         <span class="text-secondary fw-bold">Why @{{ first_name }}'s here</span>
                                         <div style="cursor: pointer;" ng-click="dateRequest(member.id)"
                                             class="w-100 tag-color p-3 mt-2 rounded-4 d-flex justify-content-start align-items-center">
