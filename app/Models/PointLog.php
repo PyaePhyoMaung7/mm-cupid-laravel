@@ -13,7 +13,7 @@ class PointLog extends Model
 
     protected $fillable = [
         'member_id',
-        'status',
+        // 'status',
         'search_id',
         'date_request_id',
         'created_at',

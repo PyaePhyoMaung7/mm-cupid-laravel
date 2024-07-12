@@ -95,7 +95,6 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
             function (response) {
                 if(response.status = 200) {
                     $scope.login_info = response.data.data;
-                    console.log($scope.login_info.id);
                 } else {
                     alert('Something went wrong while retrieving login user info');
                 }
@@ -371,6 +370,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
     }
 
     $scope.dateRequest = function (id) {
+        $scope.checkPoint();
         const data = {'id' : id};
         $('.loading').show();
         $http({
@@ -383,12 +383,14 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         }).then(
             function (response) {
                 console.log(response);
-                if (response.status == '200') {
-                    // const point          = response.data.data.point;
-                    const success_code   = response.data.success_code;
-                    // $('#point').text(point);
+                if (response.data.success) {
+                    const success_code  = response.data.success_code;
+                    const result_data   = response.data.data;
+                    $scope.members  = $scope.members.map(obj => obj.id == result_data.id ? result_data : obj);
+                    $scope.checkDateRequests(result_data);
+                    $scope.apiMe();
                     $('.loading').hide();
-                   new PNotify({
+                    new PNotify({
                         title: 'Success!',
                         width: '400px',
                         addclass: 'pnotify-center',
@@ -410,13 +412,26 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
                     });
                 }
 
+            },
+            function (error) {
+                $('.loading').hide();
+                error_msg = error.data.errors.id;
+                new PNotify({
+                    title: 'Fail!',
+                    width: '400px',
+                    addclass: 'pnotify-center',
+                    text: error_msg,
+                    type: 'error',
+                    styling: 'bootstrap3'
+                });
             }
         );
     }
 
     $scope.checkDateRequests = function (member) {
-        let sent_date_requests      = member.sent_date_requests;
-        let received_date_requests  = member.received_date_requests;
+        $scope.available_to_request_date    = true;
+        let sent_date_requests              = member.sent_date_requests;
+        let received_date_requests          = member.received_date_requests;
         for (let i = 0; i < sent_date_requests.length; i++) {
             if (sent_date_requests[i].accept_id == $scope.login_info.id) {
                 $scope.available_to_request_date = false;
@@ -425,11 +440,15 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         }
 
         for (let i = 0; i < received_date_requests.length; i++) {
-            if (received_date_requests[i].invite_id = $scope.login_info.id) {
+            if (received_date_requests[i].invite_id == $scope.login_info.id) {
                 $scope.available_to_request_date = false;
                 return ;
             }
         }
+    }
+
+    $scope.checkPoint = function () {
+        console.log('frontend check point');
     }
 
 })

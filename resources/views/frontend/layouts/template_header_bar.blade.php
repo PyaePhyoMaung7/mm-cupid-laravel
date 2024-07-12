@@ -7,7 +7,7 @@
             style="height: 25px; width: 60px; border-radius: 100%/60px;">
             <i class="fa fa-usd me-1 text-dark rounded-circle bg-white" style="font-size: 12px;padding: 2px 5px;"></i>
             <span class=" text-white" id="point"
-                style="font-size: 12px;">{{ Auth::guard('member')->user()->point }}</span>
+                style="font-size: 12px;">@{{ login_info . point }}</span>
         </button>
         <button class="icon-button">
             <i class="fa fa-search fs-4 fw-bold" id="offcanvas-search-btn" data-bs-toggle="offcanvas"

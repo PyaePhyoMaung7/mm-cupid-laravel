@@ -409,7 +409,9 @@ class MemberController extends Controller
             if ($result['status'] == ReturnMessage::OK) {
                 return response()->json([
                     'success'       => 'true',
-                    'success_code'  => 'Z0001'
+                    'success_code'  => 'Z0001',
+                    'new_point'     => $result['new_point'],
+                    'data'          => new SyncMemberResource($result['member_update']),
                 ], ReturnMessage::OK);
             } else {
                 return response()->json([
@@ -425,10 +427,12 @@ class MemberController extends Controller
     public function apiGetLoginInfo()
     {
         try {
-            $member = Auth::guard('member')->user();
+            $member = $this->memberRepository->getMemberById(Auth::guard('member')->user()->id);
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiGetLoginInfo", $queryLog);
             return new MemberResource($member);
         } catch (\Exception $e) {
-            Utility::saveErrorLog("MemberController::apiSendDateRequest", $e->getMessage());
+            Utility::saveErrorLog("MemberController::apiGetLoginInfo", $e->getMessage());
             abort(500);
         }
     }

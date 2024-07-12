@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Front;
 
 use Illuminate\Validation\Rule;
+use App\Rules\MemberPointCheckRule;
 use App\Http\Requests\BaseFormRequest;
 use App\Rules\DateRequestAlreadyExists;
 
@@ -33,6 +34,7 @@ class ApiDateInviteRequest extends BaseFormRequest
                 ->where(function ($query) {
                     return $query->whereNull('deleted_at');
                 }),
+                new MemberPointCheckRule(),
             ]
         ];
     }

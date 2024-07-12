@@ -50,4 +50,6 @@ class Constant
     public const DATE_REQUEST_REJECTED          = 1;
     public const DATE_REQUEST_ACCEPTED          = 2;
 
+    public const POINT_PER_DATE_REQEUST         = 300;
+
 }

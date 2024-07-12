@@ -16,6 +16,8 @@ interface MemberRepositoryInterface
 
     public function confirmEmail(array $data);
 
+    public function getMemberById(int $id);
+
     public function getMemberPointById(int $id);
 
     public function apiSyncMembers(array $data);

@@ -7,6 +7,7 @@ use App\Constant;
 use App\Models\Member;
 use App\ReturnMessage;
 use App\Models\Setting;
+use App\Models\PointLog;
 use App\Models\DateRequest;
 use App\Models\MemberHobby;
 use App\Models\MemberGallery;
@@ -57,6 +58,12 @@ class MemberRepository implements MemberRepositoryInterface
                         ->first();
         $point  = $member->point;
         return $point;
+    }
+
+    public function getMemberById(int $id)
+    {
+        $member = Member::find($id);
+        return $member;
     }
 
     public function getMemberIdByPasswordResetCode(string $code)
@@ -370,20 +377,75 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function apiSendDateRequest(int $id)
     {
-        $returned_array             = [];
-        $invite_id                  = Auth::guard('member')->user()->id;
-        $insert_data                = [];
-        $insert_data['invite_id']   = $invite_id;
-        $insert_data['accept_id']   = $id;
-        $insert_data['status']      = Constant::DATE_REQUEST_PENDING;
-        $insert_data['created_by']  = $invite_id ;
-        $insert_data['updated_by']  = $invite_id ;
-        $result                     = DateRequest::create($insert_data);
-        if ($result) {
-            $returned_array['status']   = ReturnMessage::OK;
-        } else {
+        $returned_array                 = [];
+        DB::beginTransaction();
+        try {
+            $invite_id                  = Auth::guard('member')->user()->id;
+            $insert_data                = [];
+            $insert_data['invite_id']   = $invite_id;
+            $insert_data['accept_id']   = $id;
+            $insert_data['status']      = Constant::DATE_REQUEST_PENDING;
+            $insert_data['created_by']  = $invite_id ;
+            $insert_data['updated_by']  = $invite_id ;
+            $result                     = DateRequest::create($insert_data);
+            if ($result) {
+                $update_data                        = [];
+                $member                             = Member::find($invite_id);
+                $remaining_point                    = $member->point - Constant::POINT_PER_DATE_REQEUST;
+                $update_data['point']               = $remaining_point;
+                $member->update($update_data);
+
+                Auth::guard('member')->user()->point= $remaining_point;
+                $member_update                      = self::syncMemberById($id);
+
+                $ins_log                            = [];
+                $ins_log['member_id']               = $invite_id;
+                $ins_log['date_request_id']         = $result->id;
+                $ins_log['created_by']              = $invite_id;
+                $ins_log['updated_by']              = $invite_id;
+                PointLog::create($ins_log);
+
+                $returned_array['status']           = ReturnMessage::OK;
+                $returned_array['new_point']        = $remaining_point;
+                $returned_array['member_update']    = $member_update;
+            }
+            DB::commit();
+            return $returned_array;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Utility::saveErrorLog("MemberRepository::apiSendDateRequest", $e->getMessage());
             $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+            return $returned_array;
         }
-        return $returned_array;
+    }
+
+    public static function syncMemberById(int $id)
+    {
+        $returned_array = [];
+        $base_url           = url('/');
+        $member  = Member::select(
+            '*',
+            DB::raw('TIMESTAMPDIFF(YEAR, members.date_of_birth, CURDATE()) AS age'),
+            DB::raw("CASE
+                                WHEN gender = ". Constant::MALE ." THEN 'male'
+                                WHEN gender = ". Constant::FEMALE ." THEN 'female'
+                                ELSE 'other'
+                            END AS gender_name"),
+            DB::raw("CASE
+                                WHEN religion = ". Constant::RELIGION_CHRISTIAN ." THEN 'Christian'
+                                WHEN religion = ". Constant::RELIGION_ISLAM ." THEN 'Muslim'
+                                WHEN religion = ". Constant::RELIGION_BUDDHIST ." THEN 'Buddhist'
+                                WHEN religion = ". Constant::RELIGION_HINDU ." THEN 'Hindu'
+                                WHEN religion = ". Constant::RELIGION_JAIN ." THEN 'Jain'
+                                WHEN religion = ". Constant::RELIGION_SHINTO ." THEN 'Shinto'
+                                WHEN religion = ". Constant::RELIGION_ATHEIST ." THEN 'Atheist'
+                                ELSE 'Other'
+                            END AS religion_name"),
+            DB::raw('CONCAT(height_feet, "\'", height_inches, "\"") AS height'),
+            DB::raw("CONCAT('". $base_url ."/storage/uploads/', id, '/thumb/', thumbnail) AS thumb")
+        )
+                    ->where('id', '=', $id)
+                    ->first();
+        return $member;
     }
 }

@@ -39,6 +39,7 @@
     </style>
     <script>
       const base_url = '{{ url('/') }}';
+    //   const login_info = "{{ Auth::guard('member')->user() }}"
       const gender_type = { 0 : 'Man' , 1 : 'Woman' , 2 : 'Everyone'};
     </script>
 
