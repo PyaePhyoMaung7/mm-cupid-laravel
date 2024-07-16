@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DateRequest extends Model
 {
@@ -22,4 +23,13 @@ class DateRequest extends Model
         'deleted_at',
         'deleted_by'
     ];
+
+    public function getInviteMemberInfoById(): HasOne
+    {
+        return $this->hasOne(
+            Member::class,
+            'invite_id',
+            'id'
+        );
+    }
 }

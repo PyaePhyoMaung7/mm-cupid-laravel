@@ -12,6 +12,8 @@ interface MemberRepositoryInterface
 
     public function register(array $data);
 
+    public function memberUpdate(array $data);
+
     public function sendEmailConfirmMail($data);
 
     public function confirmEmail(array $data);

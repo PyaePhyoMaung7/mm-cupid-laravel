@@ -20,18 +20,40 @@ class MemberResource extends JsonResource
             'email'         => $this->email,
             'phone'         => $this->phone,
             'birthday'      => $this->date_of_birth,
-            'city'          => $this->city_id,
             'hfeet'         => $this->height_feet,
             'hinches'       => $this->height_inches,
             'education'     => $this->education,
             'about'         => $this->about,
+            'age'           => $this->age,
             'gender'        => $this->gender,
+            'gender_name'   => $this->gender_name,
             'partner_gender'=> $this->partner_gender,
-            'min_age'       => $this->partner_min_age,
-            'max_age'       => $this->partner_max_age,
+            'partner_min_age' => $this->partner_min_age,
+            'partner_max_age' => $this->partner_max_age,
             'point'         => $this->point,
             'religion'      => $this->religion,
             'work'          => $this->work,
+            'thumb'         => $this->thumb,
+            'city'          => $this->when(
+                                $this->getCityByMember != null,
+                                new CityResource($this->getCityByMember)
+                            ),
+            'hobbies'       => $this->when(
+                                $this->getMemberHobbiesByMember != null,
+                                MemberHobbyResource::collection($this->getMemberHobbiesByMember)
+                            ),
+            'images'        => $this->when(
+                            $this->getGalleryByMember != null,
+                            MemberGalleryResource::collection($this->getGalleryByMember)
+                            ),
+            'sent_date_requests'    => $this->when(
+                            $this->getSentDateRequestsByMember != null,
+                            DateRequestResource::collection($this->getSentDateRequestsByMember)
+                            ),
+            'received_date_requests' => $this->when(
+                            $this->getReceiveDateRequestsByMember != null,
+                            DateRequestResource::collection($this->getReceiveDateRequestsByMember)
+                            ),
         ];
     }
 }

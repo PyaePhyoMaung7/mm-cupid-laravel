@@ -24,6 +24,7 @@ use App\Http\Requests\Front\ApiDateInviteRequest;
 use App\Http\Requests\Front\PasswordResetRequest;
 use App\Http\Requests\Front\ApiSyncMembersRequest;
 use App\Repositories\City\CityRepositoryInterface;
+use App\Http\Requests\Front\ApiMemberUpdateRequest;
 use App\Repositories\Hobby\HobbyRepositoryInterface;
 use App\Http\Requests\Front\PasswordResetCodeRequest;
 use App\Http\Requests\Front\PasswordResetLinkRequest;
@@ -436,4 +437,37 @@ class MemberController extends Controller
             abort(500);
         }
     }
+
+    public function getProfile()
+    {
+        try {
+            $setting = $this->settingRepository->getSetting();
+            $queryLog = DB::getQueryLog();
+            return view('frontend/profile', compact(['setting']));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::getProfile", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function apiMemberUpdate(ApiMemberUpdateRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->memberUpdate((array) $request->all());
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiMemberUpdate", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                $data = $result['data'];
+                return new MemberResource($data);
+            } else {
+                return response()->json([
+                    'success' => 'fail'
+                ], ReturnMessage::INTERNAL_SERVER_ERROR);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiMemberUpdate", $e->getMessage());
+            abort(500);
+        }
+    }
+
 }

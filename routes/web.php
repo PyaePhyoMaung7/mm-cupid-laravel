@@ -51,9 +51,11 @@ Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
     Route::group(['prefix' => 'api'], function () {
         Route::post('/sync-members', [MemberController::class, 'apiSyncMembers']);
         Route::post('/member/view/update', [MemberController::class, 'apiMemberViewUpdate']);
-        Route::post('invite', [MemberController::class, 'apiSendDateRequest']);
-        Route::get('member', [MemberController::class, 'apiGetLoginInfo']);
+        Route::post('/invite', [MemberController::class, 'apiSendDateRequest']);
+        Route::get('/member', [MemberController::class, 'apiGetLoginInfo']);
+        Route::post('/member/update', [MemberController::class, 'apiMemberUpdate']);
     });
+    Route::get('profile', [MemberController::class, 'getProfile']);
 });
 Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function () {
     Route::get('index', [DashboardController::class, 'index']);

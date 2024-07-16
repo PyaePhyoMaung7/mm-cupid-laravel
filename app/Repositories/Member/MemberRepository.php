@@ -62,7 +62,7 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function getMemberById(int $id)
     {
-        $member = Member::find($id);
+        $member     = self::syncMemberById($id);
         return $member;
     }
 
@@ -194,6 +194,57 @@ class MemberRepository implements MemberRepositoryInterface
         } catch (\Exception $e) {
             DB::rollBack();
             Utility::saveErrorLog("MemberRepository::register", $e->getMessage());
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+            return $returned_array;
+        }
+    }
+
+    public function memberUpdate(array $data)
+    {
+        $returned_array                     = [];
+        DB::beginTransaction();
+        try {
+            $update_data                        = [];
+            $member_id                          = Auth::guard('member')->user()->id;
+            $hobbies                            = $data['hobbies'];
+            $update_data['username']            = $data['username'];
+            $update_data['phone']               = $data['phone'];
+            $update_data['gender']              = $data['gender'];
+            $update_data['date_of_birth']       = Utility::convertToYmdFormat($data['birthday']);
+            $update_data['education']           = $data['education'];
+            $update_data['city_id']             = $data['city_id'];
+            $update_data['height_feet']         = $data['hfeet'];
+            $update_data['height_inches']       = $data['hinches'];
+            $update_data['about']               = $data['about'];
+            $update_data['partner_gender']      = $data['partner_gender'];
+            $update_data['partner_min_age']     = $data['partner_min_age'];
+            $update_data['partner_max_age']     = $data['partner_max_age'];
+            $update_data['work']                = $data['work'];
+            $update_data['religion']            = $data['religion'];
+            $update_data                        = Utility::memberAddUpdatedBy($update_data);
+            $param_obj                          = Member::find($member_id);
+            $param_obj->update($update_data);
+
+
+            $hobby_delete_data                  = [];
+            $hobby_delete_data                  = Utility::memberAddDeletedBy($hobby_delete_data);
+            $result                             = MemberHobby::where('member_id', $member_id)
+                                                        ->update($hobby_delete_data);
+            foreach ($hobbies as $hobby) {
+                $hobby_ins_data                 = [];
+                $hobby_ins_data['member_id']    = $member_id;
+                $hobby_ins_data['hobby_id']     = $hobby;
+                $hobby_ins_data                 = Utility::memberAddCreatedBy($hobby_ins_data);
+                $result = MemberHobby::create($hobby_ins_data);
+            }
+
+            DB::commit();
+            $returned_array['status']   = ReturnMessage::OK;
+            $returned_array['data']     = $param_obj;
+            return $returned_array;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Utility::saveErrorLog("MemberRepository::memberUpdate", $e->getMessage());
             $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
             return $returned_array;
         }
@@ -421,9 +472,9 @@ class MemberRepository implements MemberRepositoryInterface
 
     public static function syncMemberById(int $id)
     {
-        $returned_array = [];
+        $returned_array     = [];
         $base_url           = url('/');
-        $member  = Member::select(
+        $member             = Member::select(
             '*',
             DB::raw('TIMESTAMPDIFF(YEAR, members.date_of_birth, CURDATE()) AS age'),
             DB::raw("CASE

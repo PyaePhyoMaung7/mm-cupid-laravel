@@ -16,22 +16,22 @@ app.controller('myCtrl', function($scope, $http, $window){
     $scope.all_images       = [];
     $scope.image_arr        = [];
     $scope.inviter_index    = undefined;
-    
+
     $scope.init = function () {
-        const data = {};
         $('.loading').show();
         $http({
-            method: 'POST',
-            url: base_url+'api/sync_login_member.php',
-            data: data,
+            method: 'GET',
+            url: base_url+'/api/member',
             headers: {
               'Content-Type': 'application/json'
             }
         }).then(
             function (response) {
-                if(response.data.status == "200") {
+                console.log(response);
+                if(response.status == "200") {
                     $scope.member       = response.data.data;
-                    $scope.inviters     = response.data.data.inviters;
+                    $scope.inviters     = response.data.data.sent_date_requests;
+                    $scope.changeMemberHobbies($scope.member.hobbies);
                     $scope.bindImages($scope.member.images);
                     $scope.getCities();
                     $scope.getHobbies();
@@ -44,16 +44,17 @@ app.controller('myCtrl', function($scope, $http, $window){
 
     $scope.update = function () {
         $('.loading').show();
+        console.log($scope.member_edit);
         $http({
             method: 'POST',
-            url: base_url+'api/update_profile.php',
+            url: base_url+'/api/member/update',
             data: $scope.member_edit,
             headers: {
               'Content-Type': 'application/json'
             }
         }).then(
             function (response) {
-                if(response.data.status = '200') {
+                if(response.status = '200') {
                     $scope.init();
                     $scope.backUserProfile();
                     $('.loading').hide();
@@ -63,6 +64,7 @@ app.controller('myCtrl', function($scope, $http, $window){
     }
 
     $scope.bindImages = function (images) {
+        console.log(images);
         images.forEach(image => {
             $('#preview'+image.sort).html(`
                 <img src= ${image.image} class="" style="width: 100%; height: 100%; object-fit: cover" alt="Image Preview"/>
@@ -78,12 +80,12 @@ app.controller('myCtrl', function($scope, $http, $window){
     }
 
     $scope.bindInfo = function () {
-        $scope.min_ages         = [];
-        $scope.max_ages         = [];
+        $scope.min_ages             = [];
+        $scope.max_ages             = [];
         for (let i = 18; i <= $scope.member.partner_max_age; i++) {
             $scope.min_ages.push(i);
         }
-    
+
         for (let i = $scope.member.partner_min_age; i <= 55; i++) {
             $scope.max_ages.push(i);
         }
@@ -99,6 +101,7 @@ app.controller('myCtrl', function($scope, $http, $window){
         $scope.member.gender += '';
         $scope.member.partner_gender += '';
         $scope.member_edit  = angular.copy($scope.member);
+        $scope.member_edit.city_id  = $scope.member_edit.city.id;
     }
 
     $scope.backUserProfile = function () {
@@ -112,10 +115,10 @@ app.controller('myCtrl', function($scope, $http, $window){
     $scope.getCities = function () {
         $http({
             method: 'GET',
-            url: base_url+'api/get_cities.php',
+            url: base_url+'/api/cities',
         }).then(
             function (response) {
-                $scope.cities = response.data;
+                $scope.cities = response.data.data;
             }
         )
     }
@@ -123,10 +126,11 @@ app.controller('myCtrl', function($scope, $http, $window){
     $scope.getHobbies = function () {
         $http({
             method: 'GET',
-            url: base_url+'api/get_hobbies.php',
+            url: base_url+'/api/hobbies',
         }).then(
             function (response) {
-                $scope.hobbies = response.data;
+                $scope.hobbies = response.data.data;
+                console.log($scope.member.hobbies);
                 $scope.hobbies.forEach(hobby => {
                     if($scope.member.hobbies.includes(hobby.id)) {
                         hobby.checked = true;
@@ -134,8 +138,17 @@ app.controller('myCtrl', function($scope, $http, $window){
                         hobby.checked = false;
                     }
                 })
+                console.log($scope.hobbies);
             }
         )
+    }
+
+    $scope.changeMemberHobbies = function (hobbies) {
+        let hobby_arr = [];
+        hobbies.forEach(hobby => {
+            hobby_arr.push(hobby.hobby_id);
+        })
+        $scope.member.hobbies = hobby_arr;
     }
 
     $scope.chooseMinAge = function () {
@@ -384,7 +397,7 @@ app.controller('myCtrl', function($scope, $http, $window){
         $('.after-photo-taken').hide();
         $('#video').show();
         $('#take-photo').show();
-        
+
         navigator.mediaDevices.getUserMedia({ video: true, audio: false })
         .then(function(stream) {
             $scope.stream   = stream;
@@ -428,7 +441,7 @@ app.controller('myCtrl', function($scope, $http, $window){
     $scope.stopStream = function (stream) {
         if (stream) {
           let tracks = stream.getTracks();
-      
+
           tracks.forEach((track) => {
             track.stop();
           });
@@ -484,7 +497,7 @@ app.controller('myCtrl', function($scope, $http, $window){
             "background-color": "rgba(0, 0, 0, 0.5)"
         });
         // $(".carousel-inner").html("");
-        
+
     }
 
     $scope.cancelProfile = function () {
@@ -533,5 +546,5 @@ app.controller('myCtrl', function($scope, $http, $window){
             }
         );
     }
-    
+
 });
