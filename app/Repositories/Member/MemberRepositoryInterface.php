@@ -14,6 +14,12 @@ interface MemberRepositoryInterface
 
     public function memberUpdate(array $data);
 
+    public function apiMemberPhotoUpdate(array $data);
+
+    public function apiMemberPhotoDelete(array $data);
+
+    public function apiStoreVerificationPhoto(array $data);
+
     public function sendEmailConfirmMail($data);
 
     public function confirmEmail(array $data);

@@ -30,6 +30,7 @@ app.controller('myCtrl', function($scope, $http, $window){
                 console.log(response);
                 if(response.status == "200") {
                     $scope.member       = response.data.data;
+                    console.log($scope.member);
                     $scope.inviters     = response.data.data.sent_date_requests;
                     $scope.changeMemberHobbies($scope.member.hobbies);
                     $scope.bindImages($scope.member.images);
@@ -302,14 +303,14 @@ app.controller('myCtrl', function($scope, $http, $window){
 
     $scope.updatePhoto = function () {
         $('.loading').show();
-        const extensions = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
+        const extensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
         for (let i = 1; i <= 6; i++) {
             const input = $('#upload'+i)[0];
             if(input.files && input.files.length > 0) {
                 const fileName = input.files[0].name;
                 const fileExtension = fileName.split('.').pop().toLowerCase();
                 if(extensions.includes(fileExtension)) {
-                    const url = base_url + 'api/update_photo.php';
+                    const url = base_url + '/api/member/photo/update';
                     const fileInput = document.getElementById('upload'+i);
                     const file = fileInput.files[0];
                     let form_data = new FormData();
@@ -324,12 +325,12 @@ app.controller('myCtrl', function($scope, $http, $window){
                         }
                     }).then(
                         function (response) {
-                            if(response.data.status == '200') {
+                            if(response.data.success) {
                                 $scope.init();
                             }
                         },
                         function (error) {
-                            console.log(error);
+                            alert('Sorry! Something went wrong while saving you photos');
                         }
                     );
                 }else{
@@ -346,14 +347,15 @@ app.controller('myCtrl', function($scope, $http, $window){
             $('.loading').show();
             $http({
                 method: 'POST',
-                url: base_url+'api/delete_photo.php',
+                url: base_url+'/api/member/photo/delete',
                 data: {'sort' : sort},
                 headers: {
                   'Content-Type': 'application/json'
                 }
             }).then(
                 function (response) {
-                    if(response.data.status == '200') {
+                    console.log(response);
+                    if(response.data.success) {
                         $scope.discardPhoto(sort);
                         $('.loading').hide();
                     }
@@ -375,8 +377,8 @@ app.controller('myCtrl', function($scope, $http, $window){
 
     $scope.confirmDelete = function (sort){
         Swal.fire({
-            title: "Are you sure?",
-            text: "You won't be able to revert this!",
+            title: "Delete confimation",
+            text: "Are you sure to delete this photo?",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -385,6 +387,54 @@ app.controller('myCtrl', function($scope, $http, $window){
             }).then((result) => {
             if (result.isConfirmed) {
                $scope.deletePhoto(sort);
+            }
+        });
+    }
+
+    $scope.confirmUpdatePhoto = function (sort){
+        Swal.fire({
+            title: "Update confimation",
+            text: "Are you sure to update your photos?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, update!"
+            }).then((result) => {
+            if (result.isConfirmed) {
+               $scope.updatePhoto();
+            }
+        });
+    }
+
+    $scope.confirmUpdateInfo = function (sort){
+        Swal.fire({
+            title: "Update confimation",
+            text: "Are you sure to update your details?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, update!"
+            }).then((result) => {
+            if (result.isConfirmed) {
+               $scope.update();
+            }
+        });
+    }
+
+    $scope.confirBackUserProfile = function (sort){
+        Swal.fire({
+            title: "Are you sure to go back?",
+            text: "Changes will not be saved",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, go back!"
+            }).then((result) => {
+            if (result.isConfirmed) {
+               $scope.backUserProfile();
             }
         });
     }
@@ -454,16 +504,21 @@ app.controller('myCtrl', function($scope, $http, $window){
         $('.loading').show();
         $http({
             method: 'POST',
-            url: base_url+'api/send_photo_verify.php',
+            url: base_url+'/api/verification/photo/store',
             data: data,
             headers: {
               'Content-Type': 'application/json'
             }
         }).then(
             function (response) {
+                if (response.data.success)
                 $scope.member.status = Number(response.data.ustatus);
                 $scope.backUserProfile();
                 $('.loading').hide();
+            },
+
+            function (error) {
+                alert('Sorry! Something went wrong while sending your verfication photo');
             }
         );
     }

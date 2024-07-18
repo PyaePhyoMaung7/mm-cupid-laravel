@@ -54,6 +54,9 @@ Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
         Route::post('/invite', [MemberController::class, 'apiSendDateRequest']);
         Route::get('/member', [MemberController::class, 'apiGetLoginInfo']);
         Route::post('/member/update', [MemberController::class, 'apiMemberUpdate']);
+        Route::post('/member/photo/update', [MemberController::class, 'apiMemberPhotoUpdate']);
+        Route::post('/member/photo/delete', [MemberController::class, 'apiMemberPhotoDelete']);
+        Route::post('/verification/photo/store', [MemberController::class, 'apiStoreVerificationPhoto']);
     });
     Route::get('profile', [MemberController::class, 'getProfile']);
 });

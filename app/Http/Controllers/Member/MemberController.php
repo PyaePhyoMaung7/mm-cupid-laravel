@@ -30,7 +30,10 @@ use App\Http\Requests\Front\PasswordResetCodeRequest;
 use App\Http\Requests\Front\PasswordResetLinkRequest;
 use App\Repositories\Member\MemberRepositoryInterface;
 use App\Http\Requests\Front\ApiMemberViewUpdateRequest;
+use App\Http\Requests\Front\ApiMemberPhotoDeleteRequest;
+use App\Http\Requests\Front\ApiMemberPhotoUpdateRequest;
 use App\Repositories\Setting\SettingRepositoryInterface;
+use App\Http\Requests\Front\ApiVerificationPhotoStoreRequest;
 
 class MemberController extends Controller
 {
@@ -469,5 +472,70 @@ class MemberController extends Controller
             abort(500);
         }
     }
+
+    public function apiMemberPhotoUpdate(ApiMemberPhotoUpdateRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->apiMemberPhotoUpdate((array) $request->all());
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiMemberPhotoUpdate", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return response()->json([
+                    'success' => 'true'
+                ], ReturnMessage::OK);
+            } else {
+                return response()->json([
+                    'success' => 'false'
+                ], ReturnMessage::INTERNAL_SERVER_ERROR);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiMemberPhotoUpdate", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function apiMemberPhotoDelete(ApiMemberPhotoDeleteRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->apiMemberPhotoDelete((array) $request->all());
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiMemberPhotoDelete", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return response()->json([
+                    'success' => 'true'
+                ], ReturnMessage::OK);
+            } else {
+                return response()->json([
+                    'success' => 'false'
+                ], ReturnMessage::INTERNAL_SERVER_ERROR);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiMemberPhotoDelete", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function apiStoreVerificationPhoto(ApiVerificationPhotoStoreRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->apiStoreVerificationPhoto((array) $request->all());
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiStoreVerificationPhoto", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return response()->json([
+                    'success' => 'true',
+                    'ustatus' => Constant::MEMBER_VERIFICATION_PENDING
+                ], ReturnMessage::OK);
+            } else {
+                return response()->json([
+                    'success' => 'false'
+                ], ReturnMessage::INTERNAL_SERVER_ERROR);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiStoreVerificationPhoto", $e->getMessage());
+            abort(500);
+        }
+    }
+
 
 }

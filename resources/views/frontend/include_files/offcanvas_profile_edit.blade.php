@@ -1,6 +1,3 @@
-<?php
-$error = false;
-?>
 <div class="offcanvas offcanvas-end position-absolute right-0" style="width: 650px;" data-bs-backdrop="false" tabindex="-1" id="offcanvasUserProfileEdit" aria-labelledby="offcanvasUserProfileEdit">
     <div class="offcanvas-header position-sticky bg-white py-2 top-0 z-3 px-4 d-flex justify-content-between align-items-center fw-bold" style="font-size: 17px;">
         <div type="button" ng-click="backUserProfile()" class="fs-4 float-left" data-bs-dismiss="offcanvas" aria-label="Close" aria-label="Back"><i class="fa fa-chevron-left"></i></div>
@@ -148,16 +145,7 @@ $error = false;
                 </div>
 
                 <div>
-                    <?php
-                        if ($error) {
-                            ?>
-                        <p class="bg-danger text-white">
-                            <?php echo $error_message; ?>
-                        </p>
-                    <?php
-                        }
-                    ?>
-                    <button type="button" ng-click="update()" id="update-details-btn" disabled class="btn btn-dark rounded rounded-5 mb-4 btn-lg mt-4" style="width:100%;">
+                    <button type="button" ng-click="confirmUpdateInfo()" id="update-details-btn" disabled class="btn btn-dark rounded rounded-5 mb-4 btn-lg mt-4" style="width:100%;">
                         Update
                     </button>
 

@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmMail;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
 use App\Repositories\Member\MemberRepositoryInterface;
 use App\Repositories\Setting\SettingRepositoryInterface;
 
@@ -225,17 +226,14 @@ class MemberRepository implements MemberRepositoryInterface
             $param_obj                          = Member::find($member_id);
             $param_obj->update($update_data);
 
-
-            $hobby_delete_data                  = [];
-            $hobby_delete_data                  = Utility::memberAddDeletedBy($hobby_delete_data);
             $result                             = MemberHobby::where('member_id', $member_id)
-                                                        ->update($hobby_delete_data);
+                                                        ->delete();
             foreach ($hobbies as $hobby) {
                 $hobby_ins_data                 = [];
                 $hobby_ins_data['member_id']    = $member_id;
                 $hobby_ins_data['hobby_id']     = $hobby;
                 $hobby_ins_data                 = Utility::memberAddCreatedBy($hobby_ins_data);
-                $result = MemberHobby::create($hobby_ins_data);
+                $result                         = MemberHobby::create($hobby_ins_data);
             }
 
             DB::commit();
@@ -248,6 +246,158 @@ class MemberRepository implements MemberRepositoryInterface
             $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
             return $returned_array;
         }
+    }
+
+    public function apiMemberPhotoUpdate(array $data)
+    {
+        $returned_array                     = [];
+        $member_id                          = Auth::guard('member')->user()->id;
+        DB::beginTransaction();
+        try {
+            if (isset($data['file']) && $data['file']->isValid()) {
+                $sort        = $data['sort'];
+                $file        = $data['file'];
+                $old_photo   = null;
+                $old_thumb   = null;
+                $unique_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+                . "_"  . date('Ymd_his') . "_" . uniqid() . "." .  $file->getClientOriginalExtension();
+
+                $upload_dir = storage_path('app/public/uploads/' . $member_id ."/");
+                if (!File::exists($upload_dir)) {
+                    File::makeDirectory($upload_dir, 0755, true);
+                }
+
+                $result = MemberGallery::where('member_id', '=', $member_id)
+                                        ->where('sort', '=', $sort)
+                                        ->whereNull('deleted_at')
+                                        ->first();
+
+                if ($result) {
+                    $old_photo                      = $result->name;
+                    $photo_up_data                  = [];
+                    $photo_up_data['name']          = $unique_name;
+                    $photo_up_data['updated_at']    = date('Y-m-d H:i:s');
+                    $photo_up_data['updated_by']    = $member_id;
+                    MemberGallery::where('member_id', '=', $member_id)
+                                ->where('sort', '=', $sort)
+                                ->whereNull('deleted_at')
+                                ->update($photo_up_data);
+                } else {
+                    $photo_ins_data                     = [];
+                    $photo_ins_data['member_id']        = $member_id;
+                    $photo_ins_data['name']             = $unique_name;
+                    $photo_ins_data['sort']             = $sort;
+                    $photo_ins_data['created_by']       = $member_id;
+                    $photo_ins_data['updated_by']       = $member_id;
+                    MemberGallery::create($photo_ins_data);
+                }
+
+                $file->storeAs('uploads/' . $member_id, $unique_name, 'public');
+
+                if ($sort == 1) {
+                    $thumb_upload_dir = $upload_dir . '/thumb/';
+                    if (!File::exists($thumb_upload_dir)) {
+                        File::makeDirectory($thumb_upload_dir, 0755, true);
+                    }
+                    $unique_thumb_name = 'thumb_' . $unique_name;
+                    $thumb_destination = $thumb_upload_dir . $unique_thumb_name;
+
+                    $desired_ratio  = Constant::THUMB_WIDTH / Constant::THUMB_HEIGHT;
+                    $img            = Image::make($file);
+                    $width          = $img->width();
+                    $height         = $img->height();
+
+                    if ($width / $height > $desired_ratio) {
+                        $new_width = (int) ($height * $desired_ratio);
+                        $new_height = $height;
+                    } else {
+                        $new_width = $width;
+                        $new_height = (int) ($width * $desired_ratio);
+                    }
+                    $crop_x = (int) (($width - $new_width) / 2);
+                    $crop_y = (int) (($height - $new_height) / 2);
+
+                    $modified_img = $img->crop($new_width, $new_height, $crop_x, $crop_y);
+                    $modified_img->resize(Constant::THUMB_WIDTH, Constant::THUMB_HEIGHT);
+                    $modified_img->save($thumb_destination);
+
+                    $thumb_up_data                  = [];
+                    $thumb_up_data['thumbnail']     = $unique_thumb_name;
+                    $thumb_up_data['updated_at']    = date('Y-m-d H:i:s');
+                    $thumb_up_data['updated_by']    = $member_id;
+                    $member_obj                     = Member::find($member_id);
+                    $old_thumb                      = $member_obj->thumbnail;
+                    $member_obj->update($thumb_up_data);
+                    $file->storeAs('uploads/' . $member_id . '/thumb', $unique_thumb_name, 'public');
+                }
+
+                DB::commit();
+                try {
+                    if ($old_photo) {
+                        $file_delete_path   = 'public/uploads/' . $member_id . '/' . $old_photo;
+                        Storage::delete($file_delete_path);
+                    }
+                    if ($old_thumb) {
+                        $thumb_delete_path  = 'public/uploads/' . $member_id . '/thumb/' . $old_thumb;
+                        Storage::delete($thumb_delete_path);
+                    }
+                } catch (\Exception $e) {
+                    Utility::saveErrorLog("MemberRepository::apiMemberPhotoUpdate", $e->getMessage());
+                }
+
+                $returned_array['status']   = ReturnMessage::OK;
+                return $returned_array;
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Utility::saveErrorLog("MemberRepository::apiMemberPhotoUpdate", $e->getMessage());
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+            return $returned_array;
+        }
+    }
+
+    public function apiMemberPhotoDelete(array $data)
+    {
+        $sort           = $data['sort'];
+        $member_id      = Auth::guard('member')->user()->id;
+        $photo_del_data = [];
+        $photo_del_data = Utility::memberAddDeletedBy($photo_del_data);
+        $param_obj      = MemberGallery::where('member_id', '=', $member_id)
+                                    ->where('sort', '=', $sort)
+                                    ->whereNull('deleted_at')
+                                    ->first();
+
+        $old_photo      = $param_obj->name;
+
+        if ($old_photo) {
+            $result             = $param_obj->update($photo_del_data);
+            $thumb_delete_path  = 'public/uploads/' . $member_id . '/' . $old_photo;
+            Storage::delete($thumb_delete_path);
+        }
+
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
+    }
+
+    public function apiStoreVerificationPhoto(array $data)
+    {
+        $member_id                          = Auth::guard('member')->user()->id;
+        $photo_store_data                   = [];
+        $photo_store_data['verify_photo']   = $data['src'];
+        $photo_store_data                   = Utility::memberAddUpdatedBy($photo_store_data);
+        $param_obj                          = Member::find($member_id);
+        $result                             = $param_obj->update($photo_store_data);
+
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
     }
 
     public function sendEmailConfirmMail($data)

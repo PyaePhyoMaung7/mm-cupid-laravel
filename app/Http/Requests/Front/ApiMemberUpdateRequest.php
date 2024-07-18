@@ -59,15 +59,18 @@ class ApiMemberUpdateRequest extends FormRequest
             ],
             'partner_min_age' => [
                 'required',
+                'integer'
             ],
             'partner_max_age' => [
                 'required',
+                'integer'
             ],
             'work' => [
                 'required',
             ],
             'religion' => [
                 'required',
+                'integer'
             ],
         ];
     }

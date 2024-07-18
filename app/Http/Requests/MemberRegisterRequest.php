@@ -74,15 +74,18 @@ class MemberRegisterRequest extends BaseFormRequest
             ],
             'min_age' => [
                 'required',
+                'integer'
             ],
             'max_age' => [
                 'required',
+                'integer'
             ],
             'work' => [
                 'required',
             ],
             'religion' => [
                 'required',
+                'integer'
             ],
             'upload1' => [
                 'required',

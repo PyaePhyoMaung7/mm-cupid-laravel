@@ -68,7 +68,7 @@ class Member extends Authenticatable
             MemberGallery::class,
             'member_id',
             'id'
-        );
+        )->whereNull('deleted_at');
     }
 
     public function getMemberHobbiesByMember(): HasMany
