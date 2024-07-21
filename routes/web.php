@@ -52,7 +52,7 @@ Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
     Route::group(['prefix' => 'api'], function () {
         Route::post('/sync-members', [MemberController::class, 'apiSyncMembers']);
         Route::post('/member/view/update', [MemberController::class, 'apiMemberViewUpdate']);
-        Route::post('/invite', [MemberController::class, 'apiSendDateRequest']);
+        Route::post('/invite/date', [MemberController::class, 'apiSendDateRequest']);
         Route::get('/member', [MemberController::class, 'apiGetLoginInfo']);
         Route::post('/member', [MemberController::class, 'apiGetMemberInfo']);
         Route::post('/member/update', [MemberController::class, 'apiMemberUpdate']);
@@ -103,8 +103,9 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
     Route::group(['prefix' => 'member/'], function () {
         Route::get('index', [MemberController::class, 'adminIndex']);
         // Route::get('point/{id}', [MemberController::class, 'point']);
-        Route::get('change/status', [MemberController::class, 'changeStatus']);
-        // Route::get('delete/{id}', [UserController::class, 'delete']);
+        Route::get('change/status/{id}/{status}', [MemberController::class, 'changeStatus']);
+        // Route::get('delete/{id}', [MemberController::class, 'delete']);
+        Route::get('details/{id}', [MemberController::class, 'viewDetails']);
     });
 
 });

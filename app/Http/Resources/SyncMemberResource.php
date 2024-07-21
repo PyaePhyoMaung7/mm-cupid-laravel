@@ -20,7 +20,6 @@ class SyncMemberResource extends JsonResource
             'username'  => $this->username,
             'age'       => $this->age,
             'gender'    => $this->gender_name,
-            // 'city' => $this->city_name,
             'religion'  => $this->religion_name,
             'about'     => str_replace("\n", '<br>', $this->about),
             'status'    => $this->status,

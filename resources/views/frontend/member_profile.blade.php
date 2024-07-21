@@ -106,13 +106,13 @@
                 </div>
             </div>
             <div class="article">
-                <article class="article-container position-relative" id="member-content">
+                <article class="article-container position-relative " id="member-content">
                     <header class="article-container-header d-flex justify-content-between">
                         <button class="btn text-decoration-none article-container-title" onclick="history.back()" style="font-size: 26px">
                             <i class="fs-5 fa fa-arrow-left"></i>
                         </button>
                     </header>
-                    <section class="article-container-body rtf" style="margin-bottom: 100px;">
+                    <section class="article-container-body rtf">
                         <div class="container">
                             <div class="mt-1">
                                 <div class="row">

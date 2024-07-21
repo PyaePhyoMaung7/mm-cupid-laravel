@@ -154,6 +154,27 @@ if (!function_exists("getGender")) {
     }
 }
 
+if (!function_exists("getGenderName")) {
+    function getGenderName($gender)
+    {
+        $name = 'Others';
+
+        switch ($gender) {
+            case Constant::MALE:
+                $gender = 'male';
+                break;
+            case Constant::FEMALE:
+                $gender = 'female';
+                break;
+            default:
+                $gender = 'others';
+                break;
+        }
+
+        return $gender;
+    }
+}
+
 if (!function_exists("getVerificationStatus")) {
     function getVerificationStatus($name)
     {

@@ -375,7 +375,7 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         $('.loading').show();
         $http({
             method: 'POST',
-            url: base_url+'/api/invite',
+            url: base_url+'/api/invite/date',
             data: data,
             headers: {
               'Content-Type': 'application/json'

@@ -1,4 +1,4 @@
-<footer class="article-container-footer " >
+<footer class="article-container-footer" >
     {{-- position-absolute bottom-0 w-100 --}}
     <a href="{{ url('index') }}" class="text-decoration-none">
         <button class="button is-ghost text-secondary d-flex flex-column justify-content-between align-items-center">

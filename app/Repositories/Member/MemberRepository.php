@@ -32,17 +32,50 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function getMembers()
     {
-        $members = Member::select('id', 'username', 'email', 'phone', 'gender', 'date_of_birth', 'thumbnail', 'city_id', 'status')
+        $base_url   = url('/');
+        $members    = Member::select('id', 'username', 'email', 'phone', 'gender', 'date_of_birth', 'thumbnail', 'city_id', 'status',
+                        DB::raw("CONCAT('". $base_url ."/storage/uploads/', id, '/thumb/', thumbnail) AS thumb")
+                        )
                         ->selectRaw('CASE
-                                        WHEN gender = ' . Constant::MALE . ' THEN "ADMIN"
-                                        WHEN gender = ' . Constant::FEMALE . ' THEN "EDITOR"
+                                        WHEN gender = ' . Constant::MALE . ' THEN "male"
+                                        WHEN gender = ' . Constant::FEMALE . ' THEN "female"
                                         ELSE "Others"
-                                    END as gender_name')
+                                    END as gender_name',
+                                    )
                         ->whereNull('deleted_at')
                         ->orderBy('id', 'DESC')
                         ->paginate('5');
         return $members;
     }
+
+    public function getMemberImages($id)
+    {
+        $base_url   = url('/');
+        $images     = MemberGallery::select(
+                                    DB::raw("CONCAT('". $base_url ."/storage/uploads/', member_id, '/', name) AS image")
+                                    )
+                                    ->where('member_id', '=', $id)
+                                    ->whereNull('deleted_at')
+                                    ->get();
+        return $images;
+    }
+
+    public function changeStatus(int $id, int $status)
+    {
+        $update_data                    = [];
+        $update_data['status']          = $status;
+        $update_data                    = Utility::addUpdatedBy($update_data);
+        $param_obj                      = Member::find($id);
+        $result                         = $param_obj->update($update_data);
+
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
+    }
+
 
     public function getMemberByEmail(string $email)
     {

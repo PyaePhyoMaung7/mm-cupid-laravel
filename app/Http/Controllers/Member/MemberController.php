@@ -70,6 +70,23 @@ class MemberController extends Controller
         }
     }
 
+    public function viewDetails($id)
+    {
+        try {
+            $member = $this->memberRepository->getMemberById((int) $id);
+            $images = $this->memberRepository->getMemberImages((int) $id);
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::viewDetails", $queryLog);
+            return view('backend.member.details', compact([
+                'member',
+                'images',
+            ]));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::viewDetails", $e->getMessage());
+            abort(500);
+        }
+    }
+
     public function point($id)
     {
         try {
@@ -93,9 +110,28 @@ class MemberController extends Controller
         }
     }
 
-    public function changeStatus()
+    public function changeStatus($id, $status)
     {
-        dd('hey');
+        try {
+            $result = $this->memberRepository->changeStatus((int) $id, (int) $status);
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::changeStatus", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                if ($status == Constant::MEMBER_EMAIL_VERIFIED) {
+                    $success_msg = 'Ban successfully lifted for member';
+                } elseif ($status == Constant::MEMBER_BANNED) {
+                    $success_msg = 'Member banned successfully';
+                } elseif ($status == Constant::MEMBER_VERIFIED) {
+                    $success_msg = 'Member verified successfully';
+                }
+                return redirect('admin-backend/member/index')->with(['success_msg' => $success_msg]);
+            } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
+                return redirect('admin-backend/member/index')->with(['fail_msg' => 'member update fail!']);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::changeStatus", $e->getMessage());
+            abort(500);
+        }
     }
 
     public function index()

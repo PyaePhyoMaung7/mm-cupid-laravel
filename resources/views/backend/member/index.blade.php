@@ -52,38 +52,77 @@
                                                     <td class="align-middle">{{ $member->username }}</td>
                                                     <td class="align-middle">{{ getFifteenChars($member->email) }}</td>
                                                     <td class="align-middle">{{ $member->phone }}</td>
-                                                    <td class="align-middle">{{ $member->gender }}</td>
-                                                    <td class="align-middle">{{ $member->date_of_birth }}</td>
-                                                    <td class="align-middle col-1">{{ 'hello' }}</td>
-                                                    <td class="align-middle">{{ $member->city_id }}</td>
-                                                    <td class="align-middle">{{ $member->status }}</td>
                                                     <td class="align-middle">
-                                                        <a href=""><button type="button"
-                                                                class="btn btn-success shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
-                                                                    class="fa fa-check"></i>
-                                                                <span>Confirm</span></button></a>
+                                                        @if ($member->gender == getGender('male'))
+                                                            <i class="fa fa-mars text-primary"
+                                                                style="font-size: 1.5rem; font-weight: bold;"
+                                                                aria-hidden="true"></i>
+                                                        @elseif ($member->gender == getGender('female'))
+                                                            <i class="fa fa-venus"
+                                                                style="color: pink; font-size: 1.5rem; font-weight: bold;"
+                                                                aria-hidden="true"></i>
+                                                        @else
+                                                            <i class="fa fa-genderless"
+                                                                style="font-size: 1.5rem; font-weight: bold;"
+                                                                aria-hidden="true"></i>
+                                                        @endif
+                                                    </td>
+                                                    <td class="align-middle">{{ $member->date_of_birth }}</td>
+                                                    <td class="align-middle col-1">
+                                                        <div style="width: 80px;"><img class="w-100"
+                                                                src="{{ $member->thumb }}"></div>
+                                                    </td>
+                                                    <td class="align-middle">{{ $member->city_id }}</td>
+                                                    <td class="align-middle">
+                                                        @if ($member->status == getVerificationStatus('email'))
+                                                            <span class="badge badge-info">email verified</span>
+                                                        @elseif ($member->status == getVerificationStatus('pending'))
+                                                            <span class="badge badge-warning">pending</span>
+                                                        @elseif ($member->status == getVerificationStatus('denied'))
+                                                            <span class="badge badge-dark">declined</span>
+                                                        @elseif ($member->status == getVerificationStatus('verified'))
+                                                            <span class="badge badge-success">verified</span>
+                                                        @elseif ($member->status == getVerificationStatus('banned'))
+                                                            <span class="badge badge-danger">banned</span>
+                                                        @else
+                                                            <span class="badge badge-secondary">unverified</span>
+                                                        @endif
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        @if ($member->status == getVerificationStatus('pending'))
+                                                            <a
+                                                                href="javascript:void(0)"><button
+                                                                    onclick="confirmVerify('{{ url('admin-backend/member/change/status/' . $member->id . '/' . getVerificationStatus('verified')) }}')"
+                                                                    type="button"
+                                                                    class="btn btn-success shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
+                                                                        class="fa fa-check"></i>
+                                                                    <span>Confirm</span></button></a>
+                                                        @endif
 
-                                                        <a href=""><button type="button"
+                                                        <a href="{{ url('admin-backend/member/details/' . $member->id ) }}"><button type="button"
                                                                 class="btn btn-dark shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
                                                                     class="fa fa-eye"></i> <span>View</span></button></a>
-                                                        <a href="{{ url('member/point/' . $member->point) }}"><button type="button"
+                                                        <a href="{{ url('member/point/' . $member->point) }}"><button
+                                                                type="button"
                                                                 class="btn btn-primary shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
                                                                     class="fa fa-diamond"></i>
                                                                 <span>Point</span></button></a>
 
-                                                        <a href="javascript:void(0)"
-                                                            onclick="confirmRelease({{ url('member/change/status?id=' . $member->id . '&status=2') }})"><button
-                                                                type="button"
-                                                                class="btn btn-white text-danger shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
-                                                                    class="fa fa-unlock"></i> <span>Release</span>
-                                                            </button></a>
-
-                                                        <a href="javascript:void(0)"
-                                                            onclick="confirmRelease({{ url('member/change/status?id=' . $member->id . '&status=5') }})"><button
-                                                                type="button"
-                                                                class="btn btn-danger py-0 d-flex shadow-sm justify-content-between align-items-center btn-sm w-100"><i
-                                                                    class="fa fa-ban"></i> <span>Ban</span> </button></a>
-
+                                                        @if ($member->status == getVerificationStatus('banned'))
+                                                            <a href="javascript:void(0)"
+                                                                onclick="confirmRelease('{{ url('admin-backend/member/change/status/' . $member->id . '/' . getVerificationStatus('email')) }}')"><button
+                                                                    type="button"
+                                                                    class="btn btn-white text-danger shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
+                                                                        class="fa fa-unlock"></i> <span>Release</span>
+                                                                </button></a>
+                                                        @else
+                                                            <a href="javascript:void(0)"
+                                                                onclick="confirmBan('{{ url('admin-backend/member/change/status/' . $member->id . '/' . getVerificationStatus('banned')) }}')"><button
+                                                                    type="button"
+                                                                    class="btn btn-danger py-0 d-flex shadow-sm justify-content-between align-items-center btn-sm w-100"><i
+                                                                        class="fa fa-ban"></i> <span>Ban</span>
+                                                                </button></a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -117,6 +156,57 @@
                 confirmButtonColor: "#3085d6",
                 cancelButtonColor: "#d33",
                 confirmButtonText: "Yes, delete it!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+
+                }
+            });
+        }
+
+        function confirmRelease(url) {
+            Swal.fire({
+                title: "Release Confirmation!",
+                text: "Are you sure to lift the ban for this member?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, release!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+
+                }
+            });
+        }
+
+        function confirmBan(url) {
+            Swal.fire({
+                title: "Ban Confirmation!",
+                text: "Are you sure to ban this member?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, ban!"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+
+                }
+            });
+        }
+
+        function confirmVerify(url) {
+            Swal.fire({
+                title: "Verification Confirmation!",
+                text: "Has this member uploaded valid info and photos?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Yes, approve!"
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = url;
