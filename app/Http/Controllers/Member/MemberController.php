@@ -25,6 +25,7 @@ use App\Http\Requests\Front\PasswordResetRequest;
 use App\Http\Requests\Front\ApiSyncMembersRequest;
 use App\Repositories\City\CityRepositoryInterface;
 use App\Http\Requests\Front\ApiMemberUpdateRequest;
+use App\Http\Requests\Front\ApiMemberProfileRequest;
 use App\Repositories\Hobby\HobbyRepositoryInterface;
 use App\Http\Requests\Front\PasswordResetCodeRequest;
 use App\Http\Requests\Front\PasswordResetLinkRequest;
@@ -441,6 +442,19 @@ class MemberController extends Controller
         }
     }
 
+    public function apiGetMemberInfo(ApiMemberProfileRequest $request)
+    {
+        try {
+            $member = $this->memberRepository->getMemberById((int) $request->get('id'));
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiGetMemberInfo", $queryLog);
+            return new MemberResource($member);
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiGetMemberInfo", $e->getMessage());
+            abort(500);
+        }
+    }
+
     public function getProfile()
     {
         try {
@@ -537,5 +551,20 @@ class MemberController extends Controller
         }
     }
 
-
+    public function getMemberProfile(string $username, int $id)
+    {
+        try {
+            $setting = $this->settingRepository->getSetting();
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::getMemberProfile", $queryLog);
+            return view('frontend.member_profile', compact([
+                'setting',
+                'id',
+                'username'
+            ]));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::getMemberProfile", $e->getMessage());
+            abort(500);
+        }
+    }
 }

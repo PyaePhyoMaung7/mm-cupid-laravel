@@ -153,3 +153,33 @@ if (!function_exists("getGender")) {
         return $gender;
     }
 }
+
+if (!function_exists("getVerificationStatus")) {
+    function getVerificationStatus($name)
+    {
+        $status = Constant::MEMBER_UNVERIFIED;
+
+        switch ($name) {
+            case 'email':
+                $status = Constant::MEMBER_EMAIL_VERIFIED;
+                break;
+            case 'pending':
+                $status = Constant::MEMBER_VERIFICATION_PENDING;
+                break;
+            case 'denied':
+                $status = Constant::MEMBER_VERIFICATION_DENIED;
+                break;
+            case 'verified':
+                $status = Constant::MEMBER_VERIFIED;
+                break;
+            case 'banned':
+                $status = Constant::MEMBER_BANNED;
+                break;
+            default:
+                $status = Constant::MEMBER_UNVERIFIED;
+                break;
+        }
+
+        return $status;
+    }
+}

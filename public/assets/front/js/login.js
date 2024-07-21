@@ -15,13 +15,13 @@ app.controller('myCtrl', function($scope, $http){
         $scope.password = $('#password').val();
         $scope.checkValidation();
     }
-    
+
     $scope.openPassword = function (field) {
         $('#'+field).prop('type','text');
         $('#'+field+'-icon').removeClass('fa-eye-slash');
         $('#'+field+'-icon').addClass('fa-eye');
     }
-    
+
 
     $scope.closePassword = function (field) {
         $('#'+field).prop('type','password');
@@ -58,7 +58,7 @@ app.controller('myCtrl', function($scope, $http){
                     break;
                 default:
                     break;
-            }   
+            }
         }else{
             switch(field){
                 case 'email':
@@ -76,7 +76,7 @@ app.controller('myCtrl', function($scope, $http){
                     break;
                 default:
                     break;
-            }   
+            }
         }
     }
 

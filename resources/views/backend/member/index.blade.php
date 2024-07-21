@@ -72,14 +72,14 @@
                                                                 <span>Point</span></button></a>
 
                                                         <a href="javascript:void(0)"
-                                                            onclick="confirmRelease({{ url('member/change/status?id=' . $member->id '&status=1') }})"><button
+                                                            onclick="confirmRelease({{ url('member/change/status?id=' . $member->id . '&status=2') }})"><button
                                                                 type="button"
                                                                 class="btn btn-white text-danger shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
                                                                     class="fa fa-unlock"></i> <span>Release</span>
                                                             </button></a>
 
                                                         <a href="javascript:void(0)"
-                                                            onclick="confirmRelease({{ url('member/change/status?id=' . $member->id '&status=1') }})"><button
+                                                            onclick="confirmRelease({{ url('member/change/status?id=' . $member->id . '&status=5') }})"><button
                                                                 type="button"
                                                                 class="btn btn-danger py-0 d-flex shadow-sm justify-content-between align-items-center btn-sm w-100"><i
                                                                     class="fa fa-ban"></i> <span>Ban</span> </button></a>

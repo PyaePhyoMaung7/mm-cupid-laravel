@@ -103,8 +103,8 @@
                                         style="width: 35px; height: 35px;"><i
                                             class="fa fs-5 fa-chevron-left"></i></button>
                                     <div class="d-flex">
-                                        <div class="round-btn me-3 btn btn-light" style="width: 60px; height: 60px;"><i
-                                                class="fa fa-commenting fs-3"></i></div>
+                                        <div class="round-btn me-3 btn btn-light" style="width: 60px; height: 60px;" ng-click="viewProfile()"><i
+                                                class="fa fa-eye fs-3"></i></div>
                                         <div class="round-btn ms-3 btn btn-light" style="width: 60px; height: 60px;"><i
                                                 class="fa fa-heart fs-3"></i></div>
                                     </div>
@@ -122,7 +122,7 @@
                                         ng-click="showCarousel(0, image_arr[0].image, $event)"
                                         class="profile-image w-100 h-100 object-fit-cover" alt="">
                                 </div>
-                                <div class="">
+                                <div class=""  style="padding-bottom: 70px;">
                                     <div class="p-4" ng-if="available_to_request_date" >
                                         <span class="text-secondary fw-bold">Why @{{ first_name }}'s here</span>
                                         <div style="cursor: pointer;" ng-click="dateRequest(member.id)"
@@ -131,62 +131,25 @@
                                                 @{{ first_name }} to date </span>
                                         </div>
                                     </div>
-                                    <div class="p-4">
+                                    <div class="p-3">
                                         <div class="text-secondary fw-bold">About me</div>
                                         <div class="fs-5 fw-bold mt-2"> @{{ member . about }}</div>
                                     </div>
 
-                                    <div class="p-4">
-                                        <div class="text-secondary fw-bold">Han's info</div>
-                                        <div class="mt-2 row g-2">
-                                            <span class="col-auto tag-color rounded-pill p-2 mx-1"><i
-                                                    class="fa fa-male"></i>&nbsp;@{{ member . height }}</span>
-                                            <span class="col-auto tag-color rounded-pill p-2 mx-1"><i
-                                                    class="fa fa-graduation-cap"></i>&nbsp;@{{ member . education }} </span>
-                                            <span class="col-auto tag-color rounded-pill p-2 mx-1"><i
-                                                    class="fa fa-book"></i>&nbsp;@{{ member . religion }}</span>
-                                            <span class="col-auto tag-color rounded-pill p-2 mx-1"><i
-                                                    class="fa fa-briefcase">&nbsp;</i> @{{ member . work }} </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-2" ng-repeat="(index, image) in image_arr" ng-if="image.sort != 1">
-                                        <div class="w-100 h-100" style="padding-left: vw;">
-                                            <img ng-src="@{{ image . image }}"
-                                                ng-click="showCarousel(index, image.image, $event)"
-                                                class="profile-image w-100 h-100 mb-1 object-fit-cover" alt="">
-                                        </div>
-                                    </div>
-
-                                    <div class="p-4">
+                                    <div class="p-3">
                                         <div class="text-secondary fw-bold">Current location</div>
                                         <div class="fs-5 fw-bold mt-2">@{{ member . city . name }}</div>
                                     </div>
-                                    <div class="p-4" style="margin-bottom: 70px;">
+                                    <div class="p-3"
+                                        ng-if="member.status == 4">
                                         <div class="text-secondary fw-bold">Verification</div>
                                         <div class="mt-2">
 
-                                            <span class="fs-5 fw-bold d-flex align-items-center"
-                                                ng-if="member.status == 0">
-                                                <span class="fa-stack me-2" style="font-size: 12px;">
-                                                    <i class="fa fa-certificate fa-stack-2x text-danger"></i>
-                                                    <i class="fa fa-times fa-stack-1x text-white"></i>
-                                                </span>
-                                                <span>@{{ first_name }} is unverified</span>
-                                            </span>
-
-                                            <span class="fs-5 fw-bold d-flex align-items-center"
-                                                ng-if="member.status == 1 || member.status == 2 || member.status == 3">
-                                                <i class="fa fa-check-circle text-primary me-2"></i>
-                                                <span>@{{ first_name }} is email verified</span>
-                                            </span>
-
-                                            <span class="fs-5 fw-bold d-flex align-items-center"
-                                                ng-if="member.status == 4">
+                                            <span class="fs-5 fw-bold d-flex align-items-center">
                                                 <span class="fa-stack me-2" style="font-size: 12px;">
                                                     <i class="fa fa-certificate fa-stack-2x text-primary"></i>
                                                     <i class="fa fa-check fa-stack-1x text-white"></i>
-                                                </span>@{{ first_name }} is admin verified</span>
+                                                </span>@{{ first_name }} is verified</span>
                                             </span>
 
                                         </div>
@@ -198,7 +161,7 @@
                 </div>
             </div>
             <div class="article">
-                <article class="article-container">
+                <article class="article-container position-relative">
                     @include('frontend.layouts.template_header_bar')
 
                     <section class="article-container-body rtf">

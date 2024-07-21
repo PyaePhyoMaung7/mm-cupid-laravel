@@ -451,4 +451,9 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
         console.log('frontend check point');
     }
 
+    $scope.viewProfile = function () {
+        const url_name = $scope.member.username.replace(/\s+/g, '-');
+        window.location.href = base_url + '/user/' + url_name + '/' + $scope.member.id;
+    }
+
 })

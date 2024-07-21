@@ -31,7 +31,7 @@ app.controller('myCtrl', function($scope, $http, $window){
                 if(response.status == "200") {
                     $scope.member       = response.data.data;
                     console.log($scope.member);
-                    $scope.inviters     = response.data.data.sent_date_requests;
+                    $scope.inviters     = response.data.data.received_date_requests;
                     $scope.changeMemberHobbies($scope.member.hobbies);
                     $scope.bindImages($scope.member.images);
                     $scope.getCities();
@@ -525,14 +525,13 @@ app.controller('myCtrl', function($scope, $http, $window){
 
     $scope.showInviterProfile = function (index) {
         $scope.all_images = [];
-        $scope.inviter = $scope.inviters[index];
-
+        $scope.inviter = $scope.inviters[index].invite_details;
         $scope.inviter_index = index;
-
         if($scope.inviter.images.length <= 0) {
             let image = {};
             image.sort  = 1;
-            image.image = $scope.inviter.gender == 'male' ? base_url + 'assets/default_images/default_male.jpg' : base_url + 'assets/default_images/default_female.webp';
+            console.log($scope.inviter);
+            image.image = $scope.inviter.gender == 0 ? base_url + '/storage/images/default_male.jpg' : base_url + '/storage/images/default_female.webp';
             $scope.image_arr = [image];
         }else{
             $scope.image_arr = $scope.inviter.images;
@@ -553,6 +552,26 @@ app.controller('myCtrl', function($scope, $http, $window){
         });
         // $(".carousel-inner").html("");
 
+    }
+
+    $scope.viewProfile = function () {
+        const url_name = $scope.inviter.username.replace(/\s+/g, '-');
+        window.location.href = base_url + '/user/' + url_name + '/' + $scope.inviter.id;
+    }
+
+
+    $scope.showPrevProfile = function (index) {
+        if(index-1 >= 0){
+            $scope.inviter_index = index - 1 ;
+            $scope.showInviterProfile($scope.inviter_index);
+        }
+    }
+
+    $scope.showNextProfile = function (index) {
+       if(index+1 < $scope.inviters.length){
+            $scope.inviter_index = index + 1 ;
+            $scope.showInviterProfile($scope.inviter_index);
+       }
     }
 
     $scope.cancelProfile = function () {
@@ -601,5 +620,4 @@ app.controller('myCtrl', function($scope, $http, $window){
             }
         );
     }
-
 });

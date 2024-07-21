@@ -19,7 +19,7 @@
                                 <div class="d-flex text-white justify-content-between">
                                     <div class="d-flex align-items-center">
 
-                                        <span class="fs-5 fw-bold d-flex align-items-center" ng-if="inviter.status == 4">
+                                        <span class="fs-5 fw-bold d-flex align-items-center" ng-if="member.status == 4">
                                             <span class="fa-stack me-2" style="font-size: 14px;">
                                                 <i class="fa fa-certificate fa-stack-2x text-primary"></i>
                                                 <i class="fa fa-check fa-stack-1x text-white"></i>
@@ -68,17 +68,21 @@
                             </div>
 
                             <div id="lower-container" class="position-absolute bottom-0 p-4" style="width: 100%; ">
-                                <div class="d-flex align-items-end justify-content-center">
-                                    <!-- <button class="round-btn btn btn-light" ng-disabled="prev_btn_disabled" id="prev-profile-btn" ng-click="showPrevProfile(inviter_index)" style="width: 35px; height: 35px;"><i class="fa fs-5 fa-chevron-left"></i></button> -->
+                                <div class="d-flex align-items-end justify-content-between">
+                                    <button class="round-btn btn btn-light" ng-disabled="prev_btn_disabled"
+                                        id="prev-profile-btn" ng-click="showPrevProfile(inviter_index)"
+                                        style="width: 35px; height: 35px;"><i
+                                            class="fa fs-5 fa-chevron-left"></i></button>
                                     <div class="d-flex">
-                                        <div class="round-btn me-3 btn btn-light" style="width: 60px; height: 60px;"
-                                            ng-click="dateRequestAction(inviter.id, 2)" title="accept date invitation"><i
-                                                class="fa fa-check fs-3"></i></div>
-                                        <div class="round-btn ms-3 btn btn-light" style="width: 60px; height: 60px;"
-                                            ng-click="dateRequestAction(inviter.id, 1)" title="reject date invitation"><i
-                                                class="fa fa-times fs-3"></i></div>
+                                        <div class="round-btn me-3 btn btn-light" style="width: 60px; height: 60px;" ng-click="viewProfile()"><i
+                                                class="fa fa-eye fs-3"></i></div>
+                                        <div class="round-btn ms-3 btn btn-light" style="width: 60px; height: 60px;"><i
+                                                class="fa fa-heart fs-3"></i></div>
                                     </div>
-                                    <!-- <button class="round-btn btn btn-light me-2" ng-disabled="next_btn_disabled" id="next-profile-btn" ng-click="showNextProfile(inviter_index)" style="width: 35px; height: 35px;"><i class="fa fs-5 fa-chevron-right"></i></button> -->
+                                    <button class="round-btn btn btn-light me-2" ng-disabled="next_btn_disabled"
+                                        id="next-profile-btn" ng-click="showNextProfile(inviter_index)"
+                                        style="width: 35px; height: 35px;"><i
+                                            class="fa fs-5 fa-chevron-right"></i></button>
                                 </div>
                             </div>
 
@@ -89,63 +93,34 @@
                                         ng-click="showCarousel(0, image_arr[0].image, $event)"
                                         class="profile-image w-100 h-100 object-fit-cover" alt="">
                                 </div>
-                                <div class="">
-                                    <div class="p-4">
+                                <div class=""  style="margin-bottom: 70px;">
+                                    <div class="p-4" ng-if="available_to_request_date" >
+                                        <span class="text-secondary fw-bold">Why @{{ inviter.username }}'s here</span>
+                                        <div style="cursor: pointer;" ng-click="dateRequest(member.id)"
+                                            class="w-100 tag-color p-3 mt-2 rounded-4 d-flex justify-content-start align-items-center">
+                                            <i class="fa fa-coffee me-2 fs-3"></i><span class="fs-5 fw-bold">Invite
+                                                @{{ inviter.username }} to date </span>
+                                        </div>
+                                    </div>
+                                    <div class="p-3">
                                         <div class="text-secondary fw-bold">About me</div>
                                         <div class="fs-5 fw-bold mt-2"> @{{ inviter . about }}</div>
                                     </div>
 
-                                    <div class="p-4">
-                                        <div class="text-secondary fw-bold">@{{ first_name }}'s info</div>
-                                        <div class="mt-2 row g-2">
-                                            <span class="col-auto tag-color rounded-pill p-2 mx-1"><i
-                                                    class="fa fa-male"></i>&nbsp;@{{ inviter . height }}</span>
-                                            <span class="col-auto tag-color rounded-pill p-2 mx-1"><i
-                                                    class="fa fa-graduation-cap"></i>&nbsp;@{{ inviter . education }} </span>
-                                            <span class="col-auto tag-color rounded-pill p-2 mx-1"><i
-                                                    class="fa fa-book"></i>&nbsp;@{{ inviter . religion }}</span>
-                                            <span class="col-auto tag-color rounded-pill p-2 mx-1"><i
-                                                    class="fa fa-briefcase">&nbsp;</i> @{{ inviter . work }} </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-2" ng-repeat="(index, image) in image_arr" ng-if="image.sort != 1">
-                                        <div class="w-100 h-100" style="padding-left: vw;">
-                                            <img ng-src="@{{ image . image }}"
-                                                ng-click="showCarousel(index, image.image, $event)"
-                                                class="profile-image w-100 h-100 mb-1 object-fit-cover" alt="">
-                                        </div>
-                                    </div>
-
-                                    <div class="p-4">
+                                    <div class="p-3">
                                         <div class="text-secondary fw-bold">Current location</div>
-                                        <div class="fs-5 fw-bold mt-2">@{{ inviter . city }}</div>
+                                        <div class="fs-5 fw-bold mt-2">@{{ inviter . city . name }}</div>
                                     </div>
-                                    <div class="p-4" style="margin-bottom: 70px;">
+                                    <div class="p-3"
+                                        ng-if="inviter.status == 4">
                                         <div class="text-secondary fw-bold">Verification</div>
                                         <div class="mt-2">
 
-                                            <span class="fs-5 fw-bold d-flex align-items-center"
-                                                ng-if="inviter.status == 0">
-                                                <span class="fa-stack me-2" style="font-size: 12px;">
-                                                    <i class="fa fa-certificate fa-stack-2x text-danger"></i>
-                                                    <i class="fa fa-times fa-stack-1x text-white"></i>
-                                                </span>
-                                                <span>@{{ first_name }} is unverified</span>
-                                            </span>
-
-                                            <span class="fs-5 fw-bold d-flex align-items-center"
-                                                ng-if="inviter.status == 1">
-                                                <i class="fa fa-check-circle text-primary me-2"></i>
-                                                <span>@{{ first_name }} is email verified</span>
-                                            </span>
-
-                                            <span class="fs-5 fw-bold d-flex align-items-center"
-                                                ng-if="inviter.status == 4">
+                                            <span class="fs-5 fw-bold d-flex align-items-center">
                                                 <span class="fa-stack me-2" style="font-size: 12px;">
                                                     <i class="fa fa-certificate fa-stack-2x text-primary"></i>
                                                     <i class="fa fa-check fa-stack-1x text-white"></i>
-                                                </span>@{{ first_name }} is photo verified</span>
+                                                </span>@{{ inviter.username }} is verified</span>
                                             </span>
 
                                         </div>
@@ -233,64 +208,10 @@
                                 </div>
                             </div>
 
-                            <div class="mt-1">
-                                <div class="row">
-                                    <div class="col-md-6" style="text-align: center;">
-                                        <a style="font-weight: bold;"> Plans</a>
-                                    </div>
-                                    <div class="col-md-6" style="text-align: center;">
-                                        <a href="safty.html" style="font-weight: bold;">Safty</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="mt-1">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <img style="width: 80px; height: 70px; margin-left: 80px;"
-                                            src = "{{ asset('assets/front/images/' . 'tachometer.png')}}">
-                                        <div>
-                                            <p style="font-size: smaller; margin-left: 100px; margin-bottom: 1px;">Activity
-                                            </p>
-                                            <span style="font-size: large; color: red; margin-left: 90px;">
-                                                Average</span>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <img style="width: 50px; height: 50px; margin-left: 100px; margin-top: 15px;"
-                                            src = "{{ url('assets/front/images/' . 'heart1.png')}}">
-                                        <div>
-                                            <p
-                                                style="font-size: smaller; margin-left: 105px; margin-bottom: 1px; margin-top: 10px;">
-                                                Credit</p>
-                                            <span style="font-size: large; margin-left: 115px;">
-                                                50</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-
-                            <div class="mt-1">
-                                <div class="row">
-                                    <div class="card w-100 mb-3" style="background-color: lightgray;">
-                                        <div class="card-body">
-                                            <h5 class="card-title" style="text-align: center;">Badoo Premium</h5>
-                                            <p class="card-text" style="text-align: center;">Lorem ipsum dolor sit amet,
-                                                consectetur adipisicing elit. Distinctio sed ad ipsum?</p>
-                                            <p class=""
-                                                style="background-color: azure; border-radius: 10px;
-                            width: 250px; height: 30px; margin-left: 100px; padding-left: 30px;">
-                                                Active until April 13,2024 </p>
-                                            <p style="font-size: smaller; margin-left: 100px;">*Based on top 10% of 2.7m
-                                                users sample</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            <h5 class="ms-2">See who invited you to date</h5>
 
                             <hr>
-                            <div class="mt-1">
+                            <div class="mt-1" ng-if="inviters.length > 0">
                                 <table class="table">
                                     <thead>
                                         <tr>
@@ -303,7 +224,7 @@
                                     <tbody>
                                         <tr ng-repeat="(index, inviter) in inviters">
                                             <td scope="" class="col-9">
-                                                <strong>@{{ inviter . username . split(' ')[0] }}</strong>
+                                                <strong>@{{ inviter . invite_details . username . split(' ')[0] }}</strong>
                                             </td>
                                             <td class="">
                                                 <div class="round-btn shadow-sm ms-3 btn btn-light"

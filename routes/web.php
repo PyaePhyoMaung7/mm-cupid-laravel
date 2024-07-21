@@ -48,11 +48,13 @@ Route::get('/send-mail', [MailController::class, 'index']);
 
 Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
     Route::get('index', [MemberController::class, 'index']);
+    Route::get('/user/{username}/{id}', [MemberController::class, 'getMemberProfile']);
     Route::group(['prefix' => 'api'], function () {
         Route::post('/sync-members', [MemberController::class, 'apiSyncMembers']);
         Route::post('/member/view/update', [MemberController::class, 'apiMemberViewUpdate']);
         Route::post('/invite', [MemberController::class, 'apiSendDateRequest']);
         Route::get('/member', [MemberController::class, 'apiGetLoginInfo']);
+        Route::post('/member', [MemberController::class, 'apiGetMemberInfo']);
         Route::post('/member/update', [MemberController::class, 'apiMemberUpdate']);
         Route::post('/member/photo/update', [MemberController::class, 'apiMemberPhotoUpdate']);
         Route::post('/member/photo/delete', [MemberController::class, 'apiMemberPhotoDelete']);

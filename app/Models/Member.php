@@ -98,4 +98,6 @@ class Member extends Authenticatable
         );
     }
 
+
+
 }

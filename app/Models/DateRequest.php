@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class DateRequest extends Model
@@ -24,9 +24,9 @@ class DateRequest extends Model
         'deleted_by'
     ];
 
-    public function getInviteMemberInfoById(): HasOne
+    public function getInviteMemberInfoById(): BelongsTo
     {
-        return $this->hasOne(
+        return $this->belongsTo(
             Member::class,
             'invite_id',
             'id'

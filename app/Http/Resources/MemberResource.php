@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Http\Resources\DateInviterResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class MemberResource extends JsonResource
@@ -53,7 +54,7 @@ class MemberResource extends JsonResource
                                 ),
             'received_date_requests'=> $this->when(
                                     $this->getReceiveDateRequestsByMember != null,
-                                    DateRequestResource::collection($this->getReceiveDateRequestsByMember)
+                                    DateInviterResource::collection($this->getReceiveDateRequestsByMember)
                                     ),
         ];
     }
