@@ -4,12 +4,13 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\City\CityController;
-use App\Http\Controllers\Dashboard\DashboardController;
-use App\Http\Controllers\Hobby\HobbyController;
 use App\Http\Controllers\Mail\MailController;
+use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Hobby\HobbyController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Setting\SettingController;
-use App\Http\Controllers\User\UserController;
+use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\Transaction\TransactionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -58,6 +59,7 @@ Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
         Route::post('/member/update', [MemberController::class, 'apiMemberUpdate']);
         Route::post('/member/photo/update', [MemberController::class, 'apiMemberPhotoUpdate']);
         Route::post('/member/photo/delete', [MemberController::class, 'apiMemberPhotoDelete']);
+        Route::post('/member/transaction/photo/store', [MemberController::class, 'apiMemberTransactionPhotoStore']);
         Route::post('/verification/photo/store', [MemberController::class, 'apiStoreVerificationPhoto']);
     });
     Route::get('profile', [MemberController::class, 'getProfile']);
@@ -102,10 +104,18 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
 
     Route::group(['prefix' => 'member/'], function () {
         Route::get('index', [MemberController::class, 'adminIndex']);
-        // Route::get('point/{id}', [MemberController::class, 'point']);
+        Route::post('point/update', [MemberController::class, 'updatePoint'])->name('point.update');
         Route::get('change/status/{id}/{status}', [MemberController::class, 'changeStatus']);
         // Route::get('delete/{id}', [MemberController::class, 'delete']);
         Route::get('details/{id}', [MemberController::class, 'viewDetails']);
+    });
+
+    Route::group(['prefix' => 'transaction/'], function () {
+        // Route::get('create', [TransactionController::class, 'create']);
+        // Route::post('store', [TransactionController::class, 'store'])->name('city.store');
+        Route::get('index', [TransactionController::class, 'index']);
+        Route::get('view/{id}', [TransactionController::class, 'view']);
+        // Route::post('update', [TransactionController::class, 'update'])->name('city.update');
     });
 
 });

@@ -204,3 +204,15 @@ if (!function_exists("getVerificationStatus")) {
         return $status;
     }
 }
+
+if (!function_exists("getHobbies")) {
+    function getHobbies($hobbies)
+    {
+        $hobby_str = "";
+        foreach ($hobbies as $hobby) {
+            $hobby_str .= $hobby->getHobbiesByMemberHobby->name . ", ";
+        }
+        $hobby_str = rtrim($hobby_str, ", ");
+        return $hobby_str;
+    }
+}

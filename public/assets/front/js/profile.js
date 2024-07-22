@@ -523,6 +523,55 @@ app.controller('myCtrl', function($scope, $http, $window){
         );
     }
 
+    $scope.sendTransactionScreenshot = function () {
+        $('.loading').show();
+        const extensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
+        const input = $('#upload7')[0];
+        if(input.files && input.files.length > 0) {
+            const fileName = input.files[0].name;
+            const fileExtension = fileName.split('.').pop().toLowerCase();
+            if(extensions.includes(fileExtension)) {
+                const url = base_url + '/api/member/transaction/photo/store';
+                const fileInput = document.getElementById('upload7');
+                const file = fileInput.files[0];
+                let form_data = new FormData();
+                form_data.append('file', file);
+                $http({
+                    method: 'POST',
+                    url: url,
+                    data: form_data,
+                    headers: {
+                        'Content-Type': undefined
+                    }
+                }).then(
+                    function (response) {
+                        console.log(response);
+                        if(response.data.success) {
+                            const message  = response.data.success_msg;
+                            $('.loading').hide();
+                            new PNotify({
+                                title: 'Success!',
+                                width: '400px',
+                                addclass: 'pnotify-center',
+                                text: message,
+                                type: 'success',
+                                styling: 'bootstrap3'
+                            });
+                            $('#point-purchase-btn').click();
+                        }
+                    },
+                    function (error) {
+                        alert('Sorry! Something went wrong while saving you photos');
+                        $('#point-purchase-btn').click();
+                    }
+                );
+            }else{
+                alert('Your uploaded file type is not supported!');
+            }
+        }
+        $('.loading').hide();
+    }
+
     $scope.showInviterProfile = function (index) {
         $scope.all_images = [];
         $scope.inviter = $scope.inviters[index].invite_details;
@@ -550,7 +599,6 @@ app.controller('myCtrl', function($scope, $http, $window){
             "z-index": 10,
             "background-color": "rgba(0, 0, 0, 0.5)"
         });
-        // $(".carousel-inner").html("");
 
     }
 

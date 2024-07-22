@@ -13,13 +13,13 @@
                     <!-- menu profile quick info -->
                     <div class="profile clearfix">
                         <div class="profile_pic">
-                            @if (Auth::guard('admin')->user()->role == App\Constant::ADMIN_ROLE)
+                            @if (Auth::guard('admin')->user()->role == getUserRole('admin'))
                                 <img src="{{ url('assets/default_images/admin.png') }}" class="img-circle profile_img"
                                     alt="">
-                            @elseif (Auth::guard('admin')->user()->role == App\Constant::EDITOR_ROLE)
+                            @elseif (Auth::guard('admin')->user()->role == getUserRole('admin'))
                                 <img src="{{ url('assets/default_images/editor.png') }}" class="img-circle profile_img"
                                     alt="">
-                            @elseif (Auth::guard('admin')->user()->role == App\Constant::CUSTOMER_SERVICE_ROLE)
+                            @elseif (Auth::guard('admin')->user()->role == getUserRole('customer_service'))
                                 <img src="{{ url('assets/default_images/customer_service.png') }}"
                                     class="img-circle profile_img" alt="">
                             @endif
@@ -83,10 +83,16 @@
                                     </li>
                                 @endif
 
+                                @if(showSection('admin-backend/transaction'))
+                                    <li><a href="{{ url('admin-backend/transaction/index') }}"><i class="fa fa-credit-card-alt"></i> Transactions
+                                        </a></li>
+                                @endif
+
                                 @if(showSection('admin-backend/setting'))
                                     <li><a href="{{ url('admin-backend/setting/index') }}"><i class="fa fa-gear"></i> Setting
                                         </a></li>
                                 @endif
+
                             </ul>
                         </div>
 

@@ -26,7 +26,7 @@
                                             </span>
                                         </span>
                                         <span class="fw-bold fs-4 me-2">
-                                            @{{ inviter . username }}, @{{ inviter . age }}
+                                            @{{ inviter.username }}, @{{ inviter.age }}
                                         </span>
                                         <i class="fa fa-circle text-success" style="font-size: 7px;"></i>
 
@@ -71,30 +71,28 @@
                                 <div class="d-flex align-items-end justify-content-between">
                                     <button class="round-btn btn btn-light" ng-disabled="prev_btn_disabled"
                                         id="prev-profile-btn" ng-click="showPrevProfile(inviter_index)"
-                                        style="width: 35px; height: 35px;"><i
-                                            class="fa fs-5 fa-chevron-left"></i></button>
+                                        style="width: 35px; height: 35px;"><i class="fa fs-5 fa-chevron-left"></i></button>
                                     <div class="d-flex">
-                                        <div class="round-btn me-3 btn btn-light" style="width: 60px; height: 60px;" ng-click="viewProfile()"><i
-                                                class="fa fa-eye fs-3"></i></div>
+                                        <div class="round-btn me-3 btn btn-light" style="width: 60px; height: 60px;"
+                                            ng-click="viewProfile()"><i class="fa fa-eye fs-3"></i></div>
                                         <div class="round-btn ms-3 btn btn-light" style="width: 60px; height: 60px;"><i
                                                 class="fa fa-heart fs-3"></i></div>
                                     </div>
                                     <button class="round-btn btn btn-light me-2" ng-disabled="next_btn_disabled"
                                         id="next-profile-btn" ng-click="showNextProfile(inviter_index)"
-                                        style="width: 35px; height: 35px;"><i
-                                            class="fa fs-5 fa-chevron-right"></i></button>
+                                        style="width: 35px; height: 35px;"><i class="fa fs-5 fa-chevron-right"></i></button>
                                 </div>
                             </div>
 
                             <div id="profile-content" class="overflow-y-auto bg-white"
                                 style="width:100%; height: 80vh; z-index: 5;">
                                 <div class="w-100 h-100">
-                                    <img ng-src="@{{ image_arr[0] . image }}"
+                                    <img ng-src="@{{ image_arr[0].image }}"
                                         ng-click="showCarousel(0, image_arr[0].image, $event)"
                                         class="profile-image w-100 h-100 object-fit-cover" alt="">
                                 </div>
-                                <div class=""  style="margin-bottom: 70px;">
-                                    <div class="p-4" ng-if="available_to_request_date" >
+                                <div class="" style="margin-bottom: 70px;">
+                                    <div class="p-4" ng-if="available_to_request_date">
                                         <span class="text-secondary fw-bold">Why @{{ inviter.username }}'s here</span>
                                         <div style="cursor: pointer;" ng-click="dateRequest(member.id)"
                                             class="w-100 tag-color p-3 mt-2 rounded-4 d-flex justify-content-start align-items-center">
@@ -104,15 +102,14 @@
                                     </div>
                                     <div class="p-3">
                                         <div class="text-secondary fw-bold">About me</div>
-                                        <div class="fs-5 fw-bold mt-2"> @{{ inviter . about }}</div>
+                                        <div class="fs-5 fw-bold mt-2"> @{{ inviter.about }}</div>
                                     </div>
 
                                     <div class="p-3">
                                         <div class="text-secondary fw-bold">Current location</div>
-                                        <div class="fs-5 fw-bold mt-2">@{{ inviter . city . name }}</div>
+                                        <div class="fs-5 fw-bold mt-2">@{{ inviter.city.name }}</div>
                                     </div>
-                                    <div class="p-3"
-                                        ng-if="inviter.status == 4">
+                                    <div class="p-3" ng-if="inviter.status == 4">
                                         <div class="text-secondary fw-bold">Verification</div>
                                         <div class="mt-2">
 
@@ -153,6 +150,7 @@
                                         data-bs-target="#offcanvasUserProfile" aria-controls="offcanvasUserProfile"></i>
                                 </button>
 
+                                @include('frontend.include_files.offcanvas_point')
                                 @include('frontend.include_files.offcanvas_profile')
                                 @include('frontend.include_files.offcanvas_profile_edit')
                                 @include('frontend.include_files.offcanvas_photo_verify')
@@ -167,7 +165,7 @@
                                     <div class="col-3">
                                         <div class="position-relative" style="width: 120px; height: 120px;">
                                             <div class="shadow-sm overflow-hidden w-100 h-100 rounded-circle">
-                                                <img ng-src="@{{ member . thumb }}" class="w-100 h-100 object-fit-cover"
+                                                <img ng-src="@{{ member.thumb }}" class="w-100 h-100 object-fit-cover"
                                                     alt="Profile Photo">
                                             </div>
                                             <span class="fs-5 fw-bold d-flex align-items-center position-absolute z-3"
@@ -181,7 +179,7 @@
                                     </div>
 
                                     <div class="col-md-6">
-                                        <h3 class="mt-4">@{{ member . username }}, @{{ member . age }}</h3>
+                                        <h3 class="mt-4">@{{ member.username }}, @{{ member.age }}</h3>
                                         {{-- <i class="fa fa-flag text-success fs-5" ng-if="member.love_status == 0"></i>
                                         <i class="fa fa-flag text-danger fs-5" ng-if="member.love_status == 1"></i> --}}
                                     </div>
@@ -208,6 +206,20 @@
                                 </div>
                             </div>
 
+                            <div class="row">
+                                <div class="card w-100 mb-5" style="background-color: lightgray;">
+                                    <div class="card-body">
+                                        <h5 class="card-title" style="text-align: center;">Purchase Points</h5>
+                                        <p class="card-text text-center" style="">Want to send more date requests?
+                                            Buy cupid points here.</p>
+                                        <button class="btn d-block mx-auto fw-bold" id="point-purchase-btn"
+                                            data-bs-toggle="offcanvas" data-bs-target="#offcanvasPointPurchase"
+                                            aria-controls="offcanvasPointPurchase"
+                                            style="background-color: azure; border-radius: 10px;">See our packages</button>
+                                    </div>
+                                </div>
+                            </div>
+
                             <h5 class="ms-2">See who invited you to date</h5>
 
                             <hr>
@@ -224,7 +236,7 @@
                                     <tbody>
                                         <tr ng-repeat="(index, inviter) in inviters">
                                             <td scope="" class="col-9">
-                                                <strong>@{{ inviter . invite_details . username . split(' ')[0] }}</strong>
+                                                <strong>@{{ inviter.invite_details.username.split(' ')[0] }}</strong>
                                             </td>
                                             <td class="">
                                                 <div class="round-btn shadow-sm ms-3 btn btn-light"
@@ -279,6 +291,51 @@
         });
 
         $("#birthday").prop('readonly', true);
+
+        function browseImage(index) {
+            $('#upload' + index).click();
+        }
+
+        function previewImage(index) {
+            const fileInput = document.getElementById('upload' + index);
+            const preview = document.getElementById('preview' + index);
+
+            let fileName = fileInput.value.split('\\').pop();
+            let fileExtension = fileName.split('.').pop();
+
+            let allow_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'avif'];
+
+            let file = event.target.files[0];
+
+            if (allow_extensions.includes(fileExtension)) {
+                if (file) {
+                    let reader = new FileReader();
+                    reader.onload = function(event) {
+                        let imgSrc = event.target.result;
+                        preview.innerHTML = `
+                <img src= ${imgSrc} class="" style="width: 100%; height: 100%; object-fit: cover" alt="Image Preview"/>
+                `;
+                    };
+                    reader.readAsDataURL(file);
+                    preview.style.display = "";
+                    $('#upload-icon-' + index).hide();
+                    $('.change-photo' + index).show();
+                    $('#preview' + index).removeClass('d-none');
+                    $('#delete-btn-' + index).removeClass('d-none');
+                    $('#update-photo-btn').prop('disabled', false);
+                }
+            } else {
+                $('#upload' + index).val('');
+                $('#preview' + index).innerHTML = "";
+                $('.change-photo' + index).hide();
+                $('#upload-icon-' + index).show();
+                $('#preview' + index).addClass('d-none');
+                $('#delete-btn-' + index).addClass('d-none');
+
+                alert('Your uploaded file type is not accepted.');
+            };
+
+        }
 
         function confirmLogout(url) {
             Swal.fire({

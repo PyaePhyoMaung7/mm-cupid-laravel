@@ -77,7 +77,7 @@ class Member extends Authenticatable
             MemberHobby::class,
             'member_id',
             'id'
-        );
+        )->whereNull('deleted_at');
     }
 
     public function getSentDateRequestsByMember(): HasMany

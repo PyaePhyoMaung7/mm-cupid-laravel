@@ -16,6 +16,7 @@ use App\Http\Resources\HobbyResource;
 use App\Http\Resources\MemberResource;
 use App\Http\Requests\EmailCheckRequest;
 use App\Http\Requests\MemberLoginRequest;
+use App\Http\Requests\PointUpdateRequest;
 use App\Http\Requests\EmailConfirmRequest;
 use App\Http\Resources\SyncMemberResource;
 use App\Http\Requests\MemberRegisterRequest;
@@ -34,6 +35,7 @@ use App\Http\Requests\Front\ApiMemberViewUpdateRequest;
 use App\Http\Requests\Front\ApiMemberPhotoDeleteRequest;
 use App\Http\Requests\Front\ApiMemberPhotoUpdateRequest;
 use App\Repositories\Setting\SettingRepositoryInterface;
+use App\Http\Requests\Front\ApiTransactionPhotoStoreRequest;
 use App\Http\Requests\Front\ApiVerificationPhotoStoreRequest;
 
 class MemberController extends Controller
@@ -74,12 +76,10 @@ class MemberController extends Controller
     {
         try {
             $member = $this->memberRepository->getMemberById((int) $id);
-            $images = $this->memberRepository->getMemberImages((int) $id);
             $queryLog = DB::getQueryLog();
             Utility::saveDebugLog("MemberController::viewDetails", $queryLog);
             return view('backend.member.details', compact([
                 'member',
-                'images',
             ]));
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::viewDetails", $e->getMessage());
@@ -106,6 +106,23 @@ class MemberController extends Controller
                 abort(404);
             }
             Utility::saveErrorLog("MemberController::point", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function updatePoint(PointUpdateRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->updatePoint((array) $request->all());
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::updatePoint", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return redirect('admin-backend/transaction/index')->with(['success_msg' => 'Point added successfully']);
+            } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
+                return redirect('admin-backend/transaction/index')->with(['fail_msg' => 'Point addition failed!']);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::updatePoint", $e->getMessage());
             abort(500);
         }
     }
@@ -238,7 +255,7 @@ class MemberController extends Controller
 
                 } else {
                     $this->settingRepository->setSiteSetting();
-
+                    $this->memberRepository->updateLastLogin();
                     $queryLog       = DB::getQueryLog();
                     Utility::saveDebugLog("AuthController::postMemberLogin", $queryLog);
 
@@ -583,6 +600,28 @@ class MemberController extends Controller
             }
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::apiStoreVerificationPhoto", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function apiMemberTransactionPhotoStore(ApiTransactionPhotoStoreRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->apiMemberTransactionPhotoStore((array) $request->all());
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiMemberTransactionPhotoStore", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return response()->json([
+                    'success'       => 'true',
+                    'success_msg'   => 'Your transaction photo has been sent',
+                ], ReturnMessage::OK);
+            } else {
+                return response()->json([
+                    'success'       => 'false'
+                ], ReturnMessage::INTERNAL_SERVER_ERROR);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiMemberTransactionPhotoStore", $e->getMessage());
             abort(500);
         }
     }

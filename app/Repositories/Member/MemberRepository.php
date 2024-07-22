@@ -12,6 +12,7 @@ use App\Models\DateRequest;
 use App\Models\MemberHobby;
 use App\Models\MemberGallery;
 use App\Mail\PasswordResetMail;
+use App\Models\MemberTransaction;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -48,18 +49,6 @@ class MemberRepository implements MemberRepositoryInterface
         return $members;
     }
 
-    public function getMemberImages($id)
-    {
-        $base_url   = url('/');
-        $images     = MemberGallery::select(
-                                    DB::raw("CONCAT('". $base_url ."/storage/uploads/', member_id, '/', name) AS image")
-                                    )
-                                    ->where('member_id', '=', $id)
-                                    ->whereNull('deleted_at')
-                                    ->get();
-        return $images;
-    }
-
     public function changeStatus(int $id, int $status)
     {
         $update_data                    = [];
@@ -76,6 +65,22 @@ class MemberRepository implements MemberRepositoryInterface
         return $returned_array;
     }
 
+    public function updatePoint(array $data)
+    {
+        $returned_array         = [];
+        $update_data            = [];
+        $member_id              = $data['id'];
+        $param_obj              = Member::find($member_id);
+        $update_data['point']   = $param_obj->point + $data['point'];
+        $data                   = Utility::addUpdatedBy($update_data);
+        $result                 = $param_obj->update($update_data);
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
+    }
 
     public function getMemberByEmail(string $email)
     {
@@ -122,6 +127,15 @@ class MemberRepository implements MemberRepositoryInterface
         $today_dt           = date("Y-m-d H:i:s");
         $email_confirm_code = md5($unique_number . $today_dt);
         return $email_confirm_code;
+    }
+
+    public function updateLastLogin()
+    {
+        $update_data                = [];
+        $update_data['last_login']  = date('Y-m-d H:i:s');
+        $update_data                = Utility::memberAddUpdatedBy($update_data);
+        $param_obj                  = Member::find(Auth::guard('member')->user()->id);
+        $param_obj->update($update_data);
     }
 
     public function register(array $data)
@@ -431,6 +445,43 @@ class MemberRepository implements MemberRepositoryInterface
             $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
         }
         return $returned_array;
+    }
+
+    public function apiMemberTransactionPhotoStore(array $data)
+    {
+        $returned_array                     = [];
+        $member_id                          = Auth::guard('member')->user()->id;
+        DB::beginTransaction();
+        try {
+            if (isset($data['file']) && $data['file']->isValid()) {
+                $file        = $data['file'];
+                $unique_name = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
+                . "_"  . date('Ymd_his') . "_" . uniqid() . "." .  $file->getClientOriginalExtension();
+
+                $upload_dir = storage_path('app/public/transactions/' . $member_id ."/");
+                if (!File::exists($upload_dir)) {
+                    File::makeDirectory($upload_dir, 0755, true);
+                }
+
+                $photo_ins_data                     = [];
+                $photo_ins_data['member_id']        = $member_id;
+                $photo_ins_data['name']             = $unique_name;
+                $photo_ins_data['created_by']       = $member_id;
+                $photo_ins_data['updated_by']       = $member_id;
+                MemberTransaction::create($photo_ins_data);
+
+                $file->storeAs('transactions/' . $member_id, $unique_name, 'public');
+
+                DB::commit();
+                $returned_array['status']   = ReturnMessage::OK;
+                return $returned_array;
+            }
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Utility::saveErrorLog("MemberRepository::apiMemberTransactionPhotoStore", $e->getMessage());
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+            return $returned_array;
+        }
     }
 
     public function sendEmailConfirmMail($data)

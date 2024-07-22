@@ -4,7 +4,7 @@ namespace App\Http\Requests\Front;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ApiMemberPhotoUpdateRequest extends FormRequest
+class ApiTransactionPhotoStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,10 +24,6 @@ class ApiMemberPhotoUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'sort' => [
-                'required',
-                'integer'
-            ],
             'file' => [
                 'required',
                 'mimes:jpg,jpeg,png,gif,webp',
@@ -39,11 +35,9 @@ class ApiMemberPhotoUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-           'sort.required'  => 'Please include an image sort number.',
-           'sort.integer'   => 'Image number must be an integer',
-           'file.required'  => 'Please upload a file',
-           'file.mimes'     => 'Invalid image format.<br> Only jpg, jpeg, png, gif, webp photos are allowed.',
-           'file.max'       => 'File size can be 2mb maximum.',
+            'file.required'  => 'Please upload a file',
+            'file.mimes'     => 'Invalid image format.<br> Only jpg, jpeg, png, gif, webp photos are allowed.',
+            'file.max'       => 'File size can be 2mb maximum.',
         ];
     }
 }

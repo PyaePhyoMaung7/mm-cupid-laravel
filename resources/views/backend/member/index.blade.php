@@ -23,7 +23,6 @@
                                             <th>
                                                 <input type="checkbox" id="check-all" class="flat">
                                             </th>
-                                            <th class="column-title">Id</th>
                                             <th class="column-title">Username</th>
                                             <th class="column-title">Email</th>
                                             <th class="column-title">Phone</th>
@@ -48,7 +47,6 @@
                                                     <td class="a-center align-middle">
                                                         <input type="checkbox" class="flat" name="table_records">
                                                     </td>
-                                                    <td class="align-middle">{{ $member->id }}</td>
                                                     <td class="align-middle">{{ $member->username }}</td>
                                                     <td class="align-middle">{{ getFifteenChars($member->email) }}</td>
                                                     <td class="align-middle">{{ $member->phone }}</td>
@@ -72,7 +70,7 @@
                                                         <div style="width: 80px;"><img class="w-100"
                                                                 src="{{ $member->thumb }}"></div>
                                                     </td>
-                                                    <td class="align-middle">{{ $member->city_id }}</td>
+                                                    <td class="align-middle">{{ $member->getCityByMember->name }}</td>
                                                     <td class="align-middle">
                                                         @if ($member->status == getVerificationStatus('email'))
                                                             <span class="badge badge-info">email verified</span>
@@ -100,13 +98,9 @@
                                                         @endif
 
                                                         <a href="{{ url('admin-backend/member/details/' . $member->id ) }}"><button type="button"
-                                                                class="btn btn-dark shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
-                                                                    class="fa fa-eye"></i> <span>View</span></button></a>
-                                                        <a href="{{ url('member/point/' . $member->point) }}"><button
-                                                                type="button"
                                                                 class="btn btn-primary shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
-                                                                    class="fa fa-diamond"></i>
-                                                                <span>Point</span></button></a>
+                                                                    class="fa fa-eye"></i> <span>View</span></button></a>
+
 
                                                         @if ($member->status == getVerificationStatus('banned'))
                                                             <a href="javascript:void(0)"

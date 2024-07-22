@@ -6,9 +6,9 @@ interface MemberRepositoryInterface
 {
     public function getMembers();
 
-    public function getMemberImages(int $id);
-
     public function changeStatus(int $id, int $status);
+
+    public function updatePoint(array $data);
 
     public function getMemberByEmail(string $email);
 

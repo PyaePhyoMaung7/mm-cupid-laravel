@@ -21,11 +21,11 @@
                             <br/>
                             @if ($member)
                             <div class="row">
-                                @foreach ($images as $image)
+                                @foreach ($member->getGalleryByMember as $image)
                                     <div class="col-2">
                                         <div style="border-radius: 15px; width: 150px; height: 200px;" class="shadow-sm overflow-hidden ms-1 mb-2 d-flex justify-content-center align-items-center">
-                                            <a class="w-100 h-100" target="_blank" href="{{ $image->image }}" alt="">
-                                                <img class="w-100 h-100" style="object-fit: cover" src="{{ $image->image }}" alt="">
+                                            <a class="w-100 h-100" target="_blank" href="{{ $image->name }}" alt="">
+                                                <img class="w-100 h-100" style="object-fit: cover" src="{{ asset('/storage/uploads/' . $member->id . '/' . $image->name) }}" alt="">
                                             </a>
                                         </div>
                                     </div>
@@ -39,25 +39,25 @@
                                     </a>
                                 </div>
                                 <div class="col-6">
-                                        <div class="mb-5">
-                                            <h3>Steps for Verification</h3>
-                                            <div style="font-size: 15px;">
-                                                <p>Check the person in above photos</p>
-                                                <p>Check the person in the left photo</p>
-                                                <p>It should be the same person</p>
-                                                <p>Check personal details</p>
-                                                <p>If everything seems right, approve the member</p>
-                                            </div>
+                                    <div class="mb-5">
+                                        <h3>Steps for Verification</h3>
+                                        <div style="font-size: 15px;">
+                                            <p>Check the person in above photos</p>
+                                            <p>Check the person in the left photo</p>
+                                            <p>It should be the same person</p>
+                                            <p>Check personal details</p>
+                                            <p>If everything seems right, approve the member</p>
                                         </div>
-                                        <a
-                                        href="javascript:void(0)"><button
-                                            onclick="confirmVerify('{{ url('admin-backend/member/change/status/' . $member->id . '/' . getVerificationStatus('verified')) }}')"
-                                            type="button"
-                                            class="btn btn-success btn-lg mt-5 shadow-sm py-0 w-100"><i
-                                                class="fa fa-check"></i>
-                                            <span>Confirm</span></button></a>
                                     </div>
+                                    <a
+                                    href="javascript:void(0)"><button
+                                        onclick="confirmVerify('{{ url('admin-backend/member/change/status/' . $member->id . '/' . getVerificationStatus('verified')) }}')"
+                                        type="button"
+                                        class="btn btn-success btn-lg mt-5 shadow-sm py-0 w-100"><i
+                                            class="fa fa-check"></i>
+                                        <span>Confirm</span></button></a>
                                 </div>
+                            </div>
                             @endif
 
                             <div class="row mx-auto" style="font-size: 18px;">
@@ -84,8 +84,12 @@
                                         <div class="col-8">: {{ $member->date_of_birth }}</div>
                                     </div>
                                     <div class="row my-2">
+                                        <div class="col-4">City</div>
+                                        <div class="col-8">: {{ $member->getCityByMember->name }}</div>
+                                    </div>
+                                    <div class="row my-2">
                                         <div class="col-4">Hobbies</div>
-                                        <div class="col-8">: {{ $member->hobbies }}</div>
+                                        <div class="col-8">: {{ getHobbies($member->getMemberHobbiesByMember) }}</div>
                                     </div>
                                     <div class="row my-2">
                                         <div class="col-4">Education</div>

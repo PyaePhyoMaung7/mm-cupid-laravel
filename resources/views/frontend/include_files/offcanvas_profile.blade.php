@@ -122,24 +122,24 @@
             </div>
 
             <div class="p-3 rounded-4 bg-body-tertiary mb-2">
-                <div ng-if="member.status == 2">
+                <div ng-if="member.status == {{ getVerificationStatus('email') }}">
                     <div class="fs-5 fw-bold mb-2">Get verified</div>
                     <div class="mb-3">Verification ups your chances by showing people they can trust you</div>
                     <button class="btn btn-dark w-100 fs-5 rounded-pill" data-bs-toggle="offcanvas"  data-bs-target="#offcanvasUserPhotoVerify" aria-controls="offcanvasUserPhotoVerify"><i class="fa fa-check-circle"></i> Verify By Photo</button>
                 </div>
 
-                <div ng-if="member.status == 3">
+                <div ng-if="member.status == {{ getVerificationStatus('pending') }}">
                     <div class="fs-5 fw-bold mb-2">Verification Pending <i class="fa fa-circle text-warning" style="font-size: 20px;"></i></div>
                     <div class="mb-3">Admins are checking your photo. Please wait patiently.</div>
                 </div>
 
-                <div ng-if="member.status == 4">
+                <div ng-if="member.status == {{ getVerificationStatus('denied') }}">
                     <div class="fs-5 fw-bold mb-2">Verification Denied <i class="fa fa-circle text-danger" style="font-size: 20px;"></i></div>
                     <div class="mb-3">Sorry, we cannot verify you. Please take photo again.</div>
                     <button class="btn btn-dark w-100 fs-5 rounded-pill" data-bs-toggle="offcanvas"  data-bs-target="#offcanvasUserPhotoVerify" aria-controls="offcanvasUserPhotoVerify"><i class="fa fa-check-circle"></i> Verify By Photo</button>
                 </div>
 
-                <div ng-if="member.status == 5">
+                <div ng-if="member.status == {{ getVerificationStatus('verified') }}">
                     <div class="fs-5 fw-bold mb-2">Verification Approved <i class="fa fa-circle text-success" style="font-size: 20px;"></i></div>
                     <div class="mb-3">You are now a verified user</div>
                 </div>
@@ -148,51 +148,6 @@
     </div>
 </div>
 <script>
-    function browseImage (index) {
-        $('#upload'+index).click();
-    }
-
-    function previewImage (index) {
-        const fileInput = document.getElementById('upload'+index);
-        const preview = document.getElementById('preview'+index);
-
-        let fileName = fileInput.value.split('\\').pop();
-        let fileExtension = fileName.split('.').pop();
-
-        let allow_extensions = ['jpg','jpeg','png','gif','webp', 'avif'];
-
-        let file = event.target.files[0];
-
-        if(allow_extensions.includes(fileExtension)){
-            if(file){
-                let reader = new FileReader();
-                reader.onload = function(event) {
-                let imgSrc = event.target.result;
-                preview.innerHTML = `
-                <img src= ${imgSrc} class="" style="width: 100%; height: 100%; object-fit: cover" alt="Image Preview"/>
-                `;
-                };
-                reader.readAsDataURL(file);
-                preview.style.display = "";
-                $('#upload-icon-'+index).hide();
-                $('.change-photo'+index).show();
-                $('#preview'+index).removeClass('d-none');
-                $('#delete-btn-'+index).removeClass('d-none');
-                $('#update-photo-btn').prop('disabled', false);
-            }
-        }else{
-            $('#upload'+index).val('');
-            $('#preview'+index).innerHTML = "";
-            $('.change-photo'+index).hide();
-            $('#upload-icon-'+index).show();
-            $('#preview'+index).addClass('d-none');
-            $('#delete-btn-'+index).addClass('d-none');
-
-            alert('Your uploaded file type is not accepted.');
-        };
-
-    }
-
     const offcanvas_body = document.querySelector('.offcanvas-body')
     offcanvas_body.addEventListener('scroll', function() {
     let offcanvas_header = document.querySelector('.offcanvas-header');
