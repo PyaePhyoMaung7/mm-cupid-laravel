@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Front;
 
+use App\Rules\Base64ImageCheckRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ApiVerificationPhotoStoreRequest extends FormRequest
@@ -27,7 +28,7 @@ class ApiVerificationPhotoStoreRequest extends FormRequest
             'src' => [
                 'required',
                 'string',
-                'base64_image'
+                new Base64ImageCheckRule($this->src),
             ]
         ];
     }
@@ -37,7 +38,6 @@ class ApiVerificationPhotoStoreRequest extends FormRequest
         return [
             'src.required'      => 'Please send verification photo',
             'src.string'        => 'The photo must be a string',
-            'src.base64_image'  => 'The photo must be a valid base64-encoded image'
         ];
     }
 }

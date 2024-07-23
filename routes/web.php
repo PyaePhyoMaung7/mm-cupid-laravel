@@ -39,6 +39,7 @@ Route::get('api/cities', [MemberController::class, 'apiGetCities']);
 Route::get('api/hobbies', [MemberController::class, 'apiGetHobbies']);
 Route::post('api/check-email', [MemberController::class, 'apiCheckEmail']);
 Route::get('/email-confirm', [MemberController::class, 'confirmEmail']);
+Route::get('/email-confirm/reminder', [MemberController::class, 'remindEmailConfirm']);
 Route::get('forgot-password', [MemberController::class, 'forgotPassword']);
 Route::post('password-reset-email', [MemberController::class, 'sendPasswordResetLink']);
 Route::get('password-reset-code-check', [MemberController::class, 'passwordResetCodeCheck']);

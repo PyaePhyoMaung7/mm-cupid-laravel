@@ -68,15 +68,27 @@ class MemberRepository implements MemberRepositoryInterface
     public function updatePoint(array $data)
     {
         $returned_array         = [];
-        $update_data            = [];
-        $member_id              = $data['id'];
-        $param_obj              = Member::find($member_id);
-        $update_data['point']   = $param_obj->point + $data['point'];
-        $data                   = Utility::addUpdatedBy($update_data);
-        $result                 = $param_obj->update($update_data);
-        if ($result) {
+        DB::beginTransaction();
+        try {
+            $update_data                    = [];
+            $member_id                      = $data['member_id'];
+            $trans_id                       = $data['id'];
+            $member_obj                     = Member::find($member_id);
+            $update_data['point']           = $member_obj->point + $data['point'];
+            $update_data                    = Utility::addUpdatedBy($update_data);
+            $member_obj->update($update_data);
+
+            $status_update_data             = [];
+            $status_update_data['status']   = Constant::POINT_RECHARGED;
+            $status_update_data             = Utility::addUpdatedBy($status_update_data);
+            $trans_obj                      = MemberTransaction::find($trans_id);
+            $trans_obj->update($status_update_data);
+
+            DB::commit();
             $returned_array['status']   = ReturnMessage::OK;
-        } else {
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Utility::saveErrorLog("MemberRepository::updatePoint", $e->getMessage());
             $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
         }
         return $returned_array;
@@ -435,10 +447,10 @@ class MemberRepository implements MemberRepositoryInterface
         $member_id                          = Auth::guard('member')->user()->id;
         $photo_store_data                   = [];
         $photo_store_data['verify_photo']   = $data['src'];
+        $photo_store_data['status']         = Constant::MEMBER_VERIFICATION_PENDING;
         $photo_store_data                   = Utility::memberAddUpdatedBy($photo_store_data);
         $param_obj                          = Member::find($member_id);
         $result                             = $param_obj->update($photo_store_data);
-
         if ($result) {
             $returned_array['status']   = ReturnMessage::OK;
         } else {
@@ -466,6 +478,7 @@ class MemberRepository implements MemberRepositoryInterface
                 $photo_ins_data                     = [];
                 $photo_ins_data['member_id']        = $member_id;
                 $photo_ins_data['name']             = $unique_name;
+                $photo_ins_data['status']           = Constant::POINT_RECHARGE_PENDING;
                 $photo_ins_data['created_by']       = $member_id;
                 $photo_ins_data['updated_by']       = $member_id;
                 MemberTransaction::create($photo_ins_data);
@@ -495,7 +508,6 @@ class MemberRepository implements MemberRepositoryInterface
             'company_logo'       => $company_logo,
             'email_confirm_link' => url('email-confirm?code=' . $data->email_confirm_code),
         ];
-        dd($mail_data);
         Mail::to($data->email)->send(new RegistrationConfirmMail($mail_data));
     }
 

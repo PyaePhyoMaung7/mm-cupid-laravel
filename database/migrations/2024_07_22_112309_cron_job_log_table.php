@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cron_job_log', function (Blueprint $table) {
+        Schema::create('cron_job_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('cron_job_number');
             $table->unsignedInteger('sender_member_id');

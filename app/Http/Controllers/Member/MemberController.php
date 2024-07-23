@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Http\Resources\HobbyResource;
 use App\Http\Resources\MemberResource;
+use Illuminate\Support\Facades\Session;
 use App\Http\Requests\EmailCheckRequest;
 use App\Http\Requests\MemberLoginRequest;
 use App\Http\Requests\PointUpdateRequest;
@@ -259,8 +260,7 @@ class MemberController extends Controller
                     $queryLog       = DB::getQueryLog();
                     Utility::saveDebugLog("AuthController::postMemberLogin", $queryLog);
 
-                    return redirect('index');
-
+                    return redirect()->intended('/index');
                 }
             }
         } catch (\Exception $e) {
@@ -338,7 +338,9 @@ class MemberController extends Controller
             if ($result['status'] == ReturnMessage::OK) {
                 $data = $result['data'];
                 $this->memberRepository->sendEmailConfirmMail($data);
-                return new MemberResource($data);
+                return response()->json([
+                    'success' => 'true'
+                ], ReturnMessage::OK);
             } else {
                 return response()->json([
                     'success' => 'fail'
@@ -350,6 +352,18 @@ class MemberController extends Controller
         }
     }
 
+    public function remindEmailConfirm()
+    {
+        try {
+            $setting = $this->settingRepository->getSetting();
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::register", $queryLog);
+            return view('frontend.remind_email_confirm', compact(['setting']));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::postRegister", $e->getMessage());
+            abort(500);
+        }
+    }
     public function confirmEmail(EmailConfirmRequest $request)
     {
         try {
@@ -591,7 +605,8 @@ class MemberController extends Controller
             if ($result['status'] == ReturnMessage::OK) {
                 return response()->json([
                     'success' => 'true',
-                    'ustatus' => Constant::MEMBER_VERIFICATION_PENDING
+                    'ustatus' => Constant::MEMBER_VERIFICATION_PENDING,
+                    'success_msg' => 'Your verification photo has been sent'
                 ], ReturnMessage::OK);
             } else {
                 return response()->json([

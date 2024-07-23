@@ -29,6 +29,7 @@
                                 <div>
                                     <form id="demo-form2" action="{{ route('point.update') }}"
                                         class="form-horizontal form-label-left" method="POST">
+                                        <input type="hidden" name="member_id" value="{{ $transaction->member_id }}">
                                         <input type="hidden" name="id" value="{{ $transaction->member_id }}">
 
                                         @csrf

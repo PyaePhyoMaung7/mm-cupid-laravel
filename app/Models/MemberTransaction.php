@@ -16,6 +16,7 @@ class MemberTransaction extends Model
     protected $fillable = [
         'member_id',
         'name',
+        'status',
         'created_at',
         'created_by',
         'updated_at',

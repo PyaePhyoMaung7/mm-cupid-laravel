@@ -20,6 +20,6 @@ class MemberAuthMiddleware
         if (Auth::guard('member')->user() != null) {
             return $next($request);
         }
-        return redirect('login');
+        return redirect()->guest('login');
     }
 }

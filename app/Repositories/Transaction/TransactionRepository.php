@@ -3,6 +3,7 @@
 namespace App\Repositories\Transaction;
 
 use App\Utility;
+use App\Constant;
 use App\ReturnMessage;
 use App\Models\MemberTransaction;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ class TransactionRepository implements TransactionRepositoryInterface
     public function getTransactions ()
     {
         $transactions = MemberTransaction::select('id', 'member_id', 'name')
+                ->where('status', '=', Constant::POINT_RECHARGE_PENDING)
                 ->orderBy('id', 'DESC')
                 ->paginate('10');
         return $transactions;

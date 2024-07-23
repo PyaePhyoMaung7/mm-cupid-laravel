@@ -14,7 +14,7 @@
             <div class="col-md-5">
                 <h1 class="fw-bold text-center" style="font-size: 60px">Sign in</h1>
                 <div class="py-3 text-center" style="font-size: 14px;">
-                    Don't have account yet? <a href="{{ url('forgot-password') }}" class="text-decoration-none text-primary">Sign up</a>
+                    Don't have account yet? <a href="{{ url('register') }}" class="text-decoration-none text-primary">Sign up</a>
                 </div>
 
                 <form id="login-form" action="{{ url('login') }}" method="POST">

@@ -511,14 +511,25 @@ app.controller('myCtrl', function($scope, $http, $window){
             }
         }).then(
             function (response) {
-                if (response.data.success)
+                console.log(response);
+                if (response.data.success) {
                 $scope.member.status = Number(response.data.ustatus);
+                let message = response.data.success_msg;
+                new PNotify({
+                    title: 'Success!',
+                    width: '400px',
+                    addclass: 'pnotify-center',
+                    text: message,
+                    type: 'success',
+                    styling: 'bootstrap3'
+                });
                 $scope.backUserProfile();
                 $('.loading').hide();
+                }
             },
 
             function (error) {
-                alert('Sorry! Something went wrong while sending your verfication photo');
+                console.log(error);
             }
         );
     }

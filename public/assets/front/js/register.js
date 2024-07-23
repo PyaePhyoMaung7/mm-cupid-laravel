@@ -245,10 +245,8 @@ app.controller("myCtrl", function ($scope, $http) {
         }).then(
             function (response) {
                 if (response.status == 200 || response.status == 201) {
-                    $scope.member_id = response.data.data.member_id;
-                    $("#member-id").val($scope.member_id);
                     $('.loading').hide();
-                    window.location.href = '/login';
+                    window.location.href = '/email-confirm/reminder';
                 }
             },
             function (error) {

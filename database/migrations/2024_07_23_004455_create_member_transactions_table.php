@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class () extends Migration {
     /**
      * Run the migrations.
      *
@@ -17,6 +16,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedInteger('member_id');
             $table->string('name', 120);
+            $table->unsignedTinyInteger('status')->comment('0 = pending, 1 = recharged');
             $table->unsignedInteger('created_by');
             $table->unsignedInteger('updated_by');
             $table->unsignedInteger('deleted_by')->nullable();

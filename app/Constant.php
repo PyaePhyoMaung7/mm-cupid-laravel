@@ -52,4 +52,7 @@ class Constant
 
     public const POINT_PER_DATE_REQEUST         = 300;
 
+    public const POINT_RECHARGE_PENDING         = 0;
+    public const POINT_RECHARGED                = 1;
+
 }
