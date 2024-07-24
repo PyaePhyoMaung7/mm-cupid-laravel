@@ -62,6 +62,7 @@ Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
         Route::post('/member/photo/delete', [MemberController::class, 'apiMemberPhotoDelete']);
         Route::post('/member/transaction/photo/store', [MemberController::class, 'apiMemberTransactionPhotoStore']);
         Route::post('/verification/photo/store', [MemberController::class, 'apiStoreVerificationPhoto']);
+        Route::post('/date-request/status/update', [MemberController::class, 'apiDateRequestStatusUpdate']);
     });
     Route::get('profile', [MemberController::class, 'getProfile']);
 });
@@ -105,9 +106,9 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
 
     Route::group(['prefix' => 'member/'], function () {
         Route::get('index', [MemberController::class, 'adminIndex']);
+        Route::get('index/{key}', [MemberController::class, 'adminIndex']);
         Route::post('point/update', [MemberController::class, 'updatePoint'])->name('point.update');
         Route::get('change/status/{id}/{status}', [MemberController::class, 'changeStatus']);
-        // Route::get('delete/{id}', [MemberController::class, 'delete']);
         Route::get('details/{id}', [MemberController::class, 'viewDetails']);
     });
 

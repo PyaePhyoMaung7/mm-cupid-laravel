@@ -36,6 +36,7 @@ use App\Http\Requests\Front\ApiMemberViewUpdateRequest;
 use App\Http\Requests\Front\ApiMemberPhotoDeleteRequest;
 use App\Http\Requests\Front\ApiMemberPhotoUpdateRequest;
 use App\Repositories\Setting\SettingRepositoryInterface;
+use App\Http\Requests\Front\DateRequestStatusUpdateRequest;
 use App\Http\Requests\Front\ApiTransactionPhotoStoreRequest;
 use App\Http\Requests\Front\ApiVerificationPhotoStoreRequest;
 
@@ -58,14 +59,15 @@ class MemberController extends Controller
         DB::connection()->enableQueryLog();
     }
 
-    public function adminIndex()
+    public function adminIndex($key = '')
     {
         try {
-            $members = $this->memberRepository->getMembers();
+            $members = $this->memberRepository->getMembers((string) $key);
             $queryLog = DB::getQueryLog();
             Utility::saveDebugLog("MemberController::index", $queryLog);
             return view('backend.member.index', compact([
-                'members'
+                'members',
+                'key'
             ]));
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::index", $e->getMessage());
@@ -124,6 +126,28 @@ class MemberController extends Controller
             }
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::updatePoint", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function apiDateRequestStatusUpdate(DateRequestStatusUpdateRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->apiDateRequestStatusUpdate((array) $request->all());
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::apiDateRequestStatusUpdate", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return response()->json([
+                    'success'       => 'true',
+                    'success_msg'   => 'Your transaction photo has been sent',
+                ], ReturnMessage::OK);
+            } else {
+                return response()->json([
+                    'success'       => 'false'
+                ], ReturnMessage::INTERNAL_SERVER_ERROR);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::apiDateRequestStatusUpdate", $e->getMessage());
             abort(500);
         }
     }

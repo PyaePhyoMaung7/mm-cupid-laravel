@@ -4,7 +4,7 @@ namespace App\Repositories\Member;
 
 interface MemberRepositoryInterface
 {
-    public function getMembers();
+    public function getMembers(string $key);
 
     public function changeStatus(int $id, int $status);
 
@@ -43,5 +43,7 @@ interface MemberRepositoryInterface
     public function updatePassword(array $data);
 
     public function apiSendDateRequest(int $id);
+
+    public function apiDateRequestStatusUpdate(array $data);
 
 }

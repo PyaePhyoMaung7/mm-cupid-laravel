@@ -647,17 +647,18 @@ app.controller('myCtrl', function($scope, $http, $window){
         $('.loading').show();
         $http({
             method: 'POST',
-            url: base_url+'api/update_date_request.php',
+            url: base_url+'/api/date-request/status/update',
             data: data,
             headers: {
               'Content-Type': 'application/json'
             }
         }).then(
             function (response) {
-                if(response.data.status == '200') {
-                    $('.loading').hide();
-                }
                 console.log(response);
+                // if(response.data.status == '200') {
+                //     $('.loading').hide();
+                // }
+                // console.log(response);
             }
         );
     }

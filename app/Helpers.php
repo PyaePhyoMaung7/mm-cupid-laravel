@@ -216,3 +216,22 @@ if (!function_exists("getHobbies")) {
         return $hobby_str;
     }
 }
+
+if (!function_exists("getDateRequestStatus")) {
+    function getDateRequestStatus($name)
+    {
+        switch ($name) {
+            case "pending":
+                $status = Constant::DATE_REQUEST_PENDING;
+                break;
+            case "accepted":
+                $status = Constant::DATE_REQUEST_ACCEPTED;
+                break;
+            case "rejected":
+                $status = Constant::DATE_REQUEST_REJECTED   ;
+                break;
+        }
+
+        return $status;
+    }
+}

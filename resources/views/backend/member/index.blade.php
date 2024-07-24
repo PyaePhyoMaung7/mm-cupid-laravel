@@ -5,8 +5,12 @@
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
-                <div class="title_left">
+                <div class="title_left d-flex justify-content-between align-items-center w-100">
                     <h3>Member List</h3>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <input class="form-control" type="text" id="search-key" name="search-key" value="{{ isset($key) ? $key : '' }}" id="">
+                        <i onclick="search()" class="fa fa-search" style="font-size: 22px; margin-left: 10px; cursor: pointer;"></i>
+                    </div>
                 </div>
             </div>
 
@@ -41,7 +45,6 @@
                                     </thead>
 
                                     <tbody>
-                                        @if (count($members) > 0)
                                             @foreach ($members as $member)
                                                 <tr class="even pointer text-center">
                                                     <td class="a-center align-middle">
@@ -120,12 +123,11 @@
                                                     </td>
                                                 </tr>
                                             @endforeach
-                                        @else
-                                            <h3>There is no member
-
-                                        @endif
                                     </tbody>
                                 </table>
+                                @if (count($members) <= 0)
+                                        <h3 class="text-center mt-5">There is no member</h3>
+                                @endif
                             </div>
                             <div class="mt-3 float-right">
                                 {{ $members->onEachSide(2)->links() }}
@@ -207,6 +209,11 @@
 
                 }
             });
+        }
+
+        function search() {
+            const key = document.getElementById('search-key').value;
+            window.location.href = base_url + '/admin-backend/member/index/' + key;
         }
     </script>
 @endsection

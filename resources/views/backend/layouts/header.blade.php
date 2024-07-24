@@ -39,4 +39,7 @@
             border-radius: 10px;
         }
     </style>
+    <script>
+        const base_url = '{{ url('/') }}';
+    </script>
 </head>

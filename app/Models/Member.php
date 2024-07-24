@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Constant;
 use App\Models\City;
 use App\Models\MemberGallery;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Member extends Authenticatable
 {
@@ -95,7 +96,7 @@ class Member extends Authenticatable
             DateRequest::class,
             'accept_id',
             'id'
-        );
+        )->where('status', '=', Constant::DATE_REQUEST_PENDING);
     }
 
 

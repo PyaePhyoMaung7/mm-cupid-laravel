@@ -31,7 +31,7 @@ class MemberRepository implements MemberRepositoryInterface
         $this->settingRepository = $settingRepository;
     }
 
-    public function getMembers()
+    public function getMembers(string $key)
     {
         $base_url   = url('/');
         $members    = Member::select('id', 'username', 'email', 'phone', 'gender', 'date_of_birth', 'thumbnail', 'city_id', 'status',
@@ -43,9 +43,18 @@ class MemberRepository implements MemberRepositoryInterface
                                         ELSE "Others"
                                     END as gender_name',
                                     )
-                        ->whereNull('deleted_at')
-                        ->orderBy('id', 'DESC')
-                        ->paginate('5');
+                        ->whereNull('deleted_at');
+
+        if ($key != '') {
+            $members= $members->where(function($query) use ($key) {
+                        $query->where('username', 'like', '%' . $key . '%')
+                            ->orWhere('email', 'like', '%' . $key . '%')
+                            ->orWhere('phone', 'like', '%' . $key . '%');
+                        });
+        }
+
+        $members    = $members->orderBy('id', 'DESC')
+                              ->paginate('5');
         return $members;
     }
 
@@ -714,6 +723,25 @@ class MemberRepository implements MemberRepositoryInterface
             $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
             return $returned_array;
         }
+    }
+
+    public function apiDateRequestStatusUpdate(array $data)
+    {
+        $returned_array                             = [];
+        $update_data                                = [];
+        $id                                         = $data['id'];
+        $status                                     = $data['status'];
+        $update_data['status']                      = bcrypt($status);
+        $update_data['updated_at']                  = date('Y-m-d H:i:s');
+        $param_obj                                  = DateRequest::find($id);
+        $result                                     = $param_obj->update($update_data);
+
+        if ($result) {
+            $returned_array['status']   = ReturnMessage::OK;
+        } else {
+            $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
+        }
+        return $returned_array;
     }
 
     public static function syncMemberById(int $id)

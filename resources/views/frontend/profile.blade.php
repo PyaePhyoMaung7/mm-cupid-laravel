@@ -246,14 +246,14 @@
                                             </td>
                                             <td class="">
                                                 <div class="round-btn shadow-sm ms-3 btn btn-light"
-                                                    ng-click="dateRequestAction(inviter.id, 2)"
+                                                    ng-click="dateRequestAction(inviter.id, {{getDateRequestStatus('accepted')}})"
                                                     title="accept date invitation"
                                                     style="width: 30px; height: 30px; margin: 0 auto !important;"><i
                                                         class="fa fa-check fs-6"></i></div>
                                             </td>
                                             <td class="">
                                                 <div class="round-btn shadow-sm ms-3 btn btn-light"
-                                                    ng-click="dateRequestAction(inviter.id, 1)"
+                                                    ng-click="dateRequestAction(inviter.id, {{getDateRequestStatus('rejected')}})"
                                                     title="reject date invitation"
                                                     style="width: 30px; height: 30px; margin: 0 auto !important;"><i
                                                         class="fa fa-times fs-6"></i></div>
