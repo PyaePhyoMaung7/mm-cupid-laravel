@@ -6,7 +6,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Transaction</h3>
+                    <a href="#" onclick="history.back()"><button class="btn btn-dark" type="button"><i class="fa fa-arrow-left" style="font-size: 20px;"></i></button></a>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -14,7 +14,7 @@
                 <div class="col-md-12 col-sm-12 ">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>Transaction details</h2>
+                            <h4 class="h4">Transaction Detail</h4>
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
@@ -27,10 +27,10 @@
                                     </a>
                                 </div>
                                 <div>
-                                    <form id="demo-form2" action="{{ route('point.update') }}"
+                                    <form id="demo-form2" action="{{ route('tran.point.update') }}"
                                         class="form-horizontal form-label-left" method="POST">
                                         <input type="hidden" name="member_id" value="{{ $transaction->member_id }}">
-                                        <input type="hidden" name="id" value="{{ $transaction->member_id }}">
+                                        <input type="hidden" name="id" value="{{ $transaction->id }}">
 
                                         @csrf
                                         <div class="item form-group">
@@ -48,7 +48,7 @@
                                         <div class="item form-group">
                                             <div class="col-md-6 col-sm-6 offset-md-3">
                                                 <button class="btn btn-primary" type="reset">Reset</button>
-                                                <button type="submit" class="btn btn-success">Update</button>
+                                                <button type="submit" class="btn btn-success">Add</button>
                                             </div>
                                         </div>
                                     </form>

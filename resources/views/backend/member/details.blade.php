@@ -1,12 +1,12 @@
 @extends('backend.master')
-@section('title', 'Member List')
+@section('title', 'Member Details')
 @section('content')
     <!-- page content -->
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>Member details</h3>
+                    <a href="#" onclick="history.back()"><button class="btn btn-dark" type="button"><i class="fa fa-arrow-left" style="font-size: 20px;"></i></button></a>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -14,7 +14,7 @@
                 <div class="col-md-12 col-sm-12 ">
                     <div class="x_panel">
                         <div class="x_title">
-                            <a href="#" onclick="history.back()"><button class="btn btn-dark">Back</button></a>
+                            <h4 class="h4">Member Detail</h4>
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">
@@ -62,7 +62,7 @@
 
                             <div class="row mx-auto" style="font-size: 18px;">
                                 <div class="py-3 pl-5 shadow-sm w-100" style="border-radius: 15px;">
-                                    <h3 class="fw-bold">Personal Details</h3>
+                                    <h5 class="" style="font-weight: bold">Personal Details</h5>
                                     <div class="row mb-2">
                                         <div class="col-4">Name</div>
                                         <div class="col-8">: {{ $member->username }}</div>

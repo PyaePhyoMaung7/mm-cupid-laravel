@@ -10,6 +10,7 @@ use App\Http\Controllers\Hobby\HobbyController;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Controllers\Setting\SettingController;
 use App\Http\Controllers\Dashboard\DashboardController;
+use App\Http\Controllers\DateRequest\DateRequestController;
 use App\Http\Controllers\Transaction\TransactionController;
 
 /*
@@ -107,17 +108,21 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
     Route::group(['prefix' => 'member/'], function () {
         Route::get('index', [MemberController::class, 'adminIndex']);
         Route::get('index/{key}', [MemberController::class, 'adminIndex']);
-        Route::post('point/update', [MemberController::class, 'updatePoint'])->name('point.update');
+
         Route::get('change/status/{id}/{status}', [MemberController::class, 'changeStatus']);
         Route::get('details/{id}', [MemberController::class, 'viewDetails']);
     });
 
     Route::group(['prefix' => 'transaction/'], function () {
-        // Route::get('create', [TransactionController::class, 'create']);
-        // Route::post('store', [TransactionController::class, 'store'])->name('city.store');
         Route::get('index', [TransactionController::class, 'index']);
         Route::get('view/{id}', [TransactionController::class, 'view']);
-        // Route::post('update', [TransactionController::class, 'update'])->name('city.update');
+        Route::post('point/update', [MemberController::class, 'updatePoint'])->name('tran.point.update');
+    });
+
+    Route::group(['prefix' => 'date-request/'], function () {
+        Route::get('index', [DateRequestController::class, 'index']);
+        Route::get('view/{id}', [DateRequestController::class, 'view']);
+        Route::get('contacted/{id}', [DateRequestController::class, 'markAsContacted']);
     });
 
 });

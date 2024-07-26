@@ -33,8 +33,8 @@ class CityController extends Controller
     public function store(CityStoreRequest $request)
     {
         try {
-            $result = $this->cityRepository->store((array) $request->all());
-            $queryLog = DB::getQueryLog();
+            $result     = $this->cityRepository->store((array) $request->all());
+            $queryLog   = DB::getQueryLog();
             Utility::saveDebugLog("CityController::store", $queryLog);
             if ($result['status'] == ReturnMessage::OK) {
                 return redirect('admin-backend/city/index')->with(['success_msg' => 'City store success']);
@@ -50,8 +50,8 @@ class CityController extends Controller
     public function index()
     {
         try {
-            $cities = $this->cityRepository->getCities();
-            $queryLog = DB::getQueryLog();
+            $cities     = $this->cityRepository->getCities();
+            $queryLog   = DB::getQueryLog();
             Utility::saveDebugLog("CityController::index", $queryLog);
             return view('backend.city.index', compact([
                 'cities'

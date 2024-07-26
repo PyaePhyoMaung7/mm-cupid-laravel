@@ -514,7 +514,7 @@ app.controller('myCtrl', function($scope, $http, $window){
                 console.log(response);
                 if (response.data.success) {
                 $scope.member.status = Number(response.data.ustatus);
-                let message = response.data.success_msg;
+                const message = response.data.success_msg;
                 new PNotify({
                     title: 'Success!',
                     width: '400px',
@@ -654,11 +654,19 @@ app.controller('myCtrl', function($scope, $http, $window){
             }
         }).then(
             function (response) {
-                console.log(response);
-                // if(response.data.status == '200') {
-                //     $('.loading').hide();
-                // }
-                // console.log(response);
+                if(response.data.success) {
+                    const message = response.data.success_msg;
+                    $scope.init();
+                    $('.loading').hide();
+                    new PNotify({
+                        title: 'Success!',
+                        width: '400px',
+                        addclass: 'pnotify-center',
+                        text: message,
+                        type: 'success',
+                        styling: 'bootstrap3'
+                    });
+                }
             }
         );
     }

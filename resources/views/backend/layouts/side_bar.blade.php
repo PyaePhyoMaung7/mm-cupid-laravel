@@ -88,6 +88,11 @@
                                         </a></li>
                                 @endif
 
+                                @if(showSection('admin-backend/date-request'))
+                                    <li><a href="{{ url('admin-backend/date-request/index') }}"><i class="fa fa-heartbeat"></i> Date Requests
+                                        </a></li>
+                                @endif
+
                                 @if(showSection('admin-backend/setting'))
                                     <li><a href="{{ url('admin-backend/setting/index') }}"><i class="fa fa-gear"></i> Setting
                                         </a></li>

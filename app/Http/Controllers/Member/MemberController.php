@@ -17,7 +17,6 @@ use App\Http\Resources\MemberResource;
 use Illuminate\Support\Facades\Session;
 use App\Http\Requests\EmailCheckRequest;
 use App\Http\Requests\MemberLoginRequest;
-use App\Http\Requests\PointUpdateRequest;
 use App\Http\Requests\EmailConfirmRequest;
 use App\Http\Resources\SyncMemberResource;
 use App\Http\Requests\MemberRegisterRequest;
@@ -113,23 +112,6 @@ class MemberController extends Controller
         }
     }
 
-    public function updatePoint(PointUpdateRequest $request)
-    {
-        try {
-            $result = $this->memberRepository->updatePoint((array) $request->all());
-            $queryLog = DB::getQueryLog();
-            Utility::saveDebugLog("MemberController::updatePoint", $queryLog);
-            if ($result['status'] == ReturnMessage::OK) {
-                return redirect('admin-backend/transaction/index')->with(['success_msg' => 'Point added successfully']);
-            } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
-                return redirect('admin-backend/transaction/index')->with(['fail_msg' => 'Point addition failed!']);
-            }
-        } catch (\Exception $e) {
-            Utility::saveErrorLog("MemberController::updatePoint", $e->getMessage());
-            abort(500);
-        }
-    }
-
     public function apiDateRequestStatusUpdate(DateRequestStatusUpdateRequest $request)
     {
         try {
@@ -139,7 +121,7 @@ class MemberController extends Controller
             if ($result['status'] == ReturnMessage::OK) {
                 return response()->json([
                     'success'       => 'true',
-                    'success_msg'   => 'Your transaction photo has been sent',
+                    'success_msg'   => 'You have accepted this invitation',
                 ], ReturnMessage::OK);
             } else {
                 return response()->json([

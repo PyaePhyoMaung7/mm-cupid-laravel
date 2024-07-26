@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\City\CityRepository;
+use App\Repositories\DateRequest\DateRequestRepository;
 use App\Repositories\User\UserRepository;
 use App\Repositories\Hobby\HobbyRepository;
 use App\Repositories\Member\MemberRepository;
@@ -11,6 +12,7 @@ use App\Repositories\Setting\SettingRepository;
 use App\Repositories\Transaction\TransactionRepository;
 
 use App\Repositories\City\CityRepositoryInterface;
+use App\Repositories\DateRequest\DateRequestRepositoryInterface;
 use App\Repositories\User\UserRepositoryInterface;
 use App\Repositories\Hobby\HobbyRepositoryInterface;
 use App\Repositories\Member\MemberRepositoryInterface;
@@ -32,6 +34,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(HobbyRepositoryInterface::class, HobbyRepository::class);
         $this->app->bind(MemberRepositoryInterface::class, MemberRepository::class);
         $this->app->bind(TransactionRepositoryInterface::class, TransactionRepository::class);
+        $this->app->bind(DateRequestRepositoryInterface::class, DateRequestRepository::class);
     }
 
     /**

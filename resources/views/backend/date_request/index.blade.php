@@ -1,12 +1,12 @@
 @extends('backend.master')
-@section('title', 'City List')
+@section('title', 'Date Request List')
 @section('content')
     <!-- page content -->
     <div class="right_col" role="main">
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>City List</h3>
+                    <h3>Date Request List</h3>
                 </div>
             </div>
 
@@ -20,7 +20,8 @@
                                 <table class="table table-striped jambo_table bulk_action">
                                     <thead>
                                         <tr class="headings">
-                                            <th class="column-title">City</th>
+                                            <th class="column-title">Inviter</th>
+                                            <th class="column-title">Accepter</th>
                                             <th class="column-title no-link last"><span class="nobr">Action</span>
                                             </th>
                                             <th class="bulk-actions" colspan="7">
@@ -31,23 +32,24 @@
                                     </thead>
 
                                     <tbody>
-                                        @foreach ($cities as $city)
+                                        @foreach ($date_requests as $date_request)
                                             <tr class="even pointer">
-                                                <td class="col-7 align-middle">{{ $city->name }}</td>
+                                                <td class="col-4 align-middle">{{ $date_request->getInviteMemberInfoById->username }}</td>
+                                                <td class="col-4 align-middle">{{ $date_request->getAcceptMemberInfoById->username }}</td>
                                                 <td class="col-2 align-middle">
-                                                    <a href="{{ url('admin-backend/city/edit/' . $city->id) }}"><button type="button"
-                                                            class="btn btn-success btn-sm"><i class="fa fa-pencil"></i>
-                                                            Edit</button></a>
+                                                    <a href="{{ url('admin-backend/date-request/view/' . $date_request->id) }}"><button type="button"
+                                                            class="btn btn-success btn-sm"><i class="fa fa-eye"></i>
+                                                            View</button></a>
                                                 </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
-                                @if(count($cities) <= 0)
-                                    <h3 class="text-center mt-5">There is no city</div>
+                                @if(count($date_requests) <= 0)
+                                    <h3 class="text-center mt-5">There is no date requests</div>
                                 @endif
                                 <div class="mt-3 position-absolute" style="bottom: 0; right: 0;">
-                                    {{ $cities->onEachSide(2)->links() }}
+                                    {{ $date_requests->onEachSide(2)->links() }}
                                 </div>
                             </div>
                         </div>

@@ -20,11 +20,8 @@
                                 <table class="table table-striped jambo_table bulk_action">
                                     <thead>
                                         <tr class="headings">
-                                            <th>
-                                                <input type="checkbox" id="check-all" class="flat">
-                                            </th>
-                                            <th class="column-title">Id</th>
                                             <th class="column-title">Member</th>
+                                            <th class="column-title">Photo</th>
                                             <th class="column-title no-link last"><span class="nobr">Action</span>
                                             </th>
                                             <th class="bulk-actions" colspan="7">
@@ -35,14 +32,13 @@
                                     </thead>
 
                                     <tbody>
-                                    @if(count($transactions) > 0)
                                         @foreach ($transactions as $transaction)
                                             <tr class="even pointer">
-                                                <td class="col-1 a-center align-middle">
-                                                    <input type="checkbox" class="flat" name="table_records">
+                                                <td class="col-4 align-middle">{{ $transaction->getMemberByMemberTransaction->username }}</td>
+                                                <td class="align-middle col-4">
+                                                    <div style="width: 80px;"><img class="w-100"
+                                                            src="{{ asset('storage/transactions/' . $transaction->member_id . '/' . $transaction->name) }}"></div>
                                                 </td>
-                                                <td class="col-2 align-middle">{{ $transaction->id }}</td>
-                                                <td class="col-7 align-middle">{{ $transaction->getMemberByMemberTransaction->username }}</td>
                                                 <td class="col-2 align-middle">
                                                     <a href="{{ url('admin-backend/transaction/view/' . $transaction->id) }}"><button type="button"
                                                             class="btn btn-success btn-sm"><i class="fa fa-eye"></i>
@@ -50,11 +46,11 @@
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    @else
-                                        <h3>There is no transaction</div>
-                                    @endif
                                     </tbody>
                                 </table>
+                                @if(count($transactions) <= 0)
+                                    <h3 class="text-center mt-5">There is no transaction to process</div>
+                                @endif
                                 <div class="mt-3 position-absolute" style="bottom: 0; right: 0;">
                                     {{ $transactions->onEachSide(2)->links() }}
                                 </div>

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Carbon\Carbon;
 use App\Models\Member;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,8 +18,6 @@ class MembersTableSeeder extends Seeder
     public function run()
     {
         DB::table('members')->truncate();
-
-        // Member::factory()->count(50)->create();
 
         DB::table('members')->insert(
             [
@@ -1339,5 +1338,21 @@ class MembersTableSeeder extends Seeder
                 'updated_by' => 1
             ]
         );
+
+        $days = 30;
+        $min_user_per_day = 20;
+        $max_user_per_day = 100;
+        for ($i = 0; $i < $days ; $i++) {
+           $date = Carbon::now()->subDays($i);
+           $number_of_users = rand($min_user_per_day, $max_user_per_day);
+
+           for ($j = 0; $j < $number_of_users; $j++) {
+                Member::factory()->create([
+                    'created_at' => $date,
+                    'updated_at' => $date
+                ]);
+           }
+        }
+
     }
 }

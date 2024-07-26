@@ -49,6 +49,7 @@ class Constant
     public const DATE_REQUEST_PENDING           = 0;
     public const DATE_REQUEST_REJECTED          = 1;
     public const DATE_REQUEST_ACCEPTED          = 2;
+    public const DATE_REQUEST_CONTACTED         = 3;
 
     public const POINT_PER_DATE_REQEUST         = 300;
 

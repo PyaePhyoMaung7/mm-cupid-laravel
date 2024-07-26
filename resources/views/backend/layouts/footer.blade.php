@@ -21,12 +21,11 @@
     <script src="{{ url('assets/js/fastclick/fastclick.js') }}"></script>
     <!-- Bootstrap -->
     <script src="{{ url('assets/js/bootstrap/bootstrap.bundle.min.js') }}"></script>
-    <!-- jQuery Sparklines -->
-    <script src="{{ url('assets/js/jquery-sparkline/jquery.sparkline.min.js') }}"></script>
     <!-- bootstrap-progressbar -->
     <script src="{{ url('assets/js/bootstrap-progressbar/bootstrap-progressbar.min.js') }}"></script>
     <!-- Flot -->
     <script src="{{ url('assets/js/flot/jquery.flot.js') }}"></script>
+    <script src="{{ url('assets/js/flot/jquery.flot.time.js') }}"></script>
     <!-- Flot plugins -->
     <script src="{{ url('assets/js/flot.curvedlines/curvedLines.js') }}"></script>
     <!-- DateJS -->

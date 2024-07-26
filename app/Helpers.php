@@ -235,3 +235,12 @@ if (!function_exists("getDateRequestStatus")) {
         return $status;
     }
 }
+
+if (!function_exists("getNoImageAvailablePhoto")) {
+    function getNoImageAvailablePhoto()
+    {
+        $path = asset('/storage/images/no_image.png');
+
+        return $path;
+    }
+}

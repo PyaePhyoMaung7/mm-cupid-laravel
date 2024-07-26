@@ -6,7 +6,7 @@
         <div class="">
             <div class="page-title">
                 <div class="title_left">
-                    <h3>{{ isset($user) ? 'Update User' : 'Create User' }}</h3>
+                    <a href="#" onclick="history.back()"><button class="btn btn-dark" type="button"><i class="fa fa-arrow-left" style="font-size: 20px;"></i></button></a>
                 </div>
             </div>
             <div class="clearfix"></div>
@@ -14,7 +14,7 @@
                 <div class="col-md-12 col-sm-12 ">
                     <div class="x_panel">
                         <div class="x_title">
-                            <h2>User info</h2>
+                            <h4 class="h4">{{ isset($user) ? 'Update User' : 'Create User' }}</h4>
                             <div class="clearfix"></div>
                         </div>
                         <div class="x_content">

@@ -32,4 +32,13 @@ class DateRequest extends Model
             'id'
         );
     }
+
+    public function getAcceptMemberInfoById(): BelongsTo
+    {
+        return $this->belongsTo(
+            Member::class,
+            'accept_id',
+            'id'
+        );
+    }
 }

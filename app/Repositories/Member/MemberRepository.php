@@ -34,23 +34,33 @@ class MemberRepository implements MemberRepositoryInterface
     public function getMembers(string $key)
     {
         $base_url   = url('/');
-        $members    = Member::select('id', 'username', 'email', 'phone', 'gender', 'date_of_birth', 'thumbnail', 'city_id', 'status',
-                        DB::raw("CONCAT('". $base_url ."/storage/uploads/', id, '/thumb/', thumbnail) AS thumb")
-                        )
-                        ->selectRaw('CASE
+        $members    = Member::select(
+            'id',
+            'username',
+            'email',
+            'phone',
+            'gender',
+            'date_of_birth',
+            'thumbnail',
+            'city_id',
+            'status',
+            DB::raw("CONCAT('". $base_url ."/storage/uploads/', id, '/thumb/', thumbnail) AS thumb")
+        )
+                        ->selectRaw(
+                            'CASE
                                         WHEN gender = ' . Constant::MALE . ' THEN "male"
                                         WHEN gender = ' . Constant::FEMALE . ' THEN "female"
                                         ELSE "Others"
                                     END as gender_name',
-                                    )
+                        )
                         ->whereNull('deleted_at');
 
         if ($key != '') {
-            $members= $members->where(function($query) use ($key) {
-                        $query->where('username', 'like', '%' . $key . '%')
-                            ->orWhere('email', 'like', '%' . $key . '%')
-                            ->orWhere('phone', 'like', '%' . $key . '%');
-                        });
+            $members = $members->where(function ($query) use ($key) {
+                $query->where('username', 'like', '%' . $key . '%')
+                    ->orWhere('email', 'like', '%' . $key . '%')
+                    ->orWhere('phone', 'like', '%' . $key . '%');
+            });
         }
 
         $members    = $members->orderBy('id', 'DESC')
@@ -701,7 +711,7 @@ class MemberRepository implements MemberRepositoryInterface
                 $update_data['point']               = $remaining_point;
                 $member->update($update_data);
 
-                Auth::guard('member')->user()->point= $remaining_point;
+                Auth::guard('member')->user()->point = $remaining_point;
                 $member_update                      = self::syncMemberById($id);
 
                 $ins_log                            = [];
@@ -731,7 +741,7 @@ class MemberRepository implements MemberRepositoryInterface
         $update_data                                = [];
         $id                                         = $data['id'];
         $status                                     = $data['status'];
-        $update_data['status']                      = bcrypt($status);
+        $update_data['status']                      = $status;
         $update_data['updated_at']                  = date('Y-m-d H:i:s');
         $param_obj                                  = DateRequest::find($id);
         $result                                     = $param_obj->update($update_data);

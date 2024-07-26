@@ -24,9 +24,6 @@
                                 <table class="table table-striped jambo_table bulk_action">
                                     <thead>
                                         <tr class="headings text-center">
-                                            <th>
-                                                <input type="checkbox" id="check-all" class="flat">
-                                            </th>
                                             <th class="column-title">Username</th>
                                             <th class="column-title">Email</th>
                                             <th class="column-title">Phone</th>
@@ -47,9 +44,6 @@
                                     <tbody>
                                             @foreach ($members as $member)
                                                 <tr class="even pointer text-center">
-                                                    <td class="a-center align-middle">
-                                                        <input type="checkbox" class="flat" name="table_records">
-                                                    </td>
                                                     <td class="align-middle">{{ $member->username }}</td>
                                                     <td class="align-middle">{{ getFifteenChars($member->email) }}</td>
                                                     <td class="align-middle">{{ $member->phone }}</td>

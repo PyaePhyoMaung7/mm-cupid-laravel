@@ -20,10 +20,6 @@
                                 <table class="table table-striped jambo_table bulk_action">
                                     <thead>
                                         <tr class="headings">
-                                            <th>
-                                                <input type="checkbox" id="check-all" class="flat">
-                                            </th>
-                                            <th class="column-title">Id</th>
                                             <th class="column-title">Hobby</th>
                                             <th class="column-title no-link last"><span class="nobr">Action</span>
                                             </th>
@@ -35,29 +31,28 @@
                                     </thead>
 
                                     <tbody>
-                                    @if(count($hobbies) > 0)
                                         @foreach ($hobbies as $hobby)
                                             <tr class="even pointer">
-                                                <td class="col-1 a-center align-middle">
-                                                    <input type="checkbox" class="flat" name="table_records">
-                                                </td>
-                                                <td class="col-2 align-middle">{{ $hobby->id }}</td>
                                                 <td class="col-7 align-middle">{{ $hobby->name }}</td>
                                                 <td class="col-2 align-middle">
-                                                    <a href="{{ url('admin-backend/hobby/edit/' . $hobby->id) }}"><button type="button"
-                                                            class="btn btn-success btn-sm"><i class="fa fa-pencil"></i>
+                                                    <a href="{{ url('admin-backend/hobby/edit/' . $hobby->id) }}"><button
+                                                            type="button" class="btn btn-success btn-sm"><i
+                                                                class="fa fa-pencil"></i>
                                                             Edit</button></a>
-                                                    <a href="{{ url('admin-backend/hobby/delete/' . $hobby->id) }}"><button type="button"
-                                                        class="btn btn-danger btn-sm"><i class="fa fa-trash"></i>
-                                                        Delete</button></a>
+                                                    <a href="{{ url('admin-backend/hobby/delete/' . $hobby->id) }}"><button
+                                                            type="button" class="btn btn-danger btn-sm"><i
+                                                                class="fa fa-trash"></i>
+                                                            Delete</button></a>
                                                 </td>
                                             </tr>
                                         @endforeach
-                                    @else
-                                        <h3>There is no hobby</div>
-                                    @endif
                                     </tbody>
                                 </table>
+
+
+                                @if (count($hobbies) <= 0)
+                                    <h3 class="text-center mt-5">There is no hobby
+                                @endif
                                 <div class="mt-3 position-absolute" style="bottom: 0; right: 0;">
                                     {{ $hobbies->onEachSide(2)->links() }}
                                 </div>
