@@ -31,10 +31,6 @@
                                             <th class="column-title">Company Address</th>
                                             <th class="column-title no-link last"><span class="nobr">Action</span>
                                             </th>
-                                            <th class="bulk-actions" colspan="7">
-                                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span
-                                                        class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-                                            </th>
                                         </tr>
                                     </thead>
 

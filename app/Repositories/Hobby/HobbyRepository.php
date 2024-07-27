@@ -3,6 +3,7 @@
 namespace App\Repositories\Hobby;
 
 use App\Utility;
+use App\Constant;
 use App\Models\Hobby;
 use App\ReturnMessage;
 use Illuminate\Support\Facades\DB;
@@ -30,7 +31,7 @@ class HobbyRepository implements HobbyRepositoryInterface
     {
         $hobbies = Hobby::whereNull('deleted_at')
                         ->orderBy('id', 'DESC')
-                        ->paginate('5');
+                        ->paginate(Constant::RECORD_PER_LIST);
         return $hobbies;
     }
 

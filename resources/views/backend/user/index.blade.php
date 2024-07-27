@@ -19,22 +19,18 @@
                             <div class="table-responsive">
                                 <table class="table table-striped jambo_table bulk_action">
                                     <thead>
-                                        <tr class="headings">
+                                        <tr class="headings text-center">
                                             <th class="column-title">Username</th>
                                             <th class="column-title">Role</th>
                                             <th class="column-title">Status</th>
                                             <th class="column-title no-link last"><span class="nobr">Action</span>
-                                            </th>
-                                            <th class="bulk-actions" colspan="7">
-                                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span
-                                                        class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                                             </th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
                                         @foreach ($users as $user)
-                                            <tr class="even pointer">
+                                            <tr class="even pointer text-center">
                                                 <td class="col-2 align-middle">{{ $user->username }}</td>
                                                 <td class="col-2 align-middle">
                                                     {{ $user->role_name }}</td>

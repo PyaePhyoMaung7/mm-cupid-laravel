@@ -89,5 +89,29 @@ class RoutePermissionTableSeeder extends Seeder
             'role' => Constant::CUSTOMER_SERVICE_ROLE,
         ]);
 
+        DB::table('route_permission')->insert([
+            'id' => 13,
+            'name' => 'admin-backend/api',
+            'role' => Constant::ADMIN_ROLE,
+        ]);
+
+        DB::table('route_permission')->insert([
+            'id' => 14,
+            'name' => 'admin-backend/api',
+            'role' => Constant::EDITOR_ROLE,
+        ]);
+
+        DB::table('route_permission')->insert([
+            'id' => 15,
+            'name' => 'admin-backend/api',
+            'role' => Constant::CUSTOMER_SERVICE_ROLE,
+        ]);
+
+        DB::table('route_permission')->insert([
+            'id' => 16,
+            'name' => 'admin-backend/point-log',
+            'role' => Constant::ADMIN_ROLE,
+        ]);
+
     }
 }

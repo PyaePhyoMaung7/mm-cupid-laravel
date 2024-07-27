@@ -16,10 +16,8 @@ return new class extends Migration
         Schema::create('point_logs', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('member_id');
-            // $table->unsignedTinyInteger('status')
-            // ->comments("0 = date_request, 1 = search");
-            $table->unsignedInteger('search_id')->nullable();
-            $table->unsignedInteger('date_request_id')->nullable();
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('point');
             $table->unsignedInteger('created_by');
             $table->unsignedInteger('updated_by');
             $table->unsignedInteger('deleted_by')->nullable();

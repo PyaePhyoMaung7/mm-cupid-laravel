@@ -127,7 +127,7 @@
                                     </div>
                                     <div class="row my-2">
                                         <div class="col-4">Last log in</div>
-                                        <div class="col-8">: {{ $member->last_log_in }}</div>
+                                        <div class="col-8">: {{ $member->last_login }}</div>
                                     </div>
                                     <div class="row my-2">
                                         <div class="col-4">Point</div>

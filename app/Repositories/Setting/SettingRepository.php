@@ -20,7 +20,7 @@ class SettingRepository implements SettingRepositoryInterface
 
         if ($setting == null) {
             Session::put(['site_title' => 'MM Cupid']);
-            Session::put(['site_logo' => url('assets/default_images/cupid.jpg')]);
+            Session::put(['site_logo' => url('assets/images/cupid.jpg')]);
         } else {
             Session::put(['site_title' => $setting['company_name']]);
             Session::put(['site_logo' => url('storage/images/' .  $setting['company_logo'])]);

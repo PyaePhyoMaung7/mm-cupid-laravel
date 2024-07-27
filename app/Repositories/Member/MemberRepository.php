@@ -64,8 +64,29 @@ class MemberRepository implements MemberRepositoryInterface
         }
 
         $members    = $members->orderBy('id', 'DESC')
-                              ->paginate('5');
+                              ->paginate(Constant::RECORD_PER_LIST);
         return $members;
+    }
+
+    public function getRegisteredMembers()
+    {
+        $members = Member::select(DB::raw('DATE(created_at) as date_group'), DB::raw('COUNT(*) as total'))
+                        ->where('created_at', '>=', DB::raw('CURDATE() - INTERVAL 30 DAY'))
+                        ->groupBy(DB::raw('DATE(created_at)'))
+                        ->orderBy(DB::raw('DATE(created_at)'), 'ASC')
+                        ->whereNull('deleted_at')
+                        ->get();
+
+        $data = [];
+        foreach ($members as $member) {
+            $result = [];
+            $date_string    = $member->date_group;
+            $timestamp      = strtotime($date_string) * 1000;
+            array_push($result, $timestamp);
+            array_push($result, $member->total);
+            array_push($data, $result);
+        }
+        return $data;
     }
 
     public function changeStatus(int $id, int $status)
@@ -91,17 +112,18 @@ class MemberRepository implements MemberRepositoryInterface
         try {
             $update_data                    = [];
             $member_id                      = $data['member_id'];
-            $trans_id                       = $data['id'];
+            $override_point                 = $data['point'];
             $member_obj                     = Member::find($member_id);
-            $update_data['point']           = $member_obj->point + $data['point'];
+            $update_data['point']           = $override_point;
             $update_data                    = Utility::addUpdatedBy($update_data);
             $member_obj->update($update_data);
 
-            $status_update_data             = [];
-            $status_update_data['status']   = Constant::POINT_RECHARGED;
-            $status_update_data             = Utility::addUpdatedBy($status_update_data);
-            $trans_obj                      = MemberTransaction::find($trans_id);
-            $trans_obj->update($status_update_data);
+            $point_log_ins_data             = [];
+            $point_log_ins_data['member_id']= $member_id;
+            $point_log_ins_data['user_id']  = Auth::guard('admin')->user()->id;
+            $point_log_ins_data['point']    = $override_point;
+            $point_log_ins_data             = Utility::addCreatedBy($point_log_ins_data);
+            $result                         = PointLog::create($point_log_ins_data);
 
             DB::commit();
             $returned_array['status']   = ReturnMessage::OK;

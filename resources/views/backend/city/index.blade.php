@@ -14,25 +14,21 @@
 
                 <div class="col-md-12 col-sm-12  ">
                     <div class="x_panel">
-                        <div class="x_content position-relative" style="height: 70vh;">
+                        <div class="x_content position-relative">
 
                             <div class="table-responsive">
                                 <table class="table table-striped jambo_table bulk_action">
                                     <thead>
-                                        <tr class="headings">
+                                        <tr class="headings text-center">
                                             <th class="column-title">City</th>
                                             <th class="column-title no-link last"><span class="nobr">Action</span>
-                                            </th>
-                                            <th class="bulk-actions" colspan="7">
-                                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span
-                                                        class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                                             </th>
                                         </tr>
                                     </thead>
 
                                     <tbody>
                                         @foreach ($cities as $city)
-                                            <tr class="even pointer">
+                                            <tr class="even pointer text-center">
                                                 <td class="col-7 align-middle">{{ $city->name }}</td>
                                                 <td class="col-2 align-middle">
                                                     <a href="{{ url('admin-backend/city/edit/' . $city->id) }}"><button type="button"

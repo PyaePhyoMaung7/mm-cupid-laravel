@@ -8,6 +8,7 @@ interface TransactionRepositoryInterface
 
     public function getTransactionById(int $id);
 
-    // public function update(array $data);
+    public function updatePoint(array $data);
 
+    public function getPointLogs();
 }

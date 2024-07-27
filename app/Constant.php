@@ -45,6 +45,7 @@ class Constant
     public const RELIGION_OTHER                 = 8;
 
     public const RECORD_PER_PAGE                = 9;
+    public const RECORD_PER_LIST                = 20;
 
     public const DATE_REQUEST_PENDING           = 0;
     public const DATE_REQUEST_REJECTED          = 1;

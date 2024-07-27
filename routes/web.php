@@ -69,6 +69,7 @@ Route::group(['prefix' => '/', 'middleware' => 'member'], function () {
 });
 Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function () {
     Route::get('index', [DashboardController::class, 'index']);
+    Route::get('api/registrations', [MemberController::class, 'getRegisteredMembers']);
 
     Route::group(['prefix' => 'city/'], function () {
         Route::get('create', [CityController::class, 'create']);
@@ -108,21 +109,26 @@ Route::group(['prefix' => '/admin-backend/', 'middleware' => 'admin'], function 
     Route::group(['prefix' => 'member/'], function () {
         Route::get('index', [MemberController::class, 'adminIndex']);
         Route::get('index/{key}', [MemberController::class, 'adminIndex']);
-
         Route::get('change/status/{id}/{status}', [MemberController::class, 'changeStatus']);
         Route::get('details/{id}', [MemberController::class, 'viewDetails']);
+        Route::get('point/update/{id}', [MemberController::class, 'getUpdatePointForm']);
+        Route::post('point/update', [MemberController::class, 'updatePoint'])->name('member.point.update');
     });
 
     Route::group(['prefix' => 'transaction/'], function () {
         Route::get('index', [TransactionController::class, 'index']);
         Route::get('view/{id}', [TransactionController::class, 'view']);
-        Route::post('point/update', [MemberController::class, 'updatePoint'])->name('tran.point.update');
+        Route::post('point/update', [TransactionController::class, 'updatePoint'])->name('tran.point.update');
     });
 
     Route::group(['prefix' => 'date-request/'], function () {
         Route::get('index', [DateRequestController::class, 'index']);
         Route::get('view/{id}', [DateRequestController::class, 'view']);
         Route::get('contacted/{id}', [DateRequestController::class, 'markAsContacted']);
+    });
+
+    Route::group(['prefix' => 'point-log/'], function () {
+        Route::get('index', [TransactionController::class, 'pointLogIndex']);
     });
 
 });

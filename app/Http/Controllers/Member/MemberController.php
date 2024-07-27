@@ -20,6 +20,7 @@ use App\Http\Requests\MemberLoginRequest;
 use App\Http\Requests\EmailConfirmRequest;
 use App\Http\Resources\SyncMemberResource;
 use App\Http\Requests\MemberRegisterRequest;
+use App\Http\Requests\MemberPointUpdateRequest;
 use App\Http\Controllers\Member\MemberController;
 use App\Http\Requests\Front\ApiDateInviteRequest;
 use App\Http\Requests\Front\PasswordResetRequest;
@@ -89,25 +90,42 @@ class MemberController extends Controller
         }
     }
 
-    public function point($id)
+    public function getUpdatePointForm($id)
     {
         try {
-            $point = $this->memberRepository->getMemberPointById((int) $id);
-            if ($point == null) {
+            $member = $this->memberRepository->getMemberById((int) $id);
+            if ($member == null) {
                 abort(404);
             }
             $queryLog = DB::getQueryLog();
-            Utility::saveDebugLog("MemberController::point", $queryLog);
-            return view('backend.member.point_form', compact([
-                'point'
+            Utility::saveDebugLog("MemberController::getUpdatePointForm", $queryLog);
+            return view('backend.member.point', compact([
+                'member'
             ]));
 
         } catch (\Exception $e) {
             if ($e->getCode() == 0) {
-                Utility::saveErrorLog("MemberController::point", "Invalid Member Id");
+                Utility::saveErrorLog("MemberController::getUpdatePointForm", "Invalid Member Id");
                 abort(404);
             }
-            Utility::saveErrorLog("MemberController::point", $e->getMessage());
+            Utility::saveErrorLog("MemberController::getUpdatePointForm", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function updatePoint(MemberPointUpdateRequest $request)
+    {
+        try {
+            $result = $this->memberRepository->updatePoint((array) $request->all());
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::updatePoint", $queryLog);
+            if ($result['status'] == ReturnMessage::OK) {
+                return redirect('admin-backend/member/index')->with(['success_msg' => 'Point overrided successfully']);
+            } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
+                return redirect('admin-backend/member/index')->with(['fail_msg' => 'Point overriding failed!']);
+            }
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::updatePoint", $e->getMessage());
             abort(500);
         }
     }
@@ -130,6 +148,19 @@ class MemberController extends Controller
             }
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::apiDateRequestStatusUpdate", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function getRegisteredMembers()
+    {
+        try {
+            $result = $this->memberRepository->getRegisteredMembers();
+            $queryLog = DB::getQueryLog();
+            Utility::saveDebugLog("MemberController::getRegisteredMembers", $queryLog);
+            return $result;
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("MemberController::getRegisteredMembers", $e->getMessage());
             abort(500);
         }
     }

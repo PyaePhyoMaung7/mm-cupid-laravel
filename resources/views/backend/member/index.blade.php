@@ -34,10 +34,6 @@
                                             <th class="column-title">Status</th>
                                             <th class="column-title no-link last"><span class="nobr">Action</span>
                                             </th>
-                                            <th class="bulk-actions" colspan="7">
-                                                <a class="antoo" style="color:#fff; font-weight:500;">Bulk Actions ( <span
-                                                        class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-                                            </th>
                                         </tr>
                                     </thead>
 
@@ -98,6 +94,9 @@
                                                                 class="btn btn-primary shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
                                                                     class="fa fa-eye"></i> <span>View</span></button></a>
 
+                                                        <a href="{{ url('admin-backend/member/point/update/' . $member->id ) }}"><button type="button"
+                                                            class="btn btn-dark shadow-sm py-0 d-flex justify-content-between align-items-center btn-sm w-100"><i
+                                                                class="fa fa-database"></i> <span>Point</span></button></a>
 
                                                         @if ($member->status == getVerificationStatus('banned'))
                                                             <a href="javascript:void(0)"

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Transaction;
 
 use App\Utility;
+use App\ReturnMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -51,16 +52,31 @@ class TransactionController extends Controller
     public function updatePoint(PointUpdateRequest $request)
     {
         try {
-            $result = $this->memberRepository->updatePoint((array) $request->all());
+            $result = $this->transactionRepository->updatePoint((array) $request->all());
             $queryLog = DB::getQueryLog();
-            Utility::saveDebugLog("MemberController::updatePoint", $queryLog);
+            Utility::saveDebugLog("TransactionController::updatePoint", $queryLog);
             if ($result['status'] == ReturnMessage::OK) {
                 return redirect('admin-backend/transaction/index')->with(['success_msg' => 'Point added successfully']);
             } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
                 return redirect('admin-backend/transaction/index')->with(['fail_msg' => 'Point addition failed!']);
             }
         } catch (\Exception $e) {
-            Utility::saveErrorLog("MemberController::updatePoint", $e->getMessage());
+            Utility::saveErrorLog("TransactionController::updatePoint", $e->getMessage());
+            abort(500);
+        }
+    }
+
+    public function pointLogIndex()
+    {
+        try {
+            $point_logs = $this->transactionRepository->getPointLogs();
+            $queryLog   = DB::getQueryLog();
+            Utility::saveDebugLog("TransactionController::pointLogIndex", $queryLog);
+            return view('backend.point_logs.index', compact([
+                'point_logs'
+            ]));
+        } catch (\Exception $e) {
+            Utility::saveErrorLog("TransactionController::pointLogIndex", $e->getMessage());
             abort(500);
         }
     }

@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PointLog extends Model
 {
@@ -13,9 +14,8 @@ class PointLog extends Model
 
     protected $fillable = [
         'member_id',
-        // 'status',
-        'search_id',
-        'date_request_id',
+        'user_id',
+        'point',
         'created_at',
         'created_by',
         'updated_at',
@@ -23,4 +23,22 @@ class PointLog extends Model
         'deleted_at',
         'deleted_by'
     ];
+
+    public function getMemberByPointLog(): BelongsTo
+    {
+        return $this->belongsTo(
+            Member::class,
+            'member_id',
+            'id'
+        );
+    }
+
+    public function getUserByPointLog(): BelongsTo
+    {
+        return $this->belongsTo(
+            User::class,
+            'user_id',
+            'id'
+        );
+    }
 }

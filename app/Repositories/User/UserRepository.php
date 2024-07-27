@@ -54,7 +54,7 @@ class UserRepository implements UserRepositoryInterface
                                 END as role_name')
                     ->whereNull('deleted_at')
                     ->orderBy('id', 'DESC')
-                    ->paginate('5');
+                    ->paginate(Constant::RECORD_PER_LIST);
         return $users;
     }
 

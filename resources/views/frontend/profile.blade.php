@@ -142,8 +142,8 @@
                                     type="button">
                                     <i class="fa fa-sign-out fs-4"></i>
                                 </a>
-                                <i class="fa fa-cog fs-4" style="margin-right: 7px;"></i>
-                                <button class=""
+                                <i class="fa fa-cog fs-4" title="setting" style="margin-right: 7px; cursor: pointer;"></i>
+                                <button class="" title="edit profile"
                                     style="outline: none; background: transparent; border: 1px solid transparent;"
                                     type="button">
                                     <i class="fa fa-user fs-4" id="user-profile-btn" data-bs-toggle="offcanvas"

@@ -3,6 +3,7 @@
 namespace App\Repositories\City;
 
 use App\Utility;
+use App\Constant;
 use App\Models\City;
 use App\ReturnMessage;
 use Illuminate\Support\Facades\DB;
@@ -31,7 +32,7 @@ class CityRepository implements CityRepositoryInterface
         $cities = City::select('id', 'name')
                 ->whereNull('deleted_at')
                 ->orderBy('id', 'DESC')
-                ->paginate('5');
+                ->paginate(Constant::RECORD_PER_LIST);
         return $cities;
     }
 

@@ -93,6 +93,11 @@
                                         </a></li>
                                 @endif
 
+                                @if(showSection('admin-backend/point-log'))
+                                    <li><a href="{{ url('admin-backend/point-log/index') }}"><i class="fa fa-database"></i> Point Logs
+                                        </a></li>
+                                @endif
+
                                 @if(showSection('admin-backend/setting'))
                                     <li><a href="{{ url('admin-backend/setting/index') }}"><i class="fa fa-gear"></i> Setting
                                         </a></li>

@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class PointUpdateRequest extends FormRequest
+class MemberPointUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,14 +25,6 @@ class PointUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => [
-                'required',
-                'integer',
-                Rule::exists('member_transactions', 'id')
-                ->where(function ($query) {
-                    return $query->whereNull('deleted_at');
-                }),
-            ],
             'member_id' => [
                 'required',
                 'integer',
@@ -52,9 +44,6 @@ class PointUpdateRequest extends FormRequest
     public function messages()
     {
         return [
-            'id.required'               => 'Transaction id is required',
-            'id.integer'                => 'Transaction id must be a number',
-            'id.exists'                 => 'Invalid transaction id',
             'member_id.required'        => 'Member id is required',
             'member_id.integer'         => 'Member id must be a number',
             'member_id.exists'          => 'Invalid member id',

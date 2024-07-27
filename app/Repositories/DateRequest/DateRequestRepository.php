@@ -18,7 +18,7 @@ class DateRequestRepository implements DateRequestRepositoryInterface
                                     ->where('status', Constant::DATE_REQUEST_ACCEPTED)
                                     ->whereNull('deleted_at')
                                     ->orderBy('id', 'ASC')
-                                    ->paginate(5);
+                                    ->paginate(Constant::RECORD_PER_LIST);
         return $date_requests;
     }
 

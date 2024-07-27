@@ -46,4 +46,6 @@ interface MemberRepositoryInterface
 
     public function apiDateRequestStatusUpdate(array $data);
 
+    public function getRegisteredMembers();
+
 }
