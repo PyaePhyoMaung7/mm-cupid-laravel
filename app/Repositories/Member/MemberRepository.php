@@ -119,7 +119,7 @@ class MemberRepository implements MemberRepositoryInterface
             $member_obj->update($update_data);
 
             $point_log_ins_data             = [];
-            $point_log_ins_data['member_id']= $member_id;
+            $point_log_ins_data['member_id'] = $member_id;
             $point_log_ins_data['user_id']  = Auth::guard('admin')->user()->id;
             $point_log_ins_data['point']    = $override_point;
             $point_log_ins_data             = Utility::addCreatedBy($point_log_ins_data);
@@ -540,6 +540,7 @@ class MemberRepository implements MemberRepositoryInterface
 
     public function sendEmailConfirmMail($data)
     {
+        $trimmed_email  = trim($data->email);
         $setting        = $this->settingRepository->getSetting();
         $company_name   = $setting->company_name;
         $company_logo   = asset('storage/images/' . $setting->company_logo);
@@ -563,7 +564,6 @@ class MemberRepository implements MemberRepositoryInterface
                                         ->where('email_confirm_code', '=', $data['code'])
                                         ->first();
         $status                     = $member_data->status;
-
         if ($status == Constant::MEMBER_UNVERIFIED) {
             $result                 = Member::where('email_confirm_code', '=', $data['code'])
                                         ->update($update_data);
@@ -572,10 +572,11 @@ class MemberRepository implements MemberRepositoryInterface
             } else {
                 $returned_array['status']   = ReturnMessage::INTERNAL_SERVER_ERROR;
             }
-            return $returned_array;
         } else {
             $returned_array['status']   = ReturnMessage::EMAIL_ALREADY_CONFIRMED;
         }
+
+        return $returned_array;
     }
 
     public function apiSyncMembers(array $data)
@@ -739,6 +740,7 @@ class MemberRepository implements MemberRepositoryInterface
                 $ins_log                            = [];
                 $ins_log['member_id']               = $invite_id;
                 $ins_log['date_request_id']         = $result->id;
+                $ins_log['point']                   = Constant::POINT_PER_DATE_REQEUST;
                 $ins_log['created_by']              = $invite_id;
                 $ins_log['updated_by']              = $invite_id;
                 PointLog::create($ins_log);

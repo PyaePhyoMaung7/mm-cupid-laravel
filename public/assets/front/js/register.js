@@ -1,6 +1,6 @@
 var app = angular.module("myApp", []);
 
-app.controller("myCtrl", function ($scope, $http) {
+app.controller("myCtrl", function ($scope, $http, $timeout) {
     $scope.username = "";
     $scope.email = "";
     $scope.password = "";
@@ -100,7 +100,7 @@ app.controller("myCtrl", function ($scope, $http) {
     };
 
     $scope.checkValidation = function (field) {
-        $scope.username = $("#username").val();
+        $scope.username = $("#username").val().trim();
         $scope.email = $("#email").val();
         $scope.password = $("#password").val();
         $scope.confirm_password = $("#confirm-password").val();
@@ -200,15 +200,40 @@ app.controller("myCtrl", function ($scope, $http) {
             $scope.process_error = true;
             $("#email").get(0).scrollIntoView();
         } else {
-            $scope.user_info = false;
-            $scope.user_photo = true;
+            $scope.user_info    = false;
+            $scope.user_photo   = true;
         }
+    };
+
+    $scope.prev = function () {
+        $scope.user_info    = true;
+        $scope.user_photo   = false;
+
+        $timeout(() => {
+            $scope.selected_hobbies.forEach(hobby => {
+                const checkbox = document.getElementById('hobby-' + hobby);
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            });
+
+            $("#birthday").datepicker({
+            changeYear: true,
+            changeMonth: true,
+            dateFormat: 'yy-mm-dd',
+            maxDate: last_18_years_ago_date,
+            yearRange: "-60:+0"
+        });
+        $('#birthday').val($scope.birthday);
+        $("#birthday").prop('readonly', true);
+        $('#next-btn').prop('disabled', false);
+        }, 1);
     };
 
     $scope.register = function () {
         let form = new FormData();
-        form.append('username', $scope.username );
-        form.append('email', $scope.email );
+        form.append('username', $scope.username.trim() );
+        form.append('email', $scope.email.trim() );
         form.append('password', $scope.password );
         form.append('confirm-password', $scope.confirm_password);
         form.append('phone', $scope.phone );

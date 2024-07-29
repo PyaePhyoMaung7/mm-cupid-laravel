@@ -382,7 +382,6 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
             }
         }).then(
             function (response) {
-                console.log(response);
                 if (response.data.success) {
                     const success_code  = response.data.success_code;
                     const result_data   = response.data.data;
@@ -414,8 +413,9 @@ app.controller('myCtrl', function($scope, $http, $timeout, $window){
 
             },
             function (error) {
+                console.log(error);
                 $('.loading').hide();
-                error_msg = error.data.errors.id;
+                // error_msg = error.data.errors.id;
                 new PNotify({
                     title: 'Fail!',
                     width: '400px',

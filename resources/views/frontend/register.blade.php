@@ -228,15 +228,10 @@
                     </div>
 
                     <div ng-if="user_photo">
-                        {{-- <?php
-                      if($error){
-                  ?>
-                        <p class="bg-danger text-white">
-                            <?php echo $error_message; ?>
-                        </p>
-                        <?php
-                      }
-                  ?> --}}
+                        <button type="button" ng-click="prev()" id="prev-btn"
+                            class="btn btn-dark rounded rounded-4  ms-2 btn-lg mt-4">
+                            <i class="fa fa-arrow-left fs-5"></i>
+                        </button>
                         <table class="mt-2"
                             style="width: 100%; border-collapse: separate; border-spacing: .5em; table-layout: fixed">
                             <tr>

@@ -14,8 +14,7 @@ use App\Repositories\Transaction\TransactionRepositoryInterface;
 
 class TransactionRepository implements TransactionRepositoryInterface
 {
-
-    public function getTransactions ()
+    public function getTransactions()
     {
         $transactions = MemberTransaction::select('id', 'member_id', 'name')
                 ->where('status', '=', Constant::POINT_RECHARGE_PENDING)
@@ -51,7 +50,7 @@ class TransactionRepository implements TransactionRepositoryInterface
             $trans_obj->update($status_update_data);
 
             $point_log_ins_data             = [];
-            $point_log_ins_data['member_id']= $member_id;
+            $point_log_ins_data['member_id'] = $member_id;
             $point_log_ins_data['user_id']  = Auth::guard('admin')->user()->id;
             $point_log_ins_data['point']    = $new_point;
             $point_log_ins_data             = Utility::addCreatedBy($point_log_ins_data);

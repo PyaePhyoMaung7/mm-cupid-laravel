@@ -194,7 +194,7 @@ class MemberController extends Controller
         try {
             $setting = $this->settingRepository->getSetting();
             $queryLog = DB::getQueryLog();
-            Utility::saveDebugLog("MemberController::register", $queryLog);
+            Utility::saveDebugLog("MemberController::index", $queryLog);
             return view('frontend/index', compact(['setting']));
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::index", $e->getMessage());
@@ -411,6 +411,8 @@ class MemberController extends Controller
                 return redirect('login')->with(['success_msg' => 'Email confirmed successfully']);
             } elseif ($result['status'] == ReturnMessage::INTERNAL_SERVER_ERROR) {
                 return redirect('login')->with(['fail_msg' => 'Email confirmed failed!']);
+            } elseif ($result['status'] == ReturnMessage::EMAIL_ALREADY_CONFIRMED) {
+                return redirect('login')->with(['fail_msg' => 'Email already confirmed!']);
             }
         } catch (\Exception $e) {
             Utility::saveErrorLog("MemberController::confirmEmail", $e->getMessage());

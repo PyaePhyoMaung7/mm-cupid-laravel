@@ -66,7 +66,7 @@ class AuthController extends Controller
                 return redirect()
                 ->back()
                 ->withErrors(
-                    ['username' => 'Username not found!']
+                    ['username' => 'Username cannot be found!']
                 )->withInput();
 
             } elseif (!Hash::check($password, $userInfo->password)) {
