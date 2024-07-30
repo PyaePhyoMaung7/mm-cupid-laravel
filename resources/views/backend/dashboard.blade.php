@@ -15,16 +15,16 @@
                     </div>
                     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 ">
                         <div class="tile-stats">
-                            <div class="icon"><i class="fa fa-user-plus"></i></div>
-                            <div class="count">{{ $todayRegCount }}</div>
-                            <h5 class="pl-2">New Members</h5>
+                            <div class="icon"><i class="fa fa-user"></i></div>
+                            <div class="count">{{ $totalActiveCount }}</div>
+                            <h5 class="pl-2">Active Members</h5>
                         </div>
                     </div>
                     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 ">
                         <div class="tile-stats">
-                            <div class="icon"><i class="fa fa-user"></i></div>
-                            <div class="count">{{ $totalActiveCount }}</div>
-                            <h5 class="pl-2">Active Members</h5>
+                            <div class="icon"><i class="fa fa-user-plus"></i></div>
+                            <div class="count">{{ $todayRegCount }}</div>
+                            <h5 class="pl-2">New Members</h5>
                         </div>
                     </div>
                     <div class="animated flipInY col-lg-3 col-md-3 col-sm-6">

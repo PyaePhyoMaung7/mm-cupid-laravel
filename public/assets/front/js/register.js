@@ -543,8 +543,10 @@ app.controller("myCtrl", function ($scope, $http, $timeout) {
 
         if ($scope.process_error) {
             $("#next-btn").prop("disabled", true);
+            $("#progress-bar").css("width", '0%');
         } else {
             $("#next-btn").prop("disabled", false);
+            $("#progress-bar").css("width", '50%');
         }
     };
 

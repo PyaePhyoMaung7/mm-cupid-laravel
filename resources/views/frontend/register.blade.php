@@ -16,7 +16,14 @@
                 <div class="py-3 text-center" style="font-size: 14px;">
                     Already have an account? <a href="{{ url('/login') }}" class="text-decoration-none text-primary">Log in</a>
                 </div>
-                <div class="fw-medium text-center" style="font-size: 14px;">Sign up with your email or phone number</div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div id= "btn-step-1" class="rounded-circle text-center border shadow-sm bg-white text-dark fs-5 fw-bold" style="width: 50px; height: 50px; line-height:50px;">1</div>
+                    <div id="progress-bar-container" class="bg-white shadow-sm" style="width: 80%; height: 10px;">
+                        <div id="progress-bar" class="bg-dark" style="width: 0%; height: 100%;"></div>
+                    </div>
+                    <div id= "btn-step-2" class="rounded-circle text-center border shadow-sm bg-white text-dark fs-5 fw-bold" style="width: 50px; height: 50px; line-height:50px;">2</div>
+                </div>
 
                 <form id="register-form" action="{{ route('register') }}" method="POST"
                     enctype="multipart/form-data">
@@ -228,10 +235,6 @@
                     </div>
 
                     <div ng-if="user_photo">
-                        <button type="button" ng-click="prev()" id="prev-btn"
-                            class="btn btn-dark rounded rounded-4  ms-2 btn-lg mt-4">
-                            <i class="fa fa-arrow-left fs-5"></i>
-                        </button>
                         <table class="mt-2"
                             style="width: 100%; border-collapse: separate; border-spacing: .5em; table-layout: fixed">
                             <tr>
@@ -325,10 +328,17 @@
                             class="d-none">
                         <input type="file" name="upload6" id="upload6" onchange="previewImage('6')"
                             class="d-none">
-                        <button type="button" ng-click="register()" disabled id="register-btn"
-                            class="btn btn-dark rounded rounded-5 btn-lg mt-4" style="width:100%;">
-                            Register
-                        </button>
+
+                        <div class="d-flex">
+                            <button type="button" ng-click="prev()" id="prev-btn"
+                                class="col-3 btn btn-dark rounded rounded-5 btn-lg mt-4">
+                                Back
+                            </button>
+                            <button type="button" ng-click="register()" disabled id="register-btn"
+                                class="col-9 ms-2 btn btn-dark rounded rounded-5 btn-lg mt-4">
+                                Register
+                            </button>
+                        </div>
 
                         <input type="hidden" name="form-sub" value="1">
                         <input type="hidden" id="member-id" name="member-id">
@@ -355,6 +365,7 @@
     <script src="{{ url('assets/js/pnotify/pnotify.js') }}"></script>
 
     <script>
+
         let today_date = new Date();
         let last_18_years_ago_date;
         if (today_date.getFullYear() % 4 == 0 && today_date.getMonth() == 1 && today_date.getDate() == 29) {
@@ -426,7 +437,9 @@
 
             if (upload1_value != "") {
                 $('#register-btn').prop('disabled', false);
+                $('#progress-bar').css('width', '100%');
             } else {
+                $('#progress-bar').css('width', '50%');
                 new PNotify({
                 title: 'Reminder!',
                 text: 'Please upload a photo in the biggest square area.',

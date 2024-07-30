@@ -16,19 +16,19 @@
       rel="stylesheet"
       href="{{ url('assets/front/css/bootstrap-icons.min.css') }}"
     />
-    <link rel="stylesheet" href="{{ url('assets/front/css/custom.css?v=20240628') }}">
-    <link rel="stylesheet" href="{{ url('assets/front/css/jquery-ui.css') }}">
+    <link rel="stylesheet" href="{{ url('assets/front/css/custom.css?v=20240628') }}"/>
+    <link rel="stylesheet" href="{{ url('assets/front/css/jquery-ui.css') }}"/>
     <script src="{{ url('assets/front/js/jquery-3.6.0.js') }}"></script>
     <script src="{{ url('assets/front/js/jquery-ui.js') }}"></script>
     <script src="{{ url('assets/front/js/angular.min.js') }}"></script>
     <script src="{{ url('assets/front/js/error_messages.js') }}"></script>
     <script src="{{ url('assets/front/js/success_messages.js') }}"></script>
 
-    <link rel="stylesheet" href="{{ url('assets/css/font-awesome/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url('assets/css/font-awesome/font-awesome.min.css') }}"/>
     <!-- Pnotify -->
-    <link href="{{ url('assets/css/pnotify/pnotify.css') }}" rel="stylesheet">
+    <link href="{{ url('assets/css/pnotify/pnotify.css') }}" rel="stylesheet"/>
 
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('storage/images/' . $setting->company_logo) }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ url('storage/images/' . $setting->company_logo) }}"/>
     <style>
       .btn-outline-secondary {
         --bs-btn-hover-bg: #6c757d32;
@@ -36,6 +36,9 @@
       .pnotify-center {
         right: calc(50% - 200px) !important;
       }
+      #progress-bar {
+        transition: width 1s ease;
+        }
     </style>
     <script>
       const base_url = '{{ url('/') }}';

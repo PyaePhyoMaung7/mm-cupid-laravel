@@ -15,7 +15,6 @@ use App\Repositories\Dashboard\DashboardRepositoryInterface;
 
 class DashboardRepository implements DashboardRepositoryInterface
 {
-
     public function getTotalRegCount()
     {
         $result = Member::count();
@@ -32,9 +31,9 @@ class DashboardRepository implements DashboardRepositoryInterface
 
     public function getTotalActiveCount()
     {
-        $last_60_day    = Carbon::now()->subDays(60);
+        $last_30_day    = Carbon::now()->subDays(30);
         $result         = Member::whereNull('deleted_at')
-                                ->where('last_login', '>=', $last_60_day)
+                                ->where('last_login', '>=', $last_30_day)
                                 ->whereNotIn('status', [Constant::MEMBER_UNVERIFIED, Constant::MEMBER_BANNED])
                                 ->count();
         return $result;

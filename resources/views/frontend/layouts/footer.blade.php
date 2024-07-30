@@ -4,6 +4,7 @@
     <script src="{{ url('assets/js/sweetalert/sweetalert.js') }}"></script>
     <!-- PNotify -->
     <script src="{{ url('assets/js/pnotify/pnotify.js') }}"></script>
+
 </body>
 
 </html>

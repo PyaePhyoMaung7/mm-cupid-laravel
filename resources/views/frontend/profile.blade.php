@@ -169,7 +169,7 @@
                                                     alt="Profile Photo">
                                             </div>
                                             <span class="fs-5 fw-bold d-flex align-items-center position-absolute z-3"
-                                                style="bottom: 10px; right: -5px;" ng-if="member.status == 4">
+                                                style="bottom: 10px; right: -5px;" ng-if="member.status == {{ getVerificationStatus('verified') }}">
                                                 <span class="fa-stack me-2" style="font-size: 14px;">
                                                     <i class="fa fa-certificate fa-stack-2x text-primary"></i>
                                                     <i class="fa fa-check fa-stack-1x text-white"></i>
